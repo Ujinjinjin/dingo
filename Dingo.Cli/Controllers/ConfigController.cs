@@ -1,17 +1,11 @@
 ﻿using Dingo.Abstractions;
 using Dingo.Core.Attributes;
-using System;
 
 namespace Dingo.Cli.Controllers
 {
-	[SubCommand("config")]
+	[SubCommand("config", "Dingo configuration command group")]
 	internal class ConfigController : IController
 	{
-		[SubCommand("doSomeStuff")]
-		[Option("shit", typeof(int), "--shit", "-s")]
-		public void DoSomeStuff(int shit)
-		{
-			Console.WriteLine($"Shit: {shit}");
-		}
+		
 	}
 }

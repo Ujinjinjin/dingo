@@ -19,8 +19,8 @@ namespace Dingo.Cli.Infrastructure
 			collection.AddSingleton<ICliService, CliService>();
 
 			// Register controllers
+			// collection.AddSingleton<IController, ExampleController>();
 			collection.AddSingleton<IController, ConfigController>();
-			// collection.AddSingleton<IController, ActionController>();
 
 			return collection.BuildServiceProvider();
 		}

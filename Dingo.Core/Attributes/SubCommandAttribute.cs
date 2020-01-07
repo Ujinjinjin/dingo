@@ -6,15 +6,35 @@ namespace Dingo.Core.Attributes
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class SubCommandAttribute : Attribute
 	{
-		public string Name { get; }
-		public string Description { get; }
-		public StackType StackType { get; }
+		private readonly string _name;
+		private string _description;
+		private StackType _stackType;
 
+		public SubCommandAttribute(string name)
+		{
+			_name = name ?? throw new ArgumentNullException(nameof(name));
+			_stackType = StackType.Nested;
+		}
+		
 		public SubCommandAttribute(string name, string description = null, StackType stackType = StackType.Nested)
 		{
-			Name = name ?? throw new ArgumentNullException(nameof(name));
-			Description = description;
-			StackType = stackType;
+			_name = name ?? throw new ArgumentNullException(nameof(name));
+			_description = description;
+			_stackType = stackType;
+		}
+
+		public string Name => _name;
+
+		public string Description
+		{
+			get => _description;
+			set => _description = value;
+		}
+
+		public StackType StackType
+		{
+			get => _stackType;
+			set => _stackType = value;
 		}
 	}
 }

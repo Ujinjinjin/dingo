@@ -1,7 +1,9 @@
 ﻿using Dingo.Abstractions;
 using Dingo.Core.Attributes;
 using Dingo.Core.Exceptions;
+using Dingo.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -26,11 +28,22 @@ namespace Dingo.Core.Extensions
 				foreach (var method in controllerType.GetMethods())
 				{
 					var subCommand = MapMethod(method);
-					if (subCommand == null)
+					if (subCommand.Command == null)
 					{
 						continue;
 					}
-					command.AddCommand(subCommand);
+
+					switch (subCommand.StackType)
+					{
+						case StackType.Nested:
+							command.AddCommand(subCommand.Command);
+							break;
+						case StackType.Embedded:
+							root.AddCommand(subCommand.Command);
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
+					}
 				}
 				
 				root.AddCommand(command);
@@ -68,7 +81,7 @@ namespace Dingo.Core.Extensions
 			return command;
 		}
 
-		private static Command MapMethod(MethodInfo method)
+		private static SubCommand MapMethod(MethodInfo method)
 		{
 			var attributes = method
 				.GetCustomAttributes()
@@ -80,7 +93,7 @@ namespace Dingo.Core.Extensions
 			
 			if (subCommandAttribute == null)
 			{
-				return null;
+				return new SubCommand();
 			}
 			
 			var optionAttributes = attributes
@@ -99,7 +112,11 @@ namespace Dingo.Core.Extensions
 
 			command.Handler = CommandHandler.Create(method);
 			
-			return command;
+			return new SubCommand
+			{
+				Command = command,
+				StackType = subCommandAttribute.StackType
+			};
 		}
 	}
 }
