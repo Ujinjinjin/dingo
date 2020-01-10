@@ -3,7 +3,7 @@ using System.CommandLine;
 
 namespace Dingo.Core.Models
 {
-	internal struct SubCommand
+	internal struct CommandInfo
 	{
 		public StackType StackType { get; set; }
 		public Command Command { get; set; }

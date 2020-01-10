@@ -6,10 +6,13 @@
 		/// <summary> Unspecified stack type </summary>
 		Unspecified = 0,
 
-		/// <summary> Nested stack type </summary>
+		/// <summary> Command nested from upper level command </summary>
 		Nested = 1,
 
-		/// <summary> Embedded stack type </summary>
+		/// <summary> Command embedded into upper command level </summary>
 		Embedded = 2,
+		
+		/// <summary> Command hidden  </summary>
+		Hidden = 3,
 	}
 }

@@ -23,100 +23,127 @@ namespace Dingo.Core.Extensions
 			{
 				var controllerType = controller.GetType();
 				
-				var command = MapController(controllerType);
+				var commandInfo = MapController(controllerType);
 
 				foreach (var method in controllerType.GetMethods())
 				{
-					var subCommand = MapMethod(method);
-					if (subCommand.Command == null)
+					var subCommandInfo = MapMethod(method);
+					if (subCommandInfo.Command == null)
 					{
 						continue;
 					}
 
-					switch (subCommand.StackType)
+					switch (subCommandInfo.StackType)
 					{
 						case StackType.Nested:
-							command.AddCommand(subCommand.Command);
+							if (commandInfo.StackType == StackType.Hidden)
+							{
+								throw new InvalidStackTypeException($"Hidden controllers can't have any nested commands. Controller: {controllerType.FullName}");
+							}
+							commandInfo.Command.AddCommand(subCommandInfo.Command);
 							break;
 						case StackType.Embedded:
-							root.AddCommand(subCommand.Command);
+							root.AddCommand(subCommandInfo.Command);
 							break;
 						default:
 							throw new ArgumentOutOfRangeException();
 					}
 				}
-				
-				root.AddCommand(command);
+
+				if (commandInfo.StackType == StackType.Hidden)
+				{
+					return service;
+				}
+				root.AddCommand(commandInfo.Command);
 			}
 			
 			return service;
 		}
 
-		private static Command MapController(MemberInfo controller)
+		private static CommandInfo MapController(MemberInfo controller)
 		{
-			var attributes = controller
-				.GetCustomAttributes()
-				.ToArray();
-
-			var subCommandAttribute = attributes
-				.OfType<SubCommandAttribute>()
-				.SingleOrDefault();
-
-			if (subCommandAttribute == null)
+			try
 			{
-				throw new SubCommandNotSpecifiedException();
-			}
+				var attributes = controller
+					.GetCustomAttributes()
+					.ToArray();
 
-			var optionAttributes = attributes
-				.OfType<OptionAttribute>()
-				.ToArray();
+				var subCommandAttribute = attributes
+					.OfType<SubCommandAttribute>()
+					.SingleOrDefault();
+
+				if (subCommandAttribute == null)
+				{
+					throw new SubCommandNotSpecifiedException();
+				}
+
+				var optionAttributes = attributes
+					.OfType<OptionAttribute>()
+					.ToArray();
 				
-			var command = new Command(subCommandAttribute.Name, subCommandAttribute.Description);
+				var command = new Command(subCommandAttribute.Name, subCommandAttribute.Description);
 
-			foreach (var optionAttribute in optionAttributes)
-			{
-				command.AddOption(new Option(optionAttribute.Aliases, optionAttribute.Description));
+				foreach (var optionAttribute in optionAttributes)
+				{
+					command.AddOption(new Option(optionAttribute.Aliases, optionAttribute.Description));
+				}
+
+				return new CommandInfo
+				{
+					Command = command,
+					StackType = subCommandAttribute.StackType
+				};
 			}
-
-			return command;
+			catch (Exception exception)
+			{
+				throw new FaultException($"Error occured while mapping controller {controller.Name}", exception);
+			}
 		}
 
-		private static SubCommand MapMethod(MethodInfo method)
+		private static CommandInfo MapMethod(MethodInfo method)
 		{
-			var attributes = method
-				.GetCustomAttributes()
-				.ToArray();
-			
-			var subCommandAttribute = attributes
-				.OfType<SubCommandAttribute>()
-				.SingleOrDefault();
-			
-			if (subCommandAttribute == null)
+			try
 			{
-				return new SubCommand();
-			}
+				var attributes = method
+					.GetCustomAttributes()
+					.ToArray();
 			
-			var optionAttributes = attributes
-				.OfType<OptionAttribute>()
-				.ToArray();
-				
-			var command = new Command(subCommandAttribute.Name, subCommandAttribute.Description);
+				var subCommandAttribute = attributes
+					.OfType<SubCommandAttribute>()
+					.SingleOrDefault();
 			
-			foreach (var optionAttribute in optionAttributes)
-			{
-				command.AddOption(new Option(optionAttribute.Aliases, optionAttribute.Description)
+				if (subCommandAttribute == null)
 				{
-					Argument = new Argument { ArgumentType = optionAttribute.Type }
-				});
-			}
-
-			command.Handler = CommandHandler.Create(method);
+					return new CommandInfo();
+				}
 			
-			return new SubCommand
+				var optionAttributes = attributes
+					.OfType<OptionAttribute>()
+					.ToArray();
+				
+				var command = new Command(subCommandAttribute.Name, subCommandAttribute.Description);
+			
+				foreach (var optionAttribute in optionAttributes)
+				{
+					command.AddOption(new Option(optionAttribute.Aliases, optionAttribute.Description)
+					{
+						Argument = new Argument { ArgumentType = optionAttribute.Type },
+						Required = optionAttribute.Required
+					});
+				}
+
+				command.Handler = CommandHandler.Create(method);
+			
+				return new CommandInfo
+				{
+					Command = command,
+					StackType = subCommandAttribute.StackType
+				};
+			}
+			catch (Exception exception)
 			{
-				Command = command,
-				StackType = subCommandAttribute.StackType
-			};
+				throw new FaultException($"Error occured while mapping method {method.Name} in module {method.Module}", exception);
+			}
 		}
 	}
 }

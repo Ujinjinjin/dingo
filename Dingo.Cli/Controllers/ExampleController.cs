@@ -15,10 +15,11 @@ namespace Dingo.Cli.Controllers
 		}
 		
 		[SubCommand("embedded", Description = "Embedded command", StackType = StackType.Embedded)]
-		[Option("Embedded command option", typeof(string), "--option", "-o")]
-		public void EmbeddedCommand(string option)
+		[Option("Embedded required command option", typeof(string), "--requiredOption", "-r")]
+		[Option("Embedded optional command option", typeof(string), false, "--optionalOption", "-o")]
+		public void EmbeddedCommand(string requiredOption, string optionalOption)
 		{
-			Console.WriteLine($"Embedded: {option}");
+			Console.WriteLine($"Embedded: {requiredOption}");
 		}
 	}
 }

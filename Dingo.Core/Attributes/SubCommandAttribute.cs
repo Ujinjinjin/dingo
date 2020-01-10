@@ -6,13 +6,15 @@ namespace Dingo.Core.Attributes
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class SubCommandAttribute : Attribute
 	{
+		private const string DefaultName = "default";
+		
 		private readonly string _name;
 		private string _description;
 		private StackType _stackType;
 
-		public SubCommandAttribute(string name)
+		public SubCommandAttribute()
 		{
-			_name = name ?? throw new ArgumentNullException(nameof(name));
+			_name = DefaultName;
 			_stackType = StackType.Nested;
 		}
 		
