@@ -27,7 +27,7 @@ namespace Dingo.Core.Extensions
 
 				foreach (var method in controllerType.GetMethods())
 				{
-					var subCommandInfo = MapMethod(method);
+					var subCommandInfo = MapMethod(method, controller);
 					if (subCommandInfo.Command == null)
 					{
 						continue;
@@ -100,7 +100,7 @@ namespace Dingo.Core.Extensions
 			}
 		}
 
-		private static CommandInfo MapMethod(MethodInfo method)
+		private static CommandInfo MapMethod<T>(MethodInfo method, T controller)
 		{
 			try
 			{
@@ -132,7 +132,7 @@ namespace Dingo.Core.Extensions
 					});
 				}
 
-				command.Handler = CommandHandler.Create(method);
+				command.Handler = CommandHandler.Create(method, controller);
 			
 				return new CommandInfo
 				{
