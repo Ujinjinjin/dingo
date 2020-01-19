@@ -1,5 +1,6 @@
 ﻿using Dingo.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Infrastructure
@@ -8,7 +9,7 @@ namespace Dingo.Cli.Infrastructure
     {
         private static async Task Main(string[] args)
         {
-            var serviceProvider = new Container()
+            var serviceProvider = new IocModule()
                 .Build();
 
             var dingo = serviceProvider.GetService<ICliService>();

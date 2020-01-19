@@ -1,5 +1,6 @@
 ﻿using Dingo.Abstractions;
 using Dingo.Core.Attributes;
+using Dingo.Core.Config;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Models;
 using Microsoft.Extensions.DependencyInjection;

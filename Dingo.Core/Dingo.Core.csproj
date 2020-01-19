@@ -9,7 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="10.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
+    <PackageReference Include="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

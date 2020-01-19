@@ -2,7 +2,7 @@
 
  namespace Dingo.Abstractions
 {
-	public interface IContainer
+	public interface IIocModule
 	{
 		IServiceProvider Build();
 	}

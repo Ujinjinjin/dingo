@@ -1,7 +1,7 @@
 ﻿using Dingo.Abstractions;
 using System.CommandLine;
 
-namespace Dingo.Core.Models
+namespace Dingo.Core.Config
 {
 	internal struct CommandInfo
 	{
