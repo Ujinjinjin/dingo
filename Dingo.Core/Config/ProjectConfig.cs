@@ -1,6 +1,5 @@
 ﻿using Dingo.Abstractions;
 using Dingo.Abstractions.Config;
-using Dingo.Core.Models;
 using System.IO;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization;

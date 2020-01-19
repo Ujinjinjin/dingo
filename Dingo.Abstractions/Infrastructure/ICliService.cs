@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Dingo.Abstractions
+namespace Dingo.Abstractions.Infrastructure
 {
 	public interface ICliService
 	{

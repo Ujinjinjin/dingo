@@ -4,10 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Operations" />
-  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.2.1" />

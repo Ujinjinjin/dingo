@@ -1,8 +1,8 @@
 ﻿using Dingo.Abstractions;
+using Dingo.Abstractions.Infrastructure;
 using Dingo.Core.Attributes;
 using Dingo.Core.Config;
 using Dingo.Core.Exceptions;
-using Dingo.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.CommandLine;

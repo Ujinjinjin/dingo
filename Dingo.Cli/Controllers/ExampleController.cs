@@ -1,4 +1,5 @@
 ﻿using Dingo.Abstractions;
+using Dingo.Abstractions.Infrastructure;
 using Dingo.Core.Attributes;
 using System;
 
@@ -11,7 +12,7 @@ namespace Dingo.Cli.Controllers
 		[Option("Nested command option", typeof(int), "--option")]
 		public void NestedCommand(int option)
 		{
-			Console.WriteLine($"Nested: {option}");
+			Console.WriteLine($"Nested: {option.ToString()}");
 		}
 		
 		[SubCommand("embedded", Description = "Embedded command", StackType = StackType.Embedded)]

@@ -1,6 +1,5 @@
-﻿using Dingo.Abstractions;
+﻿using Dingo.Abstractions.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Infrastructure

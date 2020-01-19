@@ -1,4 +1,4 @@
-﻿using Dingo.Abstractions;
+﻿using Dingo.Abstractions.Infrastructure;
 using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;

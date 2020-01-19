@@ -1,4 +1,5 @@
 using Dingo.Abstractions;
+using Dingo.Abstractions.Infrastructure;
 using Dingo.Abstractions.Operations;
 using Dingo.Core.Attributes;
 using JetBrains.Annotations;

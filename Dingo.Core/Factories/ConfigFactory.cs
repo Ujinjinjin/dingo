@@ -1,7 +1,6 @@
 ﻿using Dingo.Abstractions.Config;
 using Dingo.Abstractions.Factories;
 using Dingo.Core.Config;
-using Dingo.Core.Models;
 using System;
 using YamlDotNet.Serialization;
 

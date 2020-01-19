@@ -1,8 +1,7 @@
-﻿using Dingo.Abstractions;
-using Dingo.Abstractions.Config;
+﻿using Dingo.Abstractions.Config;
+using Dingo.Abstractions.Infrastructure;
 using Dingo.Abstractions.Operations;
 using Dingo.Cli.Controllers;
-using Dingo.Core;
 using Dingo.Core.Config;
 using Dingo.Core.Factories;
 using Dingo.Core.Operations;

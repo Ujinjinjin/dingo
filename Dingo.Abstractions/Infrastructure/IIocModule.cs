@@ -1,6 +1,6 @@
 ﻿﻿using System;
 
- namespace Dingo.Abstractions
+ namespace Dingo.Abstractions.Infrastructure
 {
 	public interface IIocModule
 	{
