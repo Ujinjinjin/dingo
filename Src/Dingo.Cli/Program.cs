@@ -10,10 +10,11 @@ namespace Dingo.Cli
         {
             var scanner = new DirectoryScanner();
             var hashMaker = new HashMaker();
-            var path = "D:/gallk/Work/Utils/dingo/";
-
-            var filenameList = await scanner.GetFileListAsync(path, "*.sql");
-
+            var pathHelper = new PathHelper();
+            var configuration = new PostgresConfiguration();
+            
+            var filenameList = await scanner.GetFileListAsync(pathHelper.GetApplicationBasePath(), configuration.DingoDatabaseScriptsMask);
+            
             foreach (var filename in filenameList)
             {
                 Console.WriteLine(filename);

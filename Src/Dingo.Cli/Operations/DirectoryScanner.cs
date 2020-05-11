@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Dingo.Cli.Extensions;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Operations
@@ -13,11 +15,13 @@ namespace Dingo.Cli.Operations
 		
 		public IList<string> GetFileList(string rootPath, string searchPattern, bool absolutePath = true)
 		{
-			var fileList = Directory.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories);
+			var fileList = Directory.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories)
+				.OrderBy(x => x)
+				.ToArray();
 			for (var i = 0; i < fileList.Length; i++)
 			{
 				fileList[i] = fileList[i]
-					.Replace("\\", "/")
+					.ReplaceBackslashesWithSlashes()
 					.Replace(rootPath, absolutePath ? rootPath : "");
 			}
 			return fileList;
