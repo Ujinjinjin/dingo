@@ -1,4 +1,4 @@
-﻿namespace Dingo.Cli
+namespace Dingo.Cli
 {
 	internal class PostgresConfiguration : IConfiguration
 	{

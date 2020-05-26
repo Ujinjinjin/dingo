@@ -4,5 +4,6 @@
 	{
 		string CheckTableExistenceProcedureFilePath { get; }
 		string DingoDatabaseScriptsMask { get; }
+		string ConnectionString { get; }
 	}
 }
