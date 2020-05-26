@@ -12,8 +12,11 @@ namespace Dingo.Cli.DbUtils
 	{
 		private readonly ILogger _logger;
 		
-		protected DataConnectionBase(string dataProviderName, string connectionString, ILogger logger) 
-			: base(dataProviderName, connectionString)
+		protected DataConnectionBase(
+			string dataProviderName,
+			string connectionString,
+			ILogger logger
+		) : base(dataProviderName, connectionString)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
@@ -21,17 +24,17 @@ namespace Dingo.Cli.DbUtils
 		/// <summary> Execute command and return data reader </summary>
 		protected async Task<DataReaderAsync> ExecuteReaderAsync(string sql, params DataParameter[] parameters)
 		{
-			return await ExecuteReader(sql, CommandType.StoredProcedure, true, parameters);
+			return await ExecuteReaderAsync(sql, CommandType.StoredProcedure, true, parameters);
 		}
 		
 		/// <summary> Execute command and return data reader </summary>
 		protected async Task<DataReaderAsync> ExecuteReaderSqlAsync(string sql, params DataParameter[] parameters)
 		{
-			return await ExecuteReader(sql, CommandType.Text, true, parameters);
+			return await ExecuteReaderAsync(sql, CommandType.Text, true, parameters);
 		}
 
 		/// <summary> Execute command and return data reader </summary>
-		protected async Task<DataReaderAsync> ExecuteReader(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
+		protected async Task<DataReaderAsync> ExecuteReaderAsync(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
 		{
 			return await ExecuteReaderAsync(new DbRequest(sql)
 			{

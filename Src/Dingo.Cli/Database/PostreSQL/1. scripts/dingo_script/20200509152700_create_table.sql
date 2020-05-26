@@ -1,7 +1,7 @@
-create table dingo_script(
-	dingo_script_id integer,
-	script_path text,
-	script_hash char(256),
+create table dingo_migration(
+	dingo_migration_id integer,
+	migration_path text,
+	migration_hash char(256),
 	date_updated date,
-	primary key (dingo_script_id)
+	primary key (dingo_migration_id)
 );

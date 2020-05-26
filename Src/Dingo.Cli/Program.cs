@@ -1,10 +1,6 @@
-﻿using Dingo.Cli.Operations;
-using LinqToDB;
-using LinqToDB.Configuration;
-using LinqToDB.Data;
+﻿using Dingo.Cli.Factories;
+using Dingo.Cli.Operations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli
@@ -17,11 +13,13 @@ namespace Dingo.Cli
             var hashMaker = new HashMaker();
             var pathHelper = new PathHelper();
             var configuration = new PostgresConfiguration();
-            var operations = new PostgresOperations(pathHelper, configuration);
+            var databaseContextFactory = new DatabaseContextFactory();
+            var operations = new PostgresOperations(pathHelper, configuration, databaseContextFactory);
 
             // var providers = DataConnection.GetRegisteredProviders();
 
-            await operations.CheckSystemTableExistence();
+            var result = await operations.CheckMigrationTableExistence();
+            Console.WriteLine($"Migration table exists: {result}");
 
             // var filenameList = await scanner.GetFileListAsync(pathHelper.GetApplicationBasePath(), configuration.DingoDatabaseScriptsMask);
             //
