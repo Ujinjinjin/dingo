@@ -1,6 +1,7 @@
 ﻿using Dingo.Cli.Factories;
 using Dingo.Cli.Repository;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Operations
@@ -18,7 +19,7 @@ namespace Dingo.Cli.Operations
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
 		}
 
-		public async Task<bool> CheckMigrationTableExistence()
+		public async Task<bool> CheckMigrationTableExistenceAsync()
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
 			{
@@ -27,11 +28,15 @@ namespace Dingo.Cli.Operations
 			}
 		}
 
-		public async Task InstallDingoProcedures()
+		public async Task InstallDingoProceduresAsync()
 		{
-			await using (var dbContext = new PostgresDbContext(_configuration.ConnectionString))
+			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configuration.CheckTableExistenceProcedureFilePath);
+			
+			var sqlScriptText = await File.ReadAllTextAsync(sqlScriptPath);
+
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
 			{
-				
+				await dbContext.ExecuteRawSqlAsync(sqlScriptText);
 			}
 		}
 	}

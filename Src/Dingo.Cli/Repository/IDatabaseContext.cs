@@ -8,5 +8,6 @@ namespace Dingo.Cli.Repository
 	{
 		Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table);
 		DbSystemCheckTableExistenceResult CheckTableExistence(string schema, string table);
+		Task ExecuteRawSqlAsync(string sql);
 	}
 }

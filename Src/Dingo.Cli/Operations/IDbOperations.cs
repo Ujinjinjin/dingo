@@ -4,8 +4,8 @@ namespace Dingo.Cli.Operations
 {
 	internal interface IDbOperations
 	{
-		Task<bool> CheckMigrationTableExistence();
+		Task<bool> CheckMigrationTableExistenceAsync();
 
-		Task InstallDingoProcedures();
+		Task InstallDingoProceduresAsync();
 	}
 }

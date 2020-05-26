@@ -32,5 +32,10 @@ namespace Dingo.Cli.Repository
 				)
 				.Single();
 		}
+
+		public async Task ExecuteRawSqlAsync(string sql)
+		{
+			await ExecuteReaderSqlAsync(sql);
+		}
 	}
 }

@@ -16,9 +16,9 @@ namespace Dingo.Cli
             var databaseContextFactory = new DatabaseContextFactory();
             var operations = new PostgresOperations(pathHelper, configuration, databaseContextFactory);
 
-            // var providers = DataConnection.GetRegisteredProviders();
-
-            var result = await operations.CheckMigrationTableExistence();
+            await operations.InstallDingoProceduresAsync();
+            
+            var result = await operations.CheckMigrationTableExistenceAsync();
             Console.WriteLine($"Migration table exists: {result}");
 
             // var filenameList = await scanner.GetFileListAsync(pathHelper.GetApplicationBasePath(), configuration.DingoDatabaseScriptsMask);
