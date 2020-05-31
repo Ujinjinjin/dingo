@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Dingo.Cli.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Operations
@@ -7,7 +8,7 @@ namespace Dingo.Cli.Operations
 	{
 		Task<string> GetFileHashAsync(string filename);
 		string GetFileHash(string filename);
-		Task<IDictionary<string, string>> GetFileListHashAsync(IList<string> filenameList);
-		IDictionary<string, string> GetFileListHash(IList<string> filenameList);
+		Task<IList<MigrationInfo>> GetMigrationInfoListAsync(IList<FilePath> filePathList);
+		IList<MigrationInfo> GetMigrationInfoList(IList<FilePath> filePathList);
 	}
 }

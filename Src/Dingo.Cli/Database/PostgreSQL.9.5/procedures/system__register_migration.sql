@@ -1,7 +1,7 @@
-create or replace function system__add_migration(
+create or replace function system__register_migration(
 	p_migration_path text,
-	p_migration_hash char(256),
-	p_date_updated date
+	p_migration_hash text,
+	p_date_updated timestamp
 )
 returns void as
 $$

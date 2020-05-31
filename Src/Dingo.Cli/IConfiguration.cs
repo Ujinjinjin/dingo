@@ -2,8 +2,9 @@
 {
 	internal interface IConfiguration
 	{
-		string CheckTableExistenceProcedureFilePath { get; }
-		string DingoDatabaseScriptsMask { get; }
+		string CheckTableExistenceProcedurePath { get; }
+		string DingoMigrationsRootPath { get; }
+		string MigrationsSearchPattern { get; }
 		string ConnectionString { get; }
 		string ProviderName { get; }
 		string MigrationSchema { get; }

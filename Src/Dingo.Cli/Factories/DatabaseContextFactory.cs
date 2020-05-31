@@ -11,7 +11,7 @@ namespace Dingo.Cli.Factories
 			switch (dbProviderName)
 			{
 				case ProviderName.PostgreSQL95:
-					return new PostgresDbContext(connectionString);
+					return new DatabaseContext(dbProviderName, connectionString);
 				default:
 					throw new ArgumentOutOfRangeException(dbProviderName);
 			}

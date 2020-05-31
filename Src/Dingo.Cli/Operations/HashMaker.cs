@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Dingo.Cli.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -29,14 +29,34 @@ namespace Dingo.Cli.Operations
 			}
 		}
 		
-		public Task<IDictionary<string, string>> GetFileListHashAsync(IList<string> filenameList)
+		public async Task<IList<MigrationInfo>> GetMigrationInfoListAsync(IList<FilePath> filePathList)
 		{
-			return Task.FromResult(GetFileListHash(filenameList));
+			var migrationInfoList = new MigrationInfo[filePathList.Count];
+			for (var i = 0; i < filePathList.Count; i++)
+			{
+				migrationInfoList[i] = new MigrationInfo
+				{
+					Path = filePathList[i],
+					Hash = await GetFileHashAsync(filePathList[i].Absolute)
+				};
+			}
+
+			return migrationInfoList;
 		}
 		
-		public IDictionary<string, string> GetFileListHash(IList<string> filenameList)
+		public IList<MigrationInfo> GetMigrationInfoList(IList<FilePath> filePathList)
 		{
-			return filenameList.ToDictionary(x => x, GetFileHash);
+			var migrationInfoList = new MigrationInfo[filePathList.Count];
+			for (var i = 0; i < filePathList.Count; i++)
+			{
+				migrationInfoList[i] = new MigrationInfo
+				{
+					Path = filePathList[i],
+					Hash = GetFileHash(filePathList[i].Absolute)
+				};
+			}
+
+			return migrationInfoList;
 		}
 	}
 }

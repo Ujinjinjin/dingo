@@ -1,6 +1,5 @@
 ﻿using Dingo.Cli.Factories;
 using Dingo.Cli.Operations;
-using System;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli
@@ -14,20 +13,10 @@ namespace Dingo.Cli
             var pathHelper = new PathHelper();
             var configuration = new PostgresConfiguration();
             var databaseContextFactory = new DatabaseContextFactory();
-            var operations = new PostgresOperations(pathHelper, configuration, databaseContextFactory);
+            var operations = new DatabaseOperations(pathHelper, configuration, databaseContextFactory);
+            var programOperations = new ProgramOperations(configuration, operations, scanner, hashMaker, pathHelper);
 
-            await operations.InstallDingoProceduresAsync();
-            
-            var result = await operations.CheckMigrationTableExistenceAsync();
-            Console.WriteLine($"Migration table exists: {result}");
-
-            // var filenameList = await scanner.GetFileListAsync(pathHelper.GetApplicationBasePath(), configuration.DingoDatabaseScriptsMask);
-            //
-            // foreach (var filename in filenameList)
-            // {
-            //     Console.WriteLine(filename);
-            //     Console.WriteLine(await hashMaker.GetFileHashAsync(filename));
-            // }
+            await programOperations.RunAsync(args);
         }
     }
 }

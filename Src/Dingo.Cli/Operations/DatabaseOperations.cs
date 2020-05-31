@@ -1,18 +1,17 @@
 ﻿using Dingo.Cli.Factories;
-using Dingo.Cli.Repository;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Operations
 {
-	internal class PostgresOperations : IDbOperations
+	internal class DatabaseOperations : IDatabaseOperations
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IConfiguration _configuration;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
 
-		public PostgresOperations(IPathHelper pathHelper, IConfiguration configuration, IDatabaseContextFactory databaseContextFactory)
+		public DatabaseOperations(IPathHelper pathHelper, IConfiguration configuration, IDatabaseContextFactory databaseContextFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -28,15 +27,35 @@ namespace Dingo.Cli.Operations
 			}
 		}
 
-		public async Task InstallDingoProceduresAsync()
+		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
-			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configuration.CheckTableExistenceProcedureFilePath);
-			
+			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configuration.CheckTableExistenceProcedurePath);
 			var sqlScriptText = await File.ReadAllTextAsync(sqlScriptPath);
 
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
 			{
 				await dbContext.ExecuteRawSqlAsync(sqlScriptText);
+			}
+		}
+
+		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool silent = false)
+		{
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			{
+				await dbContext.ExecuteRawSqlAsync(sql);
+
+				if (!silent)
+				{
+					await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+				}
+			}
+		}
+
+		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
+		{
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			{
+				await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
 			}
 		}
 	}

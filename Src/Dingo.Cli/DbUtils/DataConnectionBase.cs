@@ -21,6 +21,49 @@ namespace Dingo.Cli.DbUtils
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 		
+		/// <summary> Execute sql returning nothing </summary>
+		protected async Task ExecuteAsync(string sql, params DataParameter[] parameters)
+		{
+			await ExecuteAsync(sql, CommandType.StoredProcedure, true, parameters);
+		}
+		
+		/// <summary> Execute sql returning nothing </summary>
+		protected async Task ExecuteSqlAsync(string sql, params DataParameter[] parameters)
+		{
+			await ExecuteAsync(sql, CommandType.Text, true, parameters);
+		}
+		
+		/// <summary> Execute sql returning nothing </summary>
+		protected async Task ExecuteAsync(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
+		{
+			await ExecuteAsync(new DbRequest(sql)
+			{
+				CommandType = commandType,
+				Parameters = parameters,
+				LogLevel = logEnabled ? LogLevel.Debug : LogLevel.None,
+			});
+		}
+
+		/// <summary> Execute sql returning nothing </summary>
+		protected async Task ExecuteAsync(DbRequest request)
+		{
+			using (var scope = new QueryExecutionScope(_logger))
+			{
+				try
+				{
+					Command?.Parameters.Clear();
+					CommandTimeout = request.CommandTimeout;
+				
+					await CreateCommand(request).ExecuteAsync();
+				}
+				catch (Exception exception)
+				{
+					scope.Log(LogLevel.Error, "DataConnectionBase:Error;", exception);
+					throw;
+				}
+			}
+		}
+		
 		/// <summary> Execute command and return data reader </summary>
 		protected async Task<DataReaderAsync> ExecuteReaderAsync(string sql, params DataParameter[] parameters)
 		{
