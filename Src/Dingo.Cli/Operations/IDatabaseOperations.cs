@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Dingo.Cli.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Dingo.Cli.Operations
 {
@@ -11,5 +13,7 @@ namespace Dingo.Cli.Operations
 		Task ApplyMigrationAsync(string sql, string path, string migrationHash, bool silent = false);
 		
 		Task RegisterMigrationAsync(string migrationPath, string migrationHash);
+
+		Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList);
 	}
 }

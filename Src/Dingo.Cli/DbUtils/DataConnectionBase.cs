@@ -114,6 +114,12 @@ namespace Dingo.Cli.DbUtils
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
+		protected Task<IEnumerable<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+		{
+			return Task.FromResult(Query<T>(sql, parameters));
+		}
+
+		/// <summary> Execute command and return typed list of objects </summary>
 		protected IEnumerable<T> QuerySql<T>(string sql, params DataParameter[] parameters)
 		{
 			return Query<T>(sql, CommandType.Text, parameters);

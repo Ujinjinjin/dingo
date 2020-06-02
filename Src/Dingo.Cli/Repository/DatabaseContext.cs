@@ -1,10 +1,10 @@
 ﻿using Dingo.Cli.DbUtils;
 using Dingo.Cli.Loggers;
 using Dingo.Cli.Repository.DbClasses;
-using LinqToDB;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,19 +26,14 @@ namespace Dingo.Cli.Repository
 			await ExecuteSqlAsync(sql);
 		}
 
-		public Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table)
+		public async Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table)
 		{
-			return Task.FromResult(CheckTableExistence(schema, table));
-		}
-
-		public DbSystemCheckTableExistenceResult CheckTableExistence(string schema, string table)
-		{
-			return Query<DbSystemCheckTableExistenceResult>(
-					"system__check_table_existence",
-					new DataParameter("p_table_schema", schema),
-					new DataParameter("p_table_name", table)
-				)
-				.Single();
+			var result = await QueryAsync<DbSystemCheckTableExistenceResult>(
+				"system__check_table_existence",
+				new DataParameter("p_table_schema", schema),
+				new DataParameter("p_table_name", table)
+			);
+			return result.Single();
 		}
 
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated)
@@ -49,6 +44,15 @@ namespace Dingo.Cli.Repository
 				new DataParameter("p_migration_hash", migrationHash),
 				new DataParameter("p_date_updated", dateUpdated)
 			);
+		}
+
+		public async Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList)
+		{
+			var result = await QueryAsync<DbMigrationInfoOutput>(
+				"system__get_migrations_status",
+				new DataParameter("pti_migration_info_input", dbMigrationInfoInputList)
+			);
+			return result.ToArray();
 		}
 	}
 }

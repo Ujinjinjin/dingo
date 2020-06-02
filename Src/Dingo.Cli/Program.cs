@@ -16,7 +16,7 @@ namespace Dingo.Cli
             var operations = new DatabaseOperations(pathHelper, configuration, databaseContextFactory);
             var programOperations = new ProgramOperations(configuration, operations, scanner, hashMaker, pathHelper);
 
-            await programOperations.RunAsync(args);
+            await programOperations.RunMigrationsAsync(args);
         }
     }
 }

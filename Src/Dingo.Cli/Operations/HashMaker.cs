@@ -37,7 +37,7 @@ namespace Dingo.Cli.Operations
 				migrationInfoList[i] = new MigrationInfo
 				{
 					Path = filePathList[i],
-					Hash = await GetFileHashAsync(filePathList[i].Absolute)
+					NewHash = await GetFileHashAsync(filePathList[i].Absolute)
 				};
 			}
 
@@ -52,7 +52,7 @@ namespace Dingo.Cli.Operations
 				migrationInfoList[i] = new MigrationInfo
 				{
 					Path = filePathList[i],
-					Hash = GetFileHash(filePathList[i].Absolute)
+					NewHash = GetFileHash(filePathList[i].Absolute)
 				};
 			}
 

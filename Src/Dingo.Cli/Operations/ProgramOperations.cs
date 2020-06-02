@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dingo.Cli.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Dingo.Cli.Operations
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 		}
 
-		public async Task RunAsync(string[] args)
+		public async Task RunMigrationsAsync(string[] args)
 		{
 			await _databaseOperations.InstallCheckTableExistenceProcedureAsync();
 
@@ -43,21 +44,25 @@ namespace Dingo.Cli.Operations
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
 					var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-					await _databaseOperations.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].Hash, true);
+					await _databaseOperations.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, true);
 				}
 				
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
-					await _databaseOperations.RegisterMigrationAsync(migrationInfoList[i].Path.Relative, migrationInfoList[i].Hash);
+					await _databaseOperations.RegisterMigrationAsync(migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
 				}
 			}
 			else
 			{
-				// for (var i = 0; i < migrationInfoList.Count; i++)
-				// {
-				// 	var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-				// 	await _databaseOperations.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].Hash, true);
-				// }
+				var migrationsStatusList = await _databaseOperations.GetMigrationsStatusAsync(migrationInfoList);
+				for (var i = 0; i < migrationsStatusList.Count; i++)
+				{
+					if (migrationsStatusList[i].Action == MigrationAction.Skip)
+						continue;
+					
+					var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
+					await _databaseOperations.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
+				}
 			}
 		}
 	}
