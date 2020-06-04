@@ -1,4 +1,5 @@
-﻿using Dingo.Cli.Models;
+﻿using Dingo.Cli.Config;
+using Dingo.Cli.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Dingo.Cli.Operations
 
 			var migrationTableExists = await _databaseOperations.CheckMigrationTableExistenceAsync();
 
-			var migrationsRootPath = _pathHelper.GetApplicationBasePath() + _configuration.DingoMigrationsRootPath;
+			var migrationsRootPath = _pathHelper.GetApplicationBaseDirectory() + _configuration.DingoMigrationsRootPath;
 			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configuration.MigrationsSearchPattern);
 
 			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);

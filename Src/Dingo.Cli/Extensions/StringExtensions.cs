@@ -6,5 +6,10 @@
 		{
 			return value.Replace("\\", "/");
 		}
+
+		public static bool NotContains(this string source, string substring)
+		{
+			return !source.Contains(substring);
+		}
 	}
 }

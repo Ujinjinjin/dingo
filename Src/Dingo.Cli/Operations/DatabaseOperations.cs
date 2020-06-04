@@ -1,4 +1,5 @@
-﻿using Dingo.Cli.Factories;
+﻿using Dingo.Cli.Config;
+using Dingo.Cli.Factories;
 using Dingo.Cli.Models;
 using Dingo.Cli.Repository.DbClasses;
 using System;

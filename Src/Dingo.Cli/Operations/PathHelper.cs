@@ -1,13 +1,25 @@
 ﻿using Dingo.Cli.Extensions;
 using System;
+using System.IO;
 
 namespace Dingo.Cli.Operations
 {
 	internal class PathHelper : IPathHelper
 	{
-		public string GetApplicationBasePath()
+		public string BuildFilePath(string path, string filename, string extension)
+		{
+			return path + filename + extension;
+		}
+
+		public string GetApplicationBaseDirectory()
 		{
 			return AppDomain.CurrentDomain.BaseDirectory
+				.ReplaceBackslashesWithSlashes();
+		}
+
+		public string GetExecutionBaseDirectory()
+		{
+			return $"{Directory.GetCurrentDirectory()}/"
 				.ReplaceBackslashesWithSlashes();
 		}
 
@@ -16,7 +28,7 @@ namespace Dingo.Cli.Operations
 			relativePath = relativePath
 				.ReplaceBackslashesWithSlashes();
 
-			return GetApplicationBasePath() + relativePath;
+			return GetApplicationBaseDirectory() + relativePath;
 		}
 	}
 }
