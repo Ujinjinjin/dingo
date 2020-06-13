@@ -22,12 +22,13 @@ namespace Dingo.Cli
 
             // await programOperations.RunMigrationsAsync(args);
             
-            var configReader = new ConfigLoader(pathHelper, serializer);
+            var configLoader = new ConfigLoader(pathHelper, serializer);
             var configSaver = new ConfigSaver(pathHelper, serializer);
+            var configurationWrapper = new ConfigurationWrapper(configLoader, configSaver);
 
-            var config = await configReader.LoadProjectConfigAsync();
+            await configurationWrapper.LoadAsync();
             
-            await configSaver.SaveProjectConfigAsync(config);
+            await configurationWrapper.SaveAsync();
         }
     }
 }

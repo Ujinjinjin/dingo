@@ -7,9 +7,9 @@
 			return value.Replace("\\", "/");
 		}
 
-		public static bool NotContains(this string source, string substring)
+		public static bool NotContains(this string source, string value)
 		{
-			return !source.Contains(substring);
+			return !source.Contains(value);
 		}
 	}
 }
