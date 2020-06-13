@@ -31,5 +31,15 @@ namespace Dingo.Cli.Extensions
 		{
 			return Sequence(source, 0, endIndex);
 		}
+		
+		public static T GetItem<T>(this IList<T> source, int index)
+		{
+			if (index < 0)
+			{
+				index = source.Count - index.Negate();
+			}
+			
+			return source[index];
+		}
 	}
 }

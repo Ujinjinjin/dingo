@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Cli.Config
 {
-	public interface IConfigurationWrapper : IConfiguration
+	public interface IConfigWrapper : IConfiguration
 	{
 		Task SaveAsync(CancellationToken cancellationToken = default);
 		Task SaveAsync(string configPath, CancellationToken cancellationToken = default);

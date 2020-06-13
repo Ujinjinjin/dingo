@@ -1,5 +1,6 @@
-﻿using Dingo.Cli.Operations;
-using Dingo.Cli.Serializers;
+﻿using Dingo.Cli.Constants;
+using Dingo.Cli.Factories;
+using Dingo.Cli.Operations;
 using System;
 using System.IO;
 using System.Threading;
@@ -10,12 +11,12 @@ namespace Dingo.Cli.Config
 	internal class ConfigLoader : IConfigLoader
 	{
 		private readonly IPathHelper _pathHelper;
-		private readonly IInternalSerializer _internalSerializer;
+		private readonly IInternalSerializerFactory _internalSerializerFactory;
 
-		public ConfigLoader(IPathHelper pathHelper, IInternalSerializer internalSerializer)
+		public ConfigLoader(IPathHelper pathHelper, IInternalSerializerFactory internalSerializerFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_internalSerializer = internalSerializer ?? throw new ArgumentNullException(nameof(internalSerializer));
+			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
 		public Task<IConfiguration> LoadProjectConfigAsync(CancellationToken cancellationToken = default)
@@ -23,8 +24,8 @@ namespace Dingo.Cli.Config
 			return LoadProjectConfigAsync(
 				_pathHelper.BuildFilePath(
 					_pathHelper.GetExecutionBaseDirectory(),
-					Constants.Constants.DefaultDingoConfigFilename,
-					_internalSerializer.DefaultFileExtension
+					Defaults.DingoConfigFilename,
+					Defaults.DingoConfigExtension
 				),
 				cancellationToken
 			);
@@ -32,6 +33,8 @@ namespace Dingo.Cli.Config
 
 		public async Task<IConfiguration> LoadProjectConfigAsync(string configPath, CancellationToken cancellationToken = default)
 		{
+			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
+			
 			if (!File.Exists(configPath))
 			{
 				throw new FileNotFoundException("Error", configPath);
@@ -39,7 +42,7 @@ namespace Dingo.Cli.Config
 
 			var fileContents = await File.ReadAllTextAsync(configPath, cancellationToken);
 
-			return _internalSerializer.Deserialize<ProjectConfiguration>(fileContents);
+			return internalSerializer.Deserialize<ProjectConfiguration>(fileContents);
 		}
 	}
 }

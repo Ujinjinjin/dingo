@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Cli.Config
 {
-	public class ConfigurationWrapper : IConfigurationWrapper
+	internal class ConfigWrapper : IConfigWrapper
 	{
 		private IConfiguration _projectConfiguration;
 		private readonly IConfiguration _defaultConfiguration;
@@ -47,7 +47,7 @@ namespace Dingo.Cli.Config
 			set => _projectConfiguration.MigrationTable = value;
 		}
 
-		public ConfigurationWrapper(IConfigLoader configLoader, IConfigSaver configSaver)
+		public ConfigWrapper(IConfigLoader configLoader, IConfigSaver configSaver)
 		{
 			_configLoader = configLoader ?? throw new ArgumentNullException(nameof(configLoader));
 			_configSaver = configSaver ?? throw new ArgumentNullException(nameof(configSaver));

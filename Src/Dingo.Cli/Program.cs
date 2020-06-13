@@ -18,13 +18,13 @@ namespace Dingo.Cli
             var operations = new DatabaseOperations(pathHelper, configuration, databaseContextFactory);
             var programOperations = new ProgramOperations(configuration, operations, scanner, hashMaker, pathHelper);
             // var serializer = new JsonInternalSerializer();
-            var serializer = new YamlInternalSerializer();
+            var serializerFactory = new InternalSerializerFactory();
 
             // await programOperations.RunMigrationsAsync(args);
             
-            var configLoader = new ConfigLoader(pathHelper, serializer);
-            var configSaver = new ConfigSaver(pathHelper, serializer);
-            var configurationWrapper = new ConfigurationWrapper(configLoader, configSaver);
+            var configLoader = new ConfigLoader(pathHelper, serializerFactory);
+            var configSaver = new ConfigSaver(pathHelper, serializerFactory);
+            var configurationWrapper = new ConfigWrapper(configLoader, configSaver);
 
             await configurationWrapper.LoadAsync();
             

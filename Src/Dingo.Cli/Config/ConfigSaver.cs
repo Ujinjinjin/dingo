@@ -1,4 +1,6 @@
-﻿using Dingo.Cli.Operations;
+﻿using Dingo.Cli.Constants;
+using Dingo.Cli.Factories;
+using Dingo.Cli.Operations;
 using Dingo.Cli.Serializers;
 using System;
 using System.IO;
@@ -10,12 +12,12 @@ namespace Dingo.Cli.Config
 	internal class ConfigSaver : IConfigSaver
 	{
 		private readonly IPathHelper _pathHelper;
-		private readonly IInternalSerializer _internalSerializer;
+		private readonly IInternalSerializerFactory _internalSerializerFactory;
 		
-		public ConfigSaver(IPathHelper pathHelper, IInternalSerializer internalSerializer)
+		public ConfigSaver(IPathHelper pathHelper, IInternalSerializerFactory internalSerializerFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_internalSerializer = internalSerializer ?? throw new ArgumentNullException(nameof(internalSerializer));
+			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
 		public Task SaveProjectConfigAsync(IConfiguration configuration, CancellationToken cancellationToken = default)
@@ -24,8 +26,8 @@ namespace Dingo.Cli.Config
 				configuration,
 				_pathHelper.BuildFilePath(
 					_pathHelper.GetExecutionBaseDirectory(),
-					Constants.Constants.DefaultDingoConfigFilename,
-					_internalSerializer.DefaultFileExtension
+					Defaults.DingoConfigFilename,
+					Defaults.DingoConfigExtension
 				),
 				cancellationToken
 			);
@@ -33,12 +35,14 @@ namespace Dingo.Cli.Config
 
 		public async Task SaveProjectConfigAsync(IConfiguration configuration, string configPath, CancellationToken cancellationToken = default)
 		{
+			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
+			
 			if (!File.Exists(configPath))
 			{
 				File.Create(configPath);
 			}
 
-			var fileContents = _internalSerializer.Serialize(configuration);
+			var fileContents = internalSerializer.Serialize(configuration);
 
 			await File.WriteAllTextAsync(configPath, fileContents, cancellationToken);
 		}
