@@ -1,7 +1,6 @@
-﻿using Dingo.Cli.Config;
-using Dingo.Cli.Factories;
-using Dingo.Cli.Operations;
-using Dingo.Cli.Serializers;
+﻿using Dingo.Core.Config;
+using Dingo.Core.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli
@@ -10,21 +9,12 @@ namespace Dingo.Cli
     {
         private static async Task Main(string[] args)
         {
-            var scanner = new DirectoryScanner();
-            var hashMaker = new HashMaker();
-            var pathHelper = new PathHelper();
-            var configuration = new DefaultConfiguration();
-            var databaseContextFactory = new DatabaseContextFactory();
-            var operations = new DatabaseOperations(pathHelper, configuration, databaseContextFactory);
-            var programOperations = new ProgramOperations(configuration, operations, scanner, hashMaker, pathHelper);
-            // var serializer = new JsonInternalSerializer();
-            var serializerFactory = new InternalSerializerFactory();
-
-            // await programOperations.RunMigrationsAsync(args);
+            var collection = new ServiceCollection();
+            collection.AddDingoDependencies();
+            var provider = collection.BuildServiceProvider();
             
-            var configLoader = new ConfigLoader(pathHelper, serializerFactory);
-            var configSaver = new ConfigSaver(pathHelper, serializerFactory);
-            var configurationWrapper = new ConfigWrapper(configLoader, configSaver);
+            
+            var configurationWrapper = provider.GetService<IConfigWrapper>();
 
             await configurationWrapper.LoadAsync();
             
