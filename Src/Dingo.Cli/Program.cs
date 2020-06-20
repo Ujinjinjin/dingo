@@ -1,5 +1,4 @@
-﻿using Dingo.Core.Config;
-using Dingo.Core.Extensions;
+﻿using Cliff.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
@@ -9,16 +8,12 @@ namespace Dingo.Cli
     {
         private static async Task Main(string[] args)
         {
-            var collection = new ServiceCollection();
-            collection.AddDingoDependencies();
-            var provider = collection.BuildServiceProvider();
-            
-            
-            var configurationWrapper = provider.GetService<IConfigWrapper>();
+            var serviceProvider = new IocModule()
+                .Build();
 
-            await configurationWrapper.LoadAsync();
-            
-            await configurationWrapper.SaveAsync();
+            var dingo = serviceProvider.GetService<ICliService>();
+
+            await dingo.ExecuteAsync(args);
         }
     }
 }

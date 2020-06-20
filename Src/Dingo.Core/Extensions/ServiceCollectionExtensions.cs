@@ -8,7 +8,7 @@ namespace Dingo.Core.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static void AddDingoDependencies(this IServiceCollection serviceCollection)
+		public static void UseDingo(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<IConfigLoader, ConfigLoader>();
 			serviceCollection.AddSingleton<IConfigSaver, ConfigSaver>();

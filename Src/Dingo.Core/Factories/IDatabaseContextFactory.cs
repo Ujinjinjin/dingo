@@ -1,5 +1,4 @@
-﻿using Dingo.Cli.Repository;
-using Dingo.Core.Repository;
+﻿using Dingo.Core.Repository;
 
 namespace Dingo.Core.Factories
 {
