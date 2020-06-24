@@ -2,8 +2,11 @@
 
 namespace Dingo.Core.Factories
 {
+	/// <summary> Database context factory </summary>
 	internal interface IDatabaseContextFactory
 	{
-		IDatabaseContext CreateDatabaseContext(string dbProviderName, string connectionString);
+		/// <summary> Create database context </summary>
+		/// <returns> Instance of database context </returns>
+		IDatabaseContext CreateDatabaseContext();
 	}
 }

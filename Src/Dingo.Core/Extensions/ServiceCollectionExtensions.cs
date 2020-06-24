@@ -21,7 +21,7 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 			serviceCollection.AddSingleton<IHashMaker, HashMaker>();
 			serviceCollection.AddSingleton<IPathHelper, PathHelper>();
-			serviceCollection.AddSingleton<IProgramOperations, ProgramOperations>();
+			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			
 			serviceCollection.AddSingleton<IDatabaseContext, DatabaseContext>();
 		}

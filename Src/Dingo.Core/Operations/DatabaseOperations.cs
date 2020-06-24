@@ -13,31 +13,31 @@ namespace Dingo.Core.Operations
 	internal class DatabaseOperations : IDatabaseOperations
 	{
 		private readonly IPathHelper _pathHelper;
-		private readonly IConfiguration _configuration;
+		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
 
-		public DatabaseOperations(IPathHelper pathHelper, IConfiguration configuration, IDatabaseContextFactory databaseContextFactory)
+		public DatabaseOperations(IPathHelper pathHelper, IConfigWrapper configWrapper, IDatabaseContextFactory databaseContextFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
 		}
 
 		public async Task<bool> CheckMigrationTableExistenceAsync()
 		{
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
-				var result = await dbContext.CheckTableExistenceAsync(_configuration.MigrationSchema, _configuration.MigrationTable);
+				var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
 				return result.SystemCheckTableExistence;
 			}
 		}
 
 		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
-			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configuration.CheckTableExistenceProcedurePath);
+			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
 			var sqlScriptText = await File.ReadAllTextAsync(sqlScriptPath);
 
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
 				await dbContext.ExecuteRawSqlAsync(sqlScriptText);
 			}
@@ -45,7 +45,7 @@ namespace Dingo.Core.Operations
 
 		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool silent = false)
 		{
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
 				await dbContext.ExecuteRawSqlAsync(sql);
 
@@ -58,7 +58,7 @@ namespace Dingo.Core.Operations
 
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
 		{
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
 				await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
 			}
@@ -66,7 +66,7 @@ namespace Dingo.Core.Operations
 
 		public async Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList)
 		{
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext(_configuration.ProviderName, _configuration.ConnectionString))
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
 				var input = migrationInfoList
 					.Select(x => new DbMigrationInfoInput

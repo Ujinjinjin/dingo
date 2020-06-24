@@ -2,6 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>Cliff</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>Camille Galladjov</Authors>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/ujinjinjin/dingo</RepositoryUrl>
+        <Company>None</Company>
     </PropertyGroup>
 
     <ItemGroup>

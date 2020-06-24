@@ -15,10 +15,4 @@
     <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Database\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
