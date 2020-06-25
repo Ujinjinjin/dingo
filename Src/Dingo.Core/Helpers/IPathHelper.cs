@@ -1,4 +1,4 @@
-﻿namespace Dingo.Core.Operations
+﻿namespace Dingo.Core.Helpers
 {
 	internal interface IPathHelper
 	{

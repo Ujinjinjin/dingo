@@ -1,12 +1,13 @@
 ﻿using Cliff.ConsoleUtils;
+using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
-using Dingo.Core.Renderer;
 using JetBrains.Annotations;
 using System;
 using System.Threading.Tasks;
 
-namespace Dingo.Cli
+namespace Dingo.Cli.Implementors
 {
+	/// <summary> CLI renderer </summary>
 	[UsedImplicitly]
 	public class CliRenderer : IRenderer
 	{
@@ -17,6 +18,7 @@ namespace Dingo.Cli
 			_consoleQueue = consoleQueue ?? throw new ArgumentNullException(nameof(consoleQueue));
 		}
 
+		/// <inheritdoc />
 		public async Task ShowConfigAsync(IConfigWrapper configWrapper)
 		{
 			var configFileString = string.IsNullOrWhiteSpace(configWrapper.ActiveConfigFile)
@@ -34,6 +36,7 @@ namespace Dingo.Cli
 			await _consoleQueue.EnqueueOutputAsync(configString);
 		}
 
+		/// <inheritdoc />
 		public async Task ShowMessage(string message)
 		{
 			await _consoleQueue.EnqueueOutputAsync(message);

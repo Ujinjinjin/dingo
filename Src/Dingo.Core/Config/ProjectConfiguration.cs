@@ -1,5 +1,6 @@
 ﻿namespace Dingo.Core.Config
 {
+	/// <summary> Project level configurations </summary>
 	internal struct ProjectConfiguration : IConfiguration
 	{
 		public string CheckTableExistenceProcedurePath { get; set; }

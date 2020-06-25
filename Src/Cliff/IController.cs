@@ -1,6 +1,4 @@
-﻿using System.CommandLine;
-
-namespace Cliff
+﻿namespace Cliff
 {
 	public interface IController
 	{

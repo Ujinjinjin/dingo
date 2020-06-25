@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Cliff.ConsoleUtils
 				{
 					while (true)
 					{
-						System.Console.WriteLine(_outputQueue.Take());
+						Console.WriteLine(_outputQueue.Take());
 					}
 				});
 			thread.IsBackground = true;

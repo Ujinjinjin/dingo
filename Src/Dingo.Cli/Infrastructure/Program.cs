@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
-namespace Dingo.Cli
+namespace Dingo.Cli.Infrastructure
 {
     internal static class Program
     {

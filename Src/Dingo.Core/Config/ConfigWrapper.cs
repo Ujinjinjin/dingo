@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Config
 {
+	/// <inheritdoc />
 	internal class ConfigWrapper : IConfigWrapper
 	{
 		private IConfiguration _projectConfiguration;
@@ -47,7 +48,8 @@ namespace Dingo.Core.Config
 			set => _projectConfiguration.MigrationTable = value;
 		}
 
-		public string ActiveConfigFile { get; set; }
+		public string ActiveConfigFile { get; private set; }
+		public bool ConfigFileExists => !string.IsNullOrWhiteSpace(ActiveConfigFile);
 
 		public ConfigWrapper(IConfigLoader configLoader, IConfigSaver configSaver)
 		{
@@ -57,11 +59,13 @@ namespace Dingo.Core.Config
 			_projectConfiguration = new ProjectConfiguration();
 		}
 
+		/// <inheritdoc />
 		public Task LoadAsync(CancellationToken cancellationToken = default)
 		{
 			return LoadAsync(null, cancellationToken);
 		}
 
+		/// <inheritdoc />
 		public async Task LoadAsync(string configPath, CancellationToken cancellationToken = default)
 		{
 			var loadConfigResult = string.IsNullOrWhiteSpace(configPath) 
@@ -72,11 +76,13 @@ namespace Dingo.Core.Config
 			_projectConfiguration = loadConfigResult.Configuration;
 		}
 
+		/// <inheritdoc />
 		public Task SaveAsync(CancellationToken cancellationToken = default)
 		{
 			return SaveAsync(null, cancellationToken);
 		}
 
+		/// <inheritdoc />
 		public Task SaveAsync(string configPath, CancellationToken cancellationToken = default)
 		{
 			return string.IsNullOrWhiteSpace(configPath) 

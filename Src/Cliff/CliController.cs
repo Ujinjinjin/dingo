@@ -14,7 +14,7 @@ namespace Cliff
 
 		public abstract void Register();
 		
-		protected Command Command(string name, string description, params Option[] options)
+		protected Command CreateCommand(string name, string description, params Option[] options)
 		{
 			var command = new Command(name, description);
 
@@ -26,7 +26,7 @@ namespace Cliff
 			return command;
 		}
 
-		protected Option Option(string[] aliases, string description, Type type, bool required)
+		protected Option CreateOption(string[] aliases, string description, Type type, bool required)
 		{
 			return new Option(aliases, description)
 			{

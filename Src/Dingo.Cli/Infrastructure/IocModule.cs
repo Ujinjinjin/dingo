@@ -2,13 +2,14 @@
 using Cliff.Extensions;
 using Cliff.Infrastructure;
 using Dingo.Cli.Controllers;
+using Dingo.Cli.Implementors;
+using Dingo.Core.Abstractions;
 using Dingo.Core.Extensions;
-using Dingo.Core.Renderer;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.CommandLine;
 
-namespace Dingo.Cli
+namespace Dingo.Cli.Infrastructure
 {
 	public class IocModule : IIocModule
 	{
@@ -23,6 +24,7 @@ namespace Dingo.Cli
 			collection.UseCliff();
 			
 			collection.AddSingleton<IRenderer, CliRenderer>();
+			collection.AddSingleton<IPrompt, CliPrompt>();
 			
 			collection.AddSingleton<IController, ConfigController>();
 			

@@ -11,5 +11,10 @@
 		{
 			return !source.Contains(value);
 		}
+
+		public static string ToUnixEol(this string source)
+		{
+			return source.Replace("\r\n", "\n");
+		}
 	}
 }

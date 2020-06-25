@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Operations
+namespace Dingo.Core.Helpers
 {
 	internal class DirectoryScanner : IDirectoryScanner
 	{

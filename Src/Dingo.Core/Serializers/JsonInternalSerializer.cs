@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Dingo.Core.Extensions;
+using System.Text.Json;
 
 namespace Dingo.Core.Serializers
 {
@@ -12,7 +13,10 @@ namespace Dingo.Core.Serializers
 			{
 				IgnoreNullValues = true
 			};
-			return JsonSerializer.Serialize(data, options);
+			
+			var serializedObject = JsonSerializer.Serialize(data, options);
+
+			return serializedObject.ToUnixEol();
 		}
 
 		public T Deserialize<T>(string contents)

@@ -1,7 +1,7 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Factories;
+using Dingo.Core.Helpers;
 using Dingo.Core.Models;
-using Dingo.Core.Operations;
 using System;
 using System.IO;
 using System.Threading;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Config
 {
+	/// <inheritdoc />
 	internal class ConfigLoader : IConfigLoader
 	{
 		private readonly IPathHelper _pathHelper;
@@ -20,6 +21,7 @@ namespace Dingo.Core.Config
 			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
+		/// <inheritdoc />
 		public Task<LoadConfigResult> LoadProjectConfigAsync(CancellationToken cancellationToken = default)
 		{
 			return LoadProjectConfigAsync(
@@ -32,6 +34,7 @@ namespace Dingo.Core.Config
 			);
 		}
 
+		/// <inheritdoc />
 		public async Task<LoadConfigResult> LoadProjectConfigAsync(string configPath, CancellationToken cancellationToken = default)
 		{
 			if (!Path.IsPathRooted(configPath))

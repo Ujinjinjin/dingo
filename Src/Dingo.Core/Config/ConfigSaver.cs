@@ -1,13 +1,15 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Factories;
-using Dingo.Core.Operations;
+using Dingo.Core.Helpers;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Config
 {
+	/// <inheritdoc />
 	internal class ConfigSaver : IConfigSaver
 	{
 		private readonly IPathHelper _pathHelper;
@@ -19,6 +21,7 @@ namespace Dingo.Core.Config
 			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
+		/// <inheritdoc />
 		public Task SaveProjectConfigAsync(IConfiguration configuration, CancellationToken cancellationToken = default)
 		{
 			return SaveProjectConfigAsync(
@@ -32,6 +35,7 @@ namespace Dingo.Core.Config
 			);
 		}
 
+		/// <inheritdoc />
 		public async Task SaveProjectConfigAsync(IConfiguration configuration, string configPath, CancellationToken cancellationToken = default)
 		{
 			if (!Path.IsPathRooted(configPath))
@@ -41,14 +45,13 @@ namespace Dingo.Core.Config
 			
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
 			
-			var fileContents = internalSerializer.Serialize(configuration);
+			var stringBuilder = new StringBuilder();
+			stringBuilder.Append(internalSerializer.Serialize(configuration));
 
 			await using (var streamWriter = new StreamWriter(configPath))
 			{
-				await streamWriter.WriteAsync(fileContents);
+				await streamWriter.WriteAsync(stringBuilder, cancellationToken);
 			}
-
-			await File.WriteAllTextAsync(configPath, fileContents, cancellationToken);
 		}
 	}
 }

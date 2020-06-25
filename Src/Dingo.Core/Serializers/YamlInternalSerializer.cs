@@ -32,7 +32,7 @@ namespace Dingo.Core.Serializers
 
 			var serializedObject = string.Join("\n", cleanSerializedList.Sequence(2, -2));
 			
-			return serializedObject;
+			return serializedObject.ToUnixEol();
 		}
 
 		public T Deserialize<T>(string contents)

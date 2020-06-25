@@ -1,4 +1,4 @@
-﻿using Dingo.Core.Helpers;
+﻿using Dingo.Core.Helpers.Static;
 using Microsoft.Extensions.Logging;
 using System;
 

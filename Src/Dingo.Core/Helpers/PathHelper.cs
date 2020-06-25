@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Dingo.Core.Operations
+namespace Dingo.Core.Helpers
 {
 	internal class PathHelper : IPathHelper
 	{

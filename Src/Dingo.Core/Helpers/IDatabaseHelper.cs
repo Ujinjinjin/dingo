@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Operations
+namespace Dingo.Core.Helpers
 {
-	internal interface IDatabaseOperations
+	internal interface IDatabaseHelper
 	{
 		Task<bool> CheckMigrationTableExistenceAsync();
 

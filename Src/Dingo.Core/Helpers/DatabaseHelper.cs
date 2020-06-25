@@ -8,15 +8,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Operations
+namespace Dingo.Core.Helpers
 {
-	internal class DatabaseOperations : IDatabaseOperations
+	internal class DatabaseHelper : IDatabaseHelper
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
 
-		public DatabaseOperations(IPathHelper pathHelper, IConfigWrapper configWrapper, IDatabaseContextFactory databaseContextFactory)
+		public DatabaseHelper(IPathHelper pathHelper, IConfigWrapper configWrapper, IDatabaseContextFactory databaseContextFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));

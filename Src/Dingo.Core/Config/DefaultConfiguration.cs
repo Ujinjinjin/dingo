@@ -2,6 +2,7 @@
 
 namespace Dingo.Core.Config
 {
+	/// <summary> Default project configurations </summary>
 	internal class DefaultConfiguration : IConfiguration
 	{
 		public string CheckTableExistenceProcedurePath

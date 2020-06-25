@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dingo.Core.Helpers
+namespace Dingo.Core.Helpers.Static
 {
 	/// <summary> Allows to execute code in using scope </summary>
 	internal static class DisposableHelper
@@ -24,7 +24,7 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <summary> Creates IDisposable, executing action </summary>
-		public static IDisposable Create(Action action)
+		private static IDisposable Create(Action action)
 		{
 			return new DisposableAction(action);
 		}
