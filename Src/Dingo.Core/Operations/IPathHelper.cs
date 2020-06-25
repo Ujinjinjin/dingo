@@ -6,5 +6,6 @@
 		string GetApplicationBaseDirectory();
 		string GetExecutionBaseDirectory();
 		string GetAbsolutePathFromRelative(string relativePath);
+		string GetAppRootPathFromRelative(string relativePath);
 	}
 }

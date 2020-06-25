@@ -1,5 +1,6 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Factories;
+using Dingo.Core.Models;
 using Dingo.Core.Operations;
 using System;
 using System.IO;
@@ -19,7 +20,7 @@ namespace Dingo.Core.Config
 			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
-		public Task<IConfiguration> LoadProjectConfigAsync(CancellationToken cancellationToken = default)
+		public Task<LoadConfigResult> LoadProjectConfigAsync(CancellationToken cancellationToken = default)
 		{
 			return LoadProjectConfigAsync(
 				_pathHelper.BuildFilePath(
@@ -31,18 +32,31 @@ namespace Dingo.Core.Config
 			);
 		}
 
-		public async Task<IConfiguration> LoadProjectConfigAsync(string configPath, CancellationToken cancellationToken = default)
+		public async Task<LoadConfigResult> LoadProjectConfigAsync(string configPath, CancellationToken cancellationToken = default)
 		{
+			if (!Path.IsPathRooted(configPath))
+			{
+				configPath = _pathHelper.GetAbsolutePathFromRelative(configPath);
+			}
+
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
 			
 			if (!File.Exists(configPath))
 			{
-				throw new FileNotFoundException("Error", configPath);
+				return new LoadConfigResult
+				{
+					Configuration = new ProjectConfiguration(),
+					ConfigPath = null
+				};
 			}
 
 			var fileContents = await File.ReadAllTextAsync(configPath, cancellationToken);
 
-			return internalSerializer.Deserialize<ProjectConfiguration>(fileContents);
+			return new LoadConfigResult
+			{
+				Configuration = internalSerializer.Deserialize<ProjectConfiguration>(fileContents),
+				ConfigPath = configPath
+			};
 		}
 	}
 }

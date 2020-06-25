@@ -5,6 +5,7 @@ namespace Dingo.Core.Config
 {
 	public interface IConfigWrapper : IConfiguration
 	{
+		string ActiveConfigFile { get; set; }
 		Task SaveAsync(CancellationToken cancellationToken = default);
 		Task SaveAsync(string configPath, CancellationToken cancellationToken = default);
 		Task LoadAsync(CancellationToken cancellationToken = default);

@@ -47,11 +47,14 @@ namespace Dingo.Core.Config
 			set => _projectConfiguration.MigrationTable = value;
 		}
 
+		public string ActiveConfigFile { get; set; }
+
 		public ConfigWrapper(IConfigLoader configLoader, IConfigSaver configSaver)
 		{
 			_configLoader = configLoader ?? throw new ArgumentNullException(nameof(configLoader));
 			_configSaver = configSaver ?? throw new ArgumentNullException(nameof(configSaver));
 			_defaultConfiguration = new DefaultConfiguration();
+			_projectConfiguration = new ProjectConfiguration();
 		}
 
 		public Task LoadAsync(CancellationToken cancellationToken = default)
@@ -61,9 +64,12 @@ namespace Dingo.Core.Config
 
 		public async Task LoadAsync(string configPath, CancellationToken cancellationToken = default)
 		{
-			_projectConfiguration = string.IsNullOrWhiteSpace(configPath) 
+			var loadConfigResult = string.IsNullOrWhiteSpace(configPath) 
 				? await _configLoader.LoadProjectConfigAsync(cancellationToken)
 				: await _configLoader.LoadProjectConfigAsync(configPath, cancellationToken);
+
+			ActiveConfigFile = loadConfigResult.ConfigPath;
+			_projectConfiguration = loadConfigResult.Configuration;
 		}
 
 		public Task SaveAsync(CancellationToken cancellationToken = default)

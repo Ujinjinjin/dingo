@@ -3,6 +3,7 @@ using Cliff.Extensions;
 using Cliff.Infrastructure;
 using Dingo.Cli.Controllers;
 using Dingo.Core.Extensions;
+using Dingo.Core.Renderer;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.CommandLine;
@@ -15,11 +16,13 @@ namespace Dingo.Cli
 		{
 			var collection = new ServiceCollection();
 
-			var rootCommand = new RootCommand("dingo is incremental databse installator");
+			var rootCommand = new RootCommand("dingo is incremental databse installator") { Name = "dingo" };
 			collection.AddSingleton(rootCommand);
 			
 			collection.UseDingo();
 			collection.UseCliff();
+			
+			collection.AddSingleton<IRenderer, CliRenderer>();
 			
 			collection.AddSingleton<IController, ConfigController>();
 			

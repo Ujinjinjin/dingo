@@ -1,4 +1,5 @@
-﻿using Cliff.Infrastructure;
+﻿using Cliff.ConsoleUtils;
+using Cliff.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cliff.Extensions
@@ -8,6 +9,7 @@ namespace Cliff.Extensions
 		public static void UseCliff(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<ICliService, CliService>();
+			serviceCollection.AddSingleton<IConsoleQueue, ConsoleQueue>();
 		}
 	}
 }

@@ -34,14 +34,19 @@ namespace Dingo.Core.Config
 
 		public async Task SaveProjectConfigAsync(IConfiguration configuration, string configPath, CancellationToken cancellationToken = default)
 		{
+			if (!Path.IsPathRooted(configPath))
+			{
+				configPath = _pathHelper.GetAbsolutePathFromRelative(configPath);
+			}
+			
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
 			
-			if (!File.Exists(configPath))
-			{
-				File.Create(configPath);
-			}
-
 			var fileContents = internalSerializer.Serialize(configuration);
+
+			await using (var streamWriter = new StreamWriter(configPath))
+			{
+				await streamWriter.WriteAsync(fileContents);
+			}
 
 			await File.WriteAllTextAsync(configPath, fileContents, cancellationToken);
 		}

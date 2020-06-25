@@ -28,6 +28,14 @@ namespace Dingo.Core.Operations
 			relativePath = relativePath
 				.ReplaceBackslashesWithSlashes();
 
+			return GetExecutionBaseDirectory() + relativePath;
+		}
+
+		public string GetAppRootPathFromRelative(string relativePath)
+		{
+			relativePath = relativePath
+				.ReplaceBackslashesWithSlashes();
+
 			return GetApplicationBaseDirectory() + relativePath;
 		}
 	}

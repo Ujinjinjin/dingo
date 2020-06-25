@@ -1,10 +1,12 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
 using Dingo.Core.Serializers;
+using JetBrains.Annotations;
 using System;
 
 namespace Dingo.Core.Factories
 {
+	[UsedImplicitly]
 	public class InternalSerializerFactory : IInternalSerializerFactory
 	{
 		public IInternalSerializer CreateInternalSerializer(string filename)

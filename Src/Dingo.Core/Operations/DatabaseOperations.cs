@@ -34,7 +34,7 @@ namespace Dingo.Core.Operations
 
 		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
-			var sqlScriptPath = _pathHelper.GetAbsolutePathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
+			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
 			var sqlScriptText = await File.ReadAllTextAsync(sqlScriptPath);
 
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
@@ -85,7 +85,7 @@ namespace Dingo.Core.Operations
 						Path = new FilePath
 						{
 							Relative = dbMigrationStatuses[i].MigrationPath,
-							Absolute = _pathHelper.GetAbsolutePathFromRelative(dbMigrationStatuses[i].MigrationPath)
+							Absolute = _pathHelper.GetAppRootPathFromRelative(dbMigrationStatuses[i].MigrationPath)
 						},
 						NewHash = dbMigrationStatuses[i].NewHash,
 						OldHash = dbMigrationStatuses[i].OldHash,
