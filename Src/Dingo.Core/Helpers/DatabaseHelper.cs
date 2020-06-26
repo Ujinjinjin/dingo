@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Helpers
 {
+	/// <inheritdoc />
 	internal class DatabaseHelper : IDatabaseHelper
 	{
 		private readonly IPathHelper _pathHelper;
@@ -23,6 +24,7 @@ namespace Dingo.Core.Helpers
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
 		}
 
+		/// <inheritdoc />
 		public async Task<bool> CheckMigrationTableExistenceAsync()
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
@@ -32,6 +34,7 @@ namespace Dingo.Core.Helpers
 			}
 		}
 
+		/// <inheritdoc />
 		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
 			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
@@ -43,6 +46,7 @@ namespace Dingo.Core.Helpers
 			}
 		}
 
+		/// <inheritdoc />
 		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool silent = false)
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
@@ -56,6 +60,7 @@ namespace Dingo.Core.Helpers
 			}
 		}
 
+		/// <inheritdoc />
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
@@ -64,6 +69,7 @@ namespace Dingo.Core.Helpers
 			}
 		}
 
+		/// <inheritdoc />
 		public async Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList)
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())

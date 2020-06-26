@@ -18,7 +18,7 @@ namespace Dingo.Core.Factories
 		}
 		
 		/// <inheritdoc />
-		/// <exception cref="ArgumentOutOfRangeException"> Specified database provider not supported yet </exception>
+		/// <exception cref="ArgumentOutOfRangeException">Specified database provider not supported yet</exception>
 		public IDatabaseContext CreateDatabaseContext()
 		{
 			switch (_configWrapper.ProviderName)

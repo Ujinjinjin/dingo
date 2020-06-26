@@ -6,9 +6,11 @@ using System;
 
 namespace Dingo.Core.Factories
 {
+	/// <inheritdoc />
 	[UsedImplicitly]
 	public class InternalSerializerFactory : IInternalSerializerFactory
 	{
+		/// <inheritdoc />
 		public IInternalSerializer CreateInternalSerializer(string filename)
 		{
 			var fileExtension = filename

@@ -3,6 +3,7 @@ using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using JetBrains.Annotations;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Implementors
@@ -37,9 +38,18 @@ namespace Dingo.Cli.Implementors
 		}
 
 		/// <inheritdoc />
-		public async Task ShowMessage(string message)
+		public async Task ShowMessageAsync(string message)
 		{
 			await _consoleQueue.EnqueueOutputAsync(message);
+		}
+		
+		/// <inheritdoc />
+		public async Task ListItemsAsync(IList<string> itemList)
+		{
+			for (var i = 0; i < itemList.Count; i++)
+			{
+				await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {itemList[i]}");
+			}
 		}
 	}
 }

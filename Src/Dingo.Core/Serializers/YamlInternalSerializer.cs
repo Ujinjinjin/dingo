@@ -6,10 +6,12 @@ using System.Yaml.Serialization;
 
 namespace Dingo.Core.Serializers
 {
+	/// <summary> Wrapper around JSON serializer </summary>
 	internal class YamlInternalSerializer : IInternalSerializer
 	{
 		public string DefaultFileExtension => ".yml";
 
+		/// <inheritdoc />
 		public string Serialize<T>(T data)
 		{
 			var config = new YamlConfig
@@ -35,6 +37,7 @@ namespace Dingo.Core.Serializers
 			return serializedObject.ToUnixEol();
 		}
 
+		/// <inheritdoc />
 		public T Deserialize<T>(string contents)
 		{
 			var serializer = new YamlSerializer();

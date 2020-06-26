@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CommandLine;
+using System.CommandLine.Invocation;
 
 namespace Cliff
 {
@@ -16,12 +17,19 @@ namespace Cliff
 		
 		protected Command CreateCommand(string name, string description, params Option[] options)
 		{
+			return CreateCommand(name, description, null, options);
+		}
+		
+		protected Command CreateCommand(string name, string description, ICommandHandler commandHandler, params Option[] options)
+		{
 			var command = new Command(name, description);
 
 			for (var i = 0; i < options.Length; i++)
 			{
 				command.AddOption(options[i]);
 			}
+
+			command.Handler = commandHandler;
 
 			return command;
 		}

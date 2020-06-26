@@ -24,7 +24,7 @@ namespace Dingo.Core.Operations
 		}
 
 		/// <inheritdoc />
-		public async Task InitAsync(string configPath = null)
+		public async Task InitConfigurationFileAsync(string configPath = null)
 		{
 			await _configWrapper.LoadAsync(configPath);
 
@@ -34,12 +34,12 @@ namespace Dingo.Core.Operations
 				_configWrapper.ProviderName = string.Empty;
 				await _configWrapper.SaveAsync(configPath);
 				
-				await _renderer.ShowMessage("Dingo config file successfuly initialized!");	
+				await _renderer.ShowMessageAsync("Dingo config file successfuly initialized!");	
 			}
 		}
 
 		/// <inheritdoc />
-		public async Task ShowAsync(string configPath = null)
+		public async Task ShowProjectConfigurationAsync(string configPath = null)
 		{
 			await _configWrapper.LoadAsync(configPath);
 			
@@ -47,7 +47,7 @@ namespace Dingo.Core.Operations
 		}
 
 		/// <inheritdoc />
-		public async Task UpdateAsync(
+		public async Task UpdateProjectConfigurationAsync(
 			string configPath = null,
 			string connectionString = null,
 			string providerName = null,

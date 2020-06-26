@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Dingo.Core.Extensions
 {
+	/// <summary> Collection of extensions for <see cref="IServiceCollection"/> </summary>
 	public static class ServiceCollectionExtensions
 	{
 		/// <summary> Add dingo dependencies to service collection </summary>
@@ -27,6 +28,7 @@ namespace Dingo.Core.Extensions
 			
 			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			serviceCollection.AddSingleton<IConfigOperations, ConfigOperations>();
+			serviceCollection.AddSingleton<IProviderOperations, ProviderOperations>();
 			
 			serviceCollection.AddSingleton<IDatabaseContext, DatabaseContext>();
 		}

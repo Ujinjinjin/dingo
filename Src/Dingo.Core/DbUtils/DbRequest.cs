@@ -6,6 +6,7 @@ using System.Data;
 
 namespace Dingo.Core.DbUtils
 {
+	/// <summary> Database request containing information for command execution </summary>
 	[UsedImplicitly]
 	internal class DbRequest
 	{
