@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Helpers
 {
+	/// <inheritdoc />
 	internal class HashMaker : IHashMaker
 	{
+		/// <inheritdoc />
 		public Task<string> GetFileHashAsync(string filename)
 		{
 			return Task.FromResult(GetFileHash(filename));
 		}
 
+		/// <inheritdoc />
 		public string GetFileHash(string filename)
 		{
 			using (var md5 = MD5.Create())
@@ -29,6 +32,7 @@ namespace Dingo.Core.Helpers
 			}
 		}
 		
+		/// <inheritdoc />
 		public async Task<IList<MigrationInfo>> GetMigrationInfoListAsync(IList<FilePath> filePathList)
 		{
 			var migrationInfoList = new MigrationInfo[filePathList.Count];
@@ -44,6 +48,7 @@ namespace Dingo.Core.Helpers
 			return migrationInfoList;
 		}
 		
+		/// <inheritdoc />
 		public IList<MigrationInfo> GetMigrationInfoList(IList<FilePath> filePathList)
 		{
 			var migrationInfoList = new MigrationInfo[filePathList.Count];
