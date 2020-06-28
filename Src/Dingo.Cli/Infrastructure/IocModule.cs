@@ -17,11 +17,11 @@ namespace Dingo.Cli.Infrastructure
 		{
 			var collection = new ServiceCollection();
 
-			var rootCommand = new RootCommand("dingo is incremental databse installator") { Name = "dingo" };
+			var rootCommand = new RootCommand("dingo is incremental database installer") { Name = "dingo" };
 			collection.AddSingleton(rootCommand);
 			
-			collection.UseDingo();
-			collection.UseCliff();
+			collection.AddDingo();
+			collection.AddCliff();
 			
 			collection.AddSingleton<IRenderer, CliRenderer>();
 			collection.AddSingleton<IPrompt, CliPrompt>();

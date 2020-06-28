@@ -6,7 +6,7 @@ namespace Cliff.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static void UseCliff(this IServiceCollection serviceCollection)
+		public static void AddCliff(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<ICliService, CliService>();
 			serviceCollection.AddSingleton<IConsoleQueue, ConsoleQueue>();
