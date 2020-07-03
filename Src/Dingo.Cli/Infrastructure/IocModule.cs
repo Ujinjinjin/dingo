@@ -27,6 +27,7 @@ namespace Dingo.Cli.Infrastructure
 			collection.AddSingleton<IPrompt, CliPrompt>();
 			
 			collection.AddSingleton<IController, ConfigController>();
+			collection.AddSingleton<IController, MigrationsController>();
 			collection.AddSingleton<IController, ProviderController>();
 			
 			return collection.BuildServiceProvider();

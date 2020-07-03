@@ -27,5 +27,17 @@ namespace Cliff.ConsoleUtils
 		{
 			return Task.FromResult(_outputQueue.TryAdd(value));
 		}
+		
+		public async Task EnqueueStartBlockLine(int? length = null)
+		{
+			length ??= Console.WindowWidth;
+			await EnqueueOutputAsync($"\n{new string('-', length.Value)}");
+		}
+		
+		public async Task EnqueueEndBlockLine(int? length = null)
+		{
+			length ??= Console.WindowWidth;
+			await EnqueueOutputAsync($"{new string('-', length.Value)}\n");
+		}
 	}
 }

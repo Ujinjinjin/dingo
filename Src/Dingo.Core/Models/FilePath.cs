@@ -1,7 +1,7 @@
 ﻿namespace Dingo.Core.Models
 {
 	/// <summary> Path to the file </summary>
-	internal struct FilePath
+	public struct FilePath
 	{
 		/// <summary> Absolute path to the file </summary>
 		public string Absolute { get; set; }

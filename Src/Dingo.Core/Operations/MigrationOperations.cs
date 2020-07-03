@@ -1,4 +1,5 @@
-﻿using Dingo.Core.Config;
+﻿using Dingo.Core.Abstractions;
+using Dingo.Core.Config;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using System;
@@ -16,13 +17,15 @@ namespace Dingo.Core.Operations
 		private readonly IDirectoryScanner _directoryScanner;
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
+		private readonly IRenderer _renderer;
 
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
 			IDatabaseHelper databaseHelper,
 			IDirectoryScanner directoryScanner,
 			IHashMaker hashMaker,
-			IPathHelper pathHelper
+			IPathHelper pathHelper,
+			IRenderer renderer
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
@@ -30,28 +33,50 @@ namespace Dingo.Core.Operations
 			_directoryScanner = directoryScanner ?? throw new ArgumentNullException(nameof(directoryScanner));
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
+			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
 		}
 		
 		/// <inheritdoc />
-		public async Task RunMigrationsAsync(string projectMigrationsRootPath)
+		public async Task RunMigrationsAsync(string migrationsRootPath, string configPath = null, bool silent = false)
 		{
-			await RunSystemMigrationsAsync();
-			await RunProjectMigrationsAsync(projectMigrationsRootPath);
+			await _configWrapper.LoadAsync(configPath);
+			
+			await RunSystemMigrationsAsync(silent);
+			await RunProjectMigrationsAsync(migrationsRootPath, silent);
+		}
+
+		/// <inheritdoc />
+		public async Task ShowMigrationsStatusAsync(string migrationsRootPath, string configPath = null, bool silent = false)
+		{
+			await _configWrapper.LoadAsync(configPath);
+			
+			await RunSystemMigrationsAsync(true);
+			
+			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
+			var migrationsStatusList = await _databaseHelper.GetMigrationsStatusAsync(migrationInfoList);
+
+			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
 		}
 
 		/// <summary> Read all migrations from specified path and apply if needed </summary>
 		/// <param name="migrationsRootPath">Root path where all project migrations are stored</param>
-		private async Task RunProjectMigrationsAsync(string migrationsRootPath)
+		/// <param name="silent">Show less info about migration status</param>
+		private async Task RunProjectMigrationsAsync(string migrationsRootPath, bool silent)
 		{
+			await _renderer.ShowMessageAsync("Running project migrations...");
+			
 			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 			
-			await ReadAndApplyMigrationList(migrationInfoList);
+			await ReadAndApplyMigrationList(migrationInfoList, silent);
 		}
 
 		/// <summary> Read all system migrations and apply if needed </summary>
-		private async Task RunSystemMigrationsAsync()
+		private async Task RunSystemMigrationsAsync(bool silent)
 		{
+			await _renderer.ShowMessageAsync("Running system migrations...");
+			
 			await _databaseHelper.InstallCheckTableExistenceProcedureAsync();
 
 			var migrationTableExists = await _databaseHelper.CheckMigrationTableExistenceAsync();
@@ -76,18 +101,21 @@ namespace Dingo.Core.Operations
 			}
 			else
 			{
-				await ReadAndApplyMigrationList(migrationInfoList);
+				await ReadAndApplyMigrationList(migrationInfoList, silent);
 			}
 		}
 
 		/// <summary> Read migration files and apply if needed </summary>
 		/// <param name="migrationInfoList">List of migration infos</param>
-		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList)
+		/// <param name="silent"></param>
+		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
 			var migrationsStatusList = await _databaseHelper.GetMigrationsStatusAsync(migrationInfoList);
+			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
+			
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
-				if (migrationsStatusList[i].Action == MigrationAction.Skip)
+				if (migrationsStatusList[i].Status == MigrationStatus.UpToDate)
 					continue;
 					
 				var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);

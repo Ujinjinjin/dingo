@@ -39,7 +39,7 @@ namespace Cliff
 			return new Option(aliases, description)
 			{
 				Argument = new Argument { ArgumentType = type },
-				Required = required
+				Required = required,
 			};
 		}
 	}

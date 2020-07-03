@@ -1,6 +1,8 @@
 ﻿using Cliff.ConsoleUtils;
 using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
+using Dingo.Core.Extensions;
+using Dingo.Core.Models;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -50,6 +52,54 @@ namespace Dingo.Cli.Implementors
 			{
 				await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {itemList[i]}");
 			}
+		}
+
+		/// <inheritdoc />
+		public async Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent)
+		{
+			await _consoleQueue.EnqueueStartBlockLine();
+			await _consoleQueue.EnqueueOutputAsync($"Total migrations count: {migrationInfoList.Count}.");
+
+			if (silent)
+			{
+				var newCount = 0;
+				var outdatedCount = 0;
+				var upToDateCount = 0;
+				
+				for (var i = 0; i < migrationInfoList.Count; i++)
+				{
+					switch (migrationInfoList[i].Status)
+					{
+						case MigrationStatus.New:
+							newCount++;
+							break;
+						case MigrationStatus.Outdated:
+							outdatedCount++;
+							break;
+						case MigrationStatus.UpToDate:
+							upToDateCount++;
+							break;
+						default:
+							continue;
+					}
+				}
+
+				await _consoleQueue.EnqueueOutputAsync($"New: {newCount}");
+				await _consoleQueue.EnqueueOutputAsync($"Outdated: {outdatedCount}");
+				await _consoleQueue.EnqueueOutputAsync($"Up to date: {upToDateCount}");
+			}
+			else
+			{
+				for (var i = 0; i < migrationInfoList.Count; i++)
+				{
+					var migrationInfo = migrationInfoList[i];
+					
+					await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {migrationInfo.Path.Relative}");
+					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash}\n");
+					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}");
+				}
+			}
+			await _consoleQueue.EnqueueEndBlockLine();
 		}
 	}
 }

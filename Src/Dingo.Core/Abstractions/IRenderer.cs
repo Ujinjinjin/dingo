@@ -1,4 +1,5 @@
 ﻿using Dingo.Core.Config;
+using Dingo.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,12 +12,17 @@ namespace Dingo.Core.Abstractions
 		/// <param name="configWrapper">Configuration wrapper</param>
 		Task ShowConfigAsync(IConfigWrapper configWrapper);
 
-		/// <summary> Show non-interactable message to user </summary>
+		/// <summary> Show non-interactive message to user </summary>
 		/// <param name="message">Message shown to user</param>
 		Task ShowMessageAsync(string message);
 
 		/// <summary> Display list of items </summary>
 		/// <param name="itemList">Items to be listed</param>
 		Task ListItemsAsync(IList<string> itemList);
+
+		/// <summary> Display list of migrations to user </summary>
+		/// <param name="migrationInfoList">List of migration infos</param>
+		/// <param name="silent">Show less info about migration status</param>
+		Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent);
 	}
 }

@@ -8,3 +8,5 @@
 **/.dingo/
 
 *.sqlite
+
+Src/Dingo.Cli/dingo.yml

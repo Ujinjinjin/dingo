@@ -95,11 +95,11 @@ namespace Dingo.Core.Helpers
 						},
 						NewHash = dbMigrationStatuses[i].NewHash,
 						OldHash = dbMigrationStatuses[i].OldHash,
-						Action = dbMigrationStatuses[i].IsOutdated switch
+						Status = dbMigrationStatuses[i].IsOutdated switch
 						{
-							null => MigrationAction.Install,
-							true => MigrationAction.Update,
-							false => MigrationAction.Skip,
+							null => MigrationStatus.New,
+							true => MigrationStatus.Outdated,
+							false => MigrationStatus.UpToDate,
 						}
 					};
 				}
