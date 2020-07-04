@@ -23,6 +23,13 @@ namespace Dingo.Cli.Controllers
 			var command = CreateCommand("migrations", "Group of command to work with migrations");
 			
 			command.AddCommand(CreateCommand(
+				"handshake",
+				"perform handshake connection to database to validate connection string",
+				CommandHandler.Create<string>(_migrationOperations.HandshakeDatabaseConnectionAsync),
+				CreateOption(new[] {"--configPath", "-c"}, "Custom path to configuration file", typeof(string), false)
+			));
+			
+			command.AddCommand(CreateCommand(
 				"status",
 				"show migration status",
 				CommandHandler.Create<string, string, bool>(_migrationOperations.ShowMigrationsStatusAsync),

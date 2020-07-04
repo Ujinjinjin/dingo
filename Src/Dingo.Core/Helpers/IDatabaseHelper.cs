@@ -30,5 +30,9 @@ namespace Dingo.Core.Helpers
 		/// <param name="migrationInfoList">List of migrations to check</param>
 		/// <returns>List of migrations with actual status</returns>
 		Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList);
+
+		/// <summary> Perform handshake connection to database to validate connection string </summary>
+		/// <returns>True if connection successful, false otherwise</returns>
+		Task<bool> HandshakeDatabaseConnectionAsync();
 	}
 }

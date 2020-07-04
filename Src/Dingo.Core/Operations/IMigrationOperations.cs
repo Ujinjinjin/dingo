@@ -5,6 +5,10 @@ namespace Dingo.Core.Operations
 	/// <summary> Operations with database migration files </summary>
 	public interface IMigrationOperations
 	{
+		/// <summary> Perform handshake connection to database to validate connection string </summary>
+		/// <param name="configPath">Custom path to configuration file</param>
+		Task HandshakeDatabaseConnectionAsync(string configPath = null);
+		
 		/// <summary> Run migrations </summary>
 		/// <param name="migrationsRootPath">Root path where all project migrations are stored</param>
 		/// <param name="configPath">Custom path to configuration file</param>

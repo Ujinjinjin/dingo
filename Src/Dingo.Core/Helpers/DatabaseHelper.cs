@@ -107,5 +107,19 @@ namespace Dingo.Core.Helpers
 				return result;
 			}
 		}
+
+		/// <inheritdoc />
+		public async Task<bool> HandshakeDatabaseConnectionAsync()
+		{
+			try
+			{
+				await InstallCheckTableExistenceProcedureAsync();
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }

@@ -35,11 +35,32 @@ namespace Dingo.Core.Operations
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
 		}
-		
+
+		/// <inheritdoc />
+		public async Task HandshakeDatabaseConnectionAsync(string configPath = null)
+		{
+			await _configWrapper.LoadAsync(configPath);
+			
+			if (await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			{
+				await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!");
+			}
+			else
+			{
+				await _renderer.ShowMessageAsync("Connection to database cannot be established. Please, check your configs and try again.");
+			}
+		}
+
 		/// <inheritdoc />
 		public async Task RunMigrationsAsync(string migrationsRootPath, string configPath = null, bool silent = false)
 		{
 			await _configWrapper.LoadAsync(configPath);
+
+			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			{
+				await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.");
+				return;
+			}
 			
 			await RunSystemMigrationsAsync(silent);
 			await RunProjectMigrationsAsync(migrationsRootPath, silent);
@@ -49,6 +70,12 @@ namespace Dingo.Core.Operations
 		public async Task ShowMigrationsStatusAsync(string migrationsRootPath, string configPath = null, bool silent = false)
 		{
 			await _configWrapper.LoadAsync(configPath);
+			
+			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			{
+				await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.");
+				return;
+			}
 			
 			await RunSystemMigrationsAsync(true);
 			

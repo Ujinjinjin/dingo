@@ -12,7 +12,7 @@ namespace Dingo.Core.Repository
 {
 	internal class DatabaseContext : DataConnectionBase, IDatabaseContext
 	{
-		private static readonly ILogger Logger = new ConsoleLogger();
+		private static readonly ILogger Logger = new ConsoleLogger(LogLevel.None);
 		
 		protected internal DatabaseContext(
 			string providerName,
