@@ -1,6 +1,7 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Yaml;
 using System.Yaml.Serialization;
@@ -35,7 +36,11 @@ namespace Dingo.Core.Serializers
 				}
 			}
 
-			var serializedObject = string.Join("\n", cleanSerializedList.Sequence(2, -2));
+			cleanSerializedList = cleanSerializedList.Sequence(2, -2)
+				.OrderBy(x => x)
+				.ToList();
+
+			var serializedObject = string.Join("\n", cleanSerializedList);
 			
 			return serializedObject.ToUnixEol();
 		}
