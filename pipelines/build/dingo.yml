@@ -37,14 +37,14 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
-  displayName: 'Build project'
+  displayName: 'build project'
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Run unit tests'
+  displayName: 'run unit tests'
   inputs:
     command: 'test'
     projects: 'Src/Dingo.Tests/Dingo.Tests.csproj'
