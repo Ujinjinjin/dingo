@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Dingo.Core.Tests")]
+[assembly:InternalsVisibleTo("Dingo.Tests")]

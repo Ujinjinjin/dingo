@@ -1,4 +1,4 @@
-namespace Dingo.Core.Tests.Constants
+namespace Dingo.Tests.Constants
 {
 	public class TraitName
 	{

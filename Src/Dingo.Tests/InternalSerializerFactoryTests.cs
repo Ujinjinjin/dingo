@@ -1,9 +1,8 @@
 using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
-using System;
 using Xunit;
 
-namespace Dingo.Core.Tests
+namespace Dingo.Tests
 {
 	public class InternalSerializerFactoryTests
 	{
