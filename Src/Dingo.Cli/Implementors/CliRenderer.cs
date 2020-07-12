@@ -6,6 +6,7 @@ using Dingo.Core.Models;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Implementors
@@ -27,9 +28,9 @@ namespace Dingo.Cli.Implementors
 			var configFileString = string.IsNullOrWhiteSpace(configWrapper.ActiveConfigFile)
 				? "No compatible config file found. Showing default configs\n"
 				: $"Using configs from: {configWrapper.ActiveConfigFile}\n";
-			
+
 			await _consoleQueue.EnqueueOutputAsync(configFileString);
-			
+
 			var configString = $"        connection string: {configWrapper.ConnectionString}\n" +
 							   $"            provider name: {configWrapper.ProviderName}\n" +
 							   $"         migration schema: {configWrapper.MigrationSchema}\n" +
@@ -44,7 +45,33 @@ namespace Dingo.Cli.Implementors
 		{
 			await _consoleQueue.EnqueueOutputAsync(message);
 		}
-		
+
+		/// <inheritdoc />
+		public async Task PrintTextAsync(string text, bool silent)
+		{
+			if (silent)
+			{
+				return;
+			}
+			await _consoleQueue.EnqueueOutputAsync(text);
+		}
+
+		/// <inheritdoc />
+		public async Task PrintBreakLineAsync(
+			bool silent,
+			int? length = null,
+			char symbol = '-',
+			bool newLineBefore = true,
+			bool newLineAfter = true
+		)
+		{
+			if (silent)
+			{
+				return;
+			}
+			await _consoleQueue.EnqueueBreakLine(length, symbol, newLineBefore, newLineAfter);
+		}
+
 		/// <inheritdoc />
 		public async Task ListItemsAsync(IList<string> itemList)
 		{
@@ -57,7 +84,7 @@ namespace Dingo.Cli.Implementors
 		/// <inheritdoc />
 		public async Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
-			await _consoleQueue.EnqueueStartBlockLine();
+			await _consoleQueue.EnqueueBreakLine(newLineAfter: false);
 			await _consoleQueue.EnqueueOutputAsync($"Total migrations count: {migrationInfoList.Count}.");
 
 			if (silent)
@@ -65,7 +92,7 @@ namespace Dingo.Cli.Implementors
 				var newCount = 0;
 				var outdatedCount = 0;
 				var upToDateCount = 0;
-				
+
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
 					switch (migrationInfoList[i].Status)
@@ -93,13 +120,13 @@ namespace Dingo.Cli.Implementors
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
 					var migrationInfo = migrationInfoList[i];
-					
+
 					await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {migrationInfo.Path.Relative}");
-					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash}\n");
-					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}");
+					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash}");
+					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}\n");
 				}
 			}
-			await _consoleQueue.EnqueueEndBlockLine();
+			await _consoleQueue.EnqueueBreakLine(newLineBefore: false);
 		}
 	}
 }

@@ -28,13 +28,13 @@ namespace Dingo.Core.Operations
 		{
 			await _configWrapper.LoadAsync(configPath);
 
-			if (!_configWrapper.ConfigFileExists || _prompt.Confirm($"Config file {_configWrapper.ActiveConfigFile} already exists, do you wnat to override it?"))
+			if (!_configWrapper.ConfigFileExists || _prompt.Confirm($"Config file {_configWrapper.ActiveConfigFile} already exists, do you want to override it?"))
 			{
 				_configWrapper.ConnectionString = string.Empty;
 				_configWrapper.ProviderName = string.Empty;
 				await _configWrapper.SaveAsync(configPath);
-				
-				await _renderer.ShowMessageAsync("Dingo config file successfuly initialized!");	
+
+				await _renderer.ShowMessageAsync("Dingo config file successfully initialized!");	
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace Dingo.Core.Operations
 		public async Task ShowProjectConfigurationAsync(string configPath = null)
 		{
 			await _configWrapper.LoadAsync(configPath);
-			
+
 			await _renderer.ShowConfigAsync(_configWrapper);
 		}
 
@@ -61,19 +61,19 @@ namespace Dingo.Core.Operations
 			_configWrapper.ConnectionString = string.IsNullOrWhiteSpace(connectionString)
 				? _configWrapper.ConnectionString
 				: connectionString;
-			
+
 			_configWrapper.ProviderName = string.IsNullOrWhiteSpace(providerName)
 				? _configWrapper.ProviderName
 				: providerName;
-			
+
 			_configWrapper.MigrationSchema = string.IsNullOrWhiteSpace(migrationSchema)
 				? _configWrapper.MigrationSchema
 				: migrationSchema;
-			
+
 			_configWrapper.MigrationTable = string.IsNullOrWhiteSpace(migrationTable)
 				? _configWrapper.MigrationTable
 				: migrationTable;
-			
+
 			_configWrapper.MigrationsSearchPattern = string.IsNullOrWhiteSpace(searchPattern)
 				? _configWrapper.MigrationsSearchPattern
 				: searchPattern;

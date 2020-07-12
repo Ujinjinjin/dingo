@@ -1,6 +1,7 @@
 ﻿using Dingo.Core.Config;
 using Dingo.Core.Models;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Abstractions
@@ -15,6 +16,19 @@ namespace Dingo.Core.Abstractions
 		/// <summary> Show non-interactive message to user </summary>
 		/// <param name="message">Message shown to user</param>
 		Task ShowMessageAsync(string message);
+
+		/// <summary> Print text </summary>
+		/// <param name="text">Text to print</param>
+		/// <param name="silent">Don't print text if true</param>
+		Task PrintTextAsync(string text, bool silent);
+
+		/// <summary> Print break line </summary>
+		/// <param name="silent">Don't print text if true</param>
+		/// <param name="length">Length of line</param>
+		/// <param name="symbol">Symbol of line</param>
+		/// <param name="newLineBefore">Print empty line before</param>
+		/// <param name="newLineAfter">Print empty line after</param>
+		Task PrintBreakLineAsync(bool silent, int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true);
 
 		/// <summary> Display list of items </summary>
 		/// <param name="itemList">Items to be listed</param>

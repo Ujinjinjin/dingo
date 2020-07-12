@@ -5,7 +5,6 @@ namespace Cliff.ConsoleUtils
 	public interface IConsoleQueue
 	{
 		public Task EnqueueOutputAsync(string value);
-		Task EnqueueStartBlockLine(int? length = null);
-		Task EnqueueEndBlockLine(int? length = null);
+		Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true);
 	}
 }

@@ -1,43 +1,64 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cliff.ConsoleUtils
 {
-	internal class ConsoleQueue : IConsoleQueue
+	internal class ConsoleQueue : IConsoleQueue, IDisposable
 	{
-		private readonly BlockingCollection<string> _outputQueue = new BlockingCollection<string>();
+		private readonly ConcurrentQueue<string> _outputQueue = new ConcurrentQueue<string>();
+		private readonly Thread _thread;
 
 		public ConsoleQueue()
 		{
-			var thread = new Thread(
+			_thread = new Thread(
 				() =>
 				{
 					while (true)
 					{
-						Console.WriteLine(_outputQueue.Take());
+						if (_outputQueue.TryDequeue(out var value))
+						{
+							Console.WriteLine(value);	
+						}
 					}
+					// ReSharper disable once FunctionNeverReturns
 				});
-			thread.IsBackground = true;
-			thread.Start();
+			_thread.IsBackground = true;
+			_thread.Start();
 		}
-		
+
 		public Task EnqueueOutputAsync(string value)
 		{
-			return Task.FromResult(_outputQueue.TryAdd(value));
+			_outputQueue.Enqueue(value);
+			return Task.CompletedTask;
 		}
-		
-		public async Task EnqueueStartBlockLine(int? length = null)
+
+		public async Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true)
 		{
 			length ??= Console.WindowWidth;
-			await EnqueueOutputAsync($"\n{new string('-', length.Value)}");
+			var stringBuilder = new StringBuilder();
+
+			if (newLineBefore)
+			{
+				stringBuilder.Append("\n");
+			}
+
+			stringBuilder.Append(new string(symbol, length.Value));
+			
+			if (newLineAfter)
+			{
+				stringBuilder.Append("\n");
+			}
+			
+			await EnqueueOutputAsync(stringBuilder.ToString());
 		}
-		
-		public async Task EnqueueEndBlockLine(int? length = null)
+
+		public void Dispose()
 		{
-			length ??= Console.WindowWidth;
-			await EnqueueOutputAsync($"{new string('-', length.Value)}\n");
+			_outputQueue?.Clear();
+			_thread.Abort();
 		}
 	}
 }
