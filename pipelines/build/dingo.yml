@@ -12,9 +12,6 @@ pr:
     include:
     - master
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   - name: 'buildName'
     value: 'Dingo build'
@@ -27,26 +24,32 @@ variables:
 
 name: $[variables.buildName]
 
-steps:
-- task: NuGetToolInstaller@1
-  displayName: 'install nuget'
 
-- task: NuGetCommand@2
-  displayName: 'nuget restore'
-  inputs:
-    restoreSolution: '$(solution)'
+jobs:
+  - job: windows
+    pool:
+      vmImage: 'windows-latest'
+    
+      steps:
+    - task: NuGetToolInstaller@1
+      displayName: 'install nuget'
 
-- task: VSBuild@1
-  displayName: 'build project'
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    - task: NuGetCommand@2
+      displayName: 'nuget restore'
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'run unit tests'
-  inputs:
-    command: 'test'
-    projects: 'Src/Dingo.Tests/Dingo.Tests.csproj'
-    testRunTitle: 'Unit tests'
-    arguments: '-c $(buildConfiguration)'
+    - task: VSBuild@1
+      displayName: 'build project'
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'run unit tests'
+      inputs:
+        command: 'test'
+        projects: 'Src/Dingo.Tests/Dingo.Tests.csproj'
+        testRunTitle: 'Unit tests'
+        arguments: '-c $(buildConfiguration)'
