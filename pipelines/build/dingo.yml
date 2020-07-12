@@ -30,7 +30,7 @@ jobs:
     pool:
       vmImage: 'windows-latest'
     
-      steps:
+    steps:
     - task: NuGetToolInstaller@1
       displayName: 'install nuget'
 
