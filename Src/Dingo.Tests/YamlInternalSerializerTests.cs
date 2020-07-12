@@ -1,5 +1,6 @@
 using Dingo.Core.Serializers;
 using Dingo.Tests.Models;
+using System.Runtime.Serialization;
 using Xunit;
 
 namespace Dingo.Tests
@@ -81,6 +82,17 @@ namespace Dingo.Tests
 
 			// Assert
 			Assert.Equal(expectedData, data);
+		}
+		
+		[Fact]
+		public void YamlInternalSerializerTests__Deserialize__WhenEmptySerializedDataGiven_ThenExceptionThrown()
+		{
+			// Arrange
+			var yamlInternalSerializer = new YamlInternalSerializer();
+			var serializedData = "";
+
+			// Act & Assert
+			Assert.Throws<SerializationException>(() => yamlInternalSerializer.Deserialize<TestStruct>(serializedData));
 		}
 	}
 }
