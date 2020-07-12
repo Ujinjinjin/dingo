@@ -23,7 +23,7 @@ variables:
   - name: 'buildConfiguration'
     value: 'Release'
 
-name: $(variables.buildName)
+name: $[variables.buildName]
 
 steps:
 - task: NuGetToolInstaller@1
