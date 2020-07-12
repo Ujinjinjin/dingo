@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cliff.ConsoleUtils
 {
+	/// <inheritdoc cref="Cliff.ConsoleUtils.IConsoleQueue" />
 	internal class ConsoleQueue : IConsoleQueue, IDisposable
 	{
 		private readonly ConcurrentQueue<string> _outputQueue = new ConcurrentQueue<string>();
@@ -29,12 +30,14 @@ namespace Cliff.ConsoleUtils
 			_thread.Start();
 		}
 
+		/// <inheritdoc />
 		public Task EnqueueOutputAsync(string value)
 		{
 			_outputQueue.Enqueue(value);
 			return Task.CompletedTask;
 		}
 
+		/// <inheritdoc />
 		public async Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true)
 		{
 			length ??= Console.WindowWidth;
@@ -55,6 +58,7 @@ namespace Cliff.ConsoleUtils
 			await EnqueueOutputAsync(stringBuilder.ToString());
 		}
 
+		/// <inheritdoc />
 		public void Dispose()
 		{
 			_outputQueue?.Clear();

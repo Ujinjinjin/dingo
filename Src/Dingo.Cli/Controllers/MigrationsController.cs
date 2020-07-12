@@ -6,6 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace Dingo.Cli.Controllers
 {
+	/// <summary> Controller allowing to work with migrations </summary>
 	public class MigrationsController : CliController
 	{
 		private readonly IMigrationOperations _migrationOperations;
@@ -18,6 +19,7 @@ namespace Dingo.Cli.Controllers
 			_migrationOperations = migrationOperations ?? throw new ArgumentNullException(nameof(migrationOperations));
 		}
 
+		/// <inheritdoc />
 		public override void Register()
 		{
 			var command = CreateCommand("migrations", "Group of command to work with migrations");

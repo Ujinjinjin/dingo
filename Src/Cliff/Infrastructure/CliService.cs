@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Cliff.Infrastructure
 {
+	/// <inheritdoc />
 	public class CliService : ICliService
 	{
+		/// <inheritdoc />
 		public IServiceProvider ServiceProvider { get; }
 		
 		public CliService(IServiceProvider serviceProvider)
@@ -15,6 +17,7 @@ namespace Cliff.Infrastructure
 			ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 		}
 		
+		/// <inheritdoc />
 		public async Task ExecuteAsync(string[] args)
 		{
 			await ServiceProvider.RegisterControllers()

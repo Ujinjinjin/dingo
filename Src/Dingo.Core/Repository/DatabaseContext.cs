@@ -21,11 +21,7 @@ namespace Dingo.Core.Repository
 		{
 		}
 
-		public async Task ExecuteRawSqlAsync(string sql)
-		{
-			await ExecuteSqlAsync(sql);
-		}
-
+		/// <inheritdoc />
 		public async Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table)
 		{
 			var result = await QueryAsync<DbSystemCheckTableExistenceResult>(
@@ -36,6 +32,13 @@ namespace Dingo.Core.Repository
 			return result.Single();
 		}
 
+		/// <inheritdoc />
+		public async Task ExecuteRawSqlAsync(string sql)
+		{
+			await ExecuteSqlAsync(sql);
+		}
+
+		/// <inheritdoc />
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated)
 		{
 			await ExecuteAsync(
@@ -46,6 +49,7 @@ namespace Dingo.Core.Repository
 			);
 		}
 
+		/// <inheritdoc />
 		public async Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList)
 		{
 			var result = await QueryAsync<DbMigrationInfoOutput>(

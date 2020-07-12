@@ -6,7 +6,6 @@ using Dingo.Core.Models;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Implementors

@@ -6,6 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace Dingo.Cli.Controllers
 {
+	/// <summary> Controller allowing to work with project configs </summary>
 	internal class ConfigController : CliController
 	{
 		private readonly IConfigOperations _configOperations;
@@ -18,9 +19,10 @@ namespace Dingo.Cli.Controllers
 			_configOperations = configOperations ?? throw new ArgumentNullException(nameof(configOperations));
 		}
 
+		/// <inheritdoc />
 		public override void Register()
 		{
-			var command = CreateCommand("config", "Group of command that allows to work with configs");
+			var command = CreateCommand("config", "Group of command to work with configs");
 
 			command.AddCommand(CreateCommand(
 				"init", 

@@ -6,7 +6,7 @@ using System.Yaml.Serialization;
 
 namespace Dingo.Core.Serializers
 {
-	/// <summary> Wrapper around JSON serializer </summary>
+	/// <summary> Wrapper around YAML serializer </summary>
 	internal class YamlInternalSerializer : IInternalSerializer
 	{
 		public string DefaultFileExtension => ".yml";

@@ -6,6 +6,7 @@ using System.CommandLine.Invocation;
 
 namespace Dingo.Cli.Controllers
 {
+	/// <summary> Controller allowing to manage database provider </summary>
 	internal class ProviderController : CliController
 	{
 		private readonly IProviderOperations _providerOperations;
@@ -18,6 +19,7 @@ namespace Dingo.Cli.Controllers
 			_providerOperations = providerOperations ?? throw new ArgumentNullException(nameof(providerOperations));
 		}
 
+		/// <inheritdoc />
 		public override void Register()
 		{
 			var command = CreateCommand("provider", "Group of commands to manage database provider");

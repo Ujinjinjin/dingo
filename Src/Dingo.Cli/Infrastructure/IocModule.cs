@@ -11,8 +11,10 @@ using System.CommandLine;
 
 namespace Dingo.Cli.Infrastructure
 {
+	/// <inheritdoc />
 	public class IocModule : IIocModule
 	{
+		/// <inheritdoc />
 		public IServiceProvider Build()
 		{
 			var collection = new ServiceCollection();

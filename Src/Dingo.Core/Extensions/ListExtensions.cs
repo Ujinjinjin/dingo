@@ -10,7 +10,7 @@ namespace Dingo.Core.Extensions
 		/// <param name="startIndex">Start index</param>
 		/// <param name="endIndex">End index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
-		/// <returns>Sequnce of items</returns>
+		/// <returns>Sequence of items</returns>
 		public static IList<T> Sequence<T>(this IList<T> source, int startIndex, int endIndex)
 		{
 			if (endIndex < 0)
@@ -33,7 +33,7 @@ namespace Dingo.Core.Extensions
 		/// <param name="source">Source list of items</param>
 		/// <param name="startIndex">Start index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
-		/// <returns>Sequnce of items</returns>
+		/// <returns>Sequence of items</returns>
 		public static IList<T> SequenceFrom<T>(this IList<T> source, int startIndex)
 		{
 			return Sequence(source, startIndex, -1);
@@ -43,7 +43,7 @@ namespace Dingo.Core.Extensions
 		/// <param name="source">Source list of items</param>
 		/// <param name="endIndex">End index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
-		/// <returns>Sequnce of items</returns>
+		/// <returns>Sequence of items</returns>
 		public static IList<T> SequenceTo<T>(this IList<T> source, int endIndex)
 		{
 			return Sequence(source, 0, endIndex);
