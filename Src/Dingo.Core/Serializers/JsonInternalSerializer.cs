@@ -1,4 +1,5 @@
-﻿using Dingo.Core.Extensions;
+﻿using Dingo.Core.Constants;
+using Dingo.Core.Extensions;
 using System.Text.Json;
 
 namespace Dingo.Core.Serializers
@@ -6,7 +7,7 @@ namespace Dingo.Core.Serializers
 	/// <summary> Wrapper around JSON serializer </summary>
 	internal class JsonInternalSerializer : IInternalSerializer
 	{
-		public string DefaultFileExtension => ".json";
+		public string DefaultFileExtension => FileExtension.Json;
 
 		/// <inheritdoc />
 		public string Serialize<T>(T data)

@@ -1,4 +1,5 @@
-﻿using Dingo.Core.Extensions;
+﻿using Dingo.Core.Constants;
+using Dingo.Core.Extensions;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Yaml;
@@ -9,7 +10,7 @@ namespace Dingo.Core.Serializers
 	/// <summary> Wrapper around YAML serializer </summary>
 	internal class YamlInternalSerializer : IInternalSerializer
 	{
-		public string DefaultFileExtension => ".yml";
+		public string DefaultFileExtension => FileExtension.Yml;
 
 		/// <inheritdoc />
 		public string Serialize<T>(T data)
@@ -21,7 +22,9 @@ namespace Dingo.Core.Serializers
 			};
 			var serializer = new YamlSerializer(config);
 
-			var dirtySerializedArray = serializer.Serialize(data).Split("\n");
+			var dirtySerializedArray = serializer.Serialize(data)
+				.ToUnixEol()
+				.Split("\n");
 			var cleanSerializedList = new List<string>();
 			
 			for (var i = 0; i < dirtySerializedArray.Length; i++)

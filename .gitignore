@@ -10,3 +10,5 @@
 *.sqlite
 
 Src/Dingo.Cli/dingo.yml
+
+Src/Dingo.sln.DotSettings.user

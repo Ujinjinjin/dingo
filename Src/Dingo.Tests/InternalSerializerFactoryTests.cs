@@ -1,3 +1,4 @@
+using Dingo.Core.Constants;
 using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
 using Xunit;
@@ -18,6 +19,7 @@ namespace Dingo.Tests
 
 			// Assert
 			Assert.Equal(typeof(JsonInternalSerializer), internalSerializer.GetType());
+			Assert.Equal(FileExtension.Json, internalSerializer.DefaultFileExtension);
 		}
 		
 		[Fact]
@@ -32,6 +34,7 @@ namespace Dingo.Tests
 
 			// Assert
 			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
+			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
 		}
 		
 		[Fact]
@@ -46,6 +49,7 @@ namespace Dingo.Tests
 
 			// Assert
 			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
+			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
 		}
 	}
 }
