@@ -1,13 +1,29 @@
 trigger:
-- master
+  branches:
+    include:
+    - master
+    exclude:
+    - release/*
+
+pr:
+  branches:
+    include:
+    - master
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'src/dingo.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  - name: 'buildName'
+    value: 'Dingo build'
+  - name: 'solution'
+    value: 'src/dingo.sln'
+  - name: 'buildPlatform'
+    value: 'Any CPU'
+  - name: 'buildConfiguration'
+    value: 'Release'
+
+name: $(variables.buildName)
 
 steps:
 - task: NuGetToolInstaller@1
