@@ -58,4 +58,4 @@ jobs:
       displayName: 'publish code coverage result'
       inputs:
         codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: '**/*.coverage'
+        summaryFileLocation: '$(Agent.TempDirectory)/*.coverage'
