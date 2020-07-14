@@ -50,6 +50,6 @@ jobs:
       displayName: 'run unit tests'
       inputs:
         command: 'test'
-        projects: 'Src/Dingo.Tests/Dingo.UnitTests.csproj'
+        projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
         testRunTitle: 'Unit tests'
         arguments: '-c $(buildConfiguration)'
