@@ -1,9 +1,9 @@
 using Dingo.Core.Serializers;
-using Dingo.Tests.Models;
+using Dingo.UnitTests.Models;
 using System.Runtime.Serialization;
 using Xunit;
 
-namespace Dingo.Tests
+namespace Dingo.UnitTests
 {
 	public class YamlInternalSerializerTests
 	{

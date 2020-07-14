@@ -1,8 +1,8 @@
 using Dingo.Core.Serializers;
-using Dingo.Tests.Models;
+using Dingo.UnitTests.Models;
 using Xunit;
 
-namespace Dingo.Tests
+namespace Dingo.UnitTests
 {
 	public class JsonInternalSerializerTests
 	{

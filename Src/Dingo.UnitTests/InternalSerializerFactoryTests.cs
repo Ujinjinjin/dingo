@@ -3,7 +3,7 @@ using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
 using Xunit;
 
-namespace Dingo.Tests
+namespace Dingo.UnitTests
 {
 	public class InternalSerializerFactoryTests
 	{

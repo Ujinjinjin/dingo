@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cliff", "Cliff\Cliff.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core", "Dingo.Core\Dingo.Core.csproj", "{205BA0BA-7D5D-446F-9267-67920C02AF41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Tests", "Dingo.Tests\Dingo.Tests.csproj", "{B69DFD4B-016C-48F4-967A-D710F96CB467}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.UnitTests", "Dingo.UnitTests\Dingo.UnitTests.csproj", "{B69DFD4B-016C-48F4-967A-D710F96CB467}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

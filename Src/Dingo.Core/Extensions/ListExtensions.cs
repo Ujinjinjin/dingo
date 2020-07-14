@@ -5,7 +5,7 @@ namespace Dingo.Core.Extensions
 	/// <summary> Collection of extensions for <see cref="IList{T}"/> </summary>
 	internal static class ListExtensions
 	{
-		/// <summary> Select sequence from list of item beggining at startIndex and ending at endIndex </summary>
+		/// <summary> Select sequence from list of item beginning at startIndex and ending at endIndex </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="startIndex">Start index</param>
 		/// <param name="endIndex">End index</param>
@@ -29,7 +29,7 @@ namespace Dingo.Core.Extensions
 			return target;
 		}
 		
-		/// <summary> Select sequence from list of item beggining at startIndex and ending with last item </summary>
+		/// <summary> Select sequence from list of item beginning at startIndex and ending with last item </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="startIndex">Start index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
@@ -39,7 +39,7 @@ namespace Dingo.Core.Extensions
 			return Sequence(source, startIndex, -1);
 		}
 		
-		/// <summary> Select sequence from list of item beggining with first item and ending at endIndex </summary>
+		/// <summary> Select sequence from list of item beginning with first item and ending at endIndex </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="endIndex">End index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
@@ -49,7 +49,7 @@ namespace Dingo.Core.Extensions
 			return Sequence(source, 0, endIndex);
 		}
 		
-		/// <summary> Get item from source list at specified inxed with support of negative index where -1=last </summary>
+		/// <summary> Get item from source list at specified index with support of negative index where -1=last </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="index">Index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>

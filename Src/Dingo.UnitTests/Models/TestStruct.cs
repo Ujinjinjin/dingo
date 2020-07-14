@@ -1,4 +1,4 @@
-namespace Dingo.Tests.Models
+namespace Dingo.UnitTests.Models
 {
 	public struct TestStruct
 	{
