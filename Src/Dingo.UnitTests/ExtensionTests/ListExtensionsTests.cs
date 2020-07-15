@@ -45,7 +45,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		}
 
 		[Fact]
-		public void ListExtensionsTests__Sequence__WhenEndIndexOutOfRangeGiven_ThenArgumentOutOfRangeExceptionThrown()
+		public void ListExtensionsTests__Sequence__WhenEndIndexOutOfRangeGiven_ThenExceptionThrown()
 		{
 			// Arrange
 			var fixture = new Fixture();

@@ -2,6 +2,7 @@ using Dingo.Core.Constants;
 using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
 using Dingo.UnitTests.Base;
+using System;
 using Xunit;
 
 namespace Dingo.UnitTests
@@ -51,6 +52,17 @@ namespace Dingo.UnitTests
 			// Assert
 			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
 			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
+		}
+		
+		[Fact]
+		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenInvalidFilenameGiven_ThenExceptionThrown()
+		{
+			// Arrange
+			var internalSerializerFactory = new InternalSerializerFactory();
+			var filename = "dingo.exe";
+
+			// Act & Assert
+			Assert.Throws<ArgumentOutOfRangeException>(() => internalSerializerFactory.CreateInternalSerializer(filename));
 		}
 	}
 }
