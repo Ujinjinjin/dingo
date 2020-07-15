@@ -1,12 +1,13 @@
 using AutoFixture;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
+using Dingo.UnitTests.Base;
 using System;
 using Xunit;
 
 namespace Dingo.UnitTests.ExtensionTests
 {
-	public class MigrationStatusExtensionsTests
+	public class MigrationStatusExtensionsTests : UnitTestsBase
 	{
 		[Fact]
 		public void MigrationStatusExtensionsTests__ToDisplayText__WhenValidEnumValueGiven_ThenDisplayTextReturned()

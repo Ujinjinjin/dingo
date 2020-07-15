@@ -1,11 +1,12 @@
 using Dingo.Core.Serializers;
+using Dingo.UnitTests.Base;
 using Dingo.UnitTests.Models;
 using System.Runtime.Serialization;
 using Xunit;
 
 namespace Dingo.UnitTests
 {
-	public class YamlInternalSerializerTests
+	public class YamlInternalSerializerTests : UnitTestsBase
 	{
 		[Fact]
 		public void YamlInternalSerializerTests__Serialize__WhenValidObjectGiven_ThenObjectSerialized()

@@ -1,11 +1,12 @@
 using Dingo.Core.Constants;
 using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
+using Dingo.UnitTests.Base;
 using Xunit;
 
 namespace Dingo.UnitTests
 {
-	public class InternalSerializerFactoryTests
+	public class InternalSerializerFactoryTests : UnitTestsBase
 	{
 		[Fact]
 		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenJsonFilenameGiven_ThenJsonInternalSerializerReturned()

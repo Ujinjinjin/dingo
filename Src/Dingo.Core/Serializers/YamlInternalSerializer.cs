@@ -36,7 +36,7 @@ namespace Dingo.Core.Serializers
 				}
 			}
 
-			cleanSerializedList = cleanSerializedList.Sequence(2, -2)
+			cleanSerializedList = cleanSerializedList.Sequence(2, ^2)
 				.OrderBy(x => x)
 				.ToList();
 

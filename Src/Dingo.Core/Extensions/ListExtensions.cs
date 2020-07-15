@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dingo.Core.Extensions
 {
@@ -11,19 +12,19 @@ namespace Dingo.Core.Extensions
 		/// <param name="endIndex">End index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
 		/// <returns>Sequence of items</returns>
-		public static IList<T> Sequence<T>(this IList<T> source, int startIndex, int endIndex)
+		public static IList<T> Sequence<T>(this IList<T> source, Index startIndex, Index endIndex)
 		{
-			if (endIndex < 0)
+			if (endIndex.IsFromEnd)
 			{
-				endIndex = source.Count - endIndex.Negate();
+				endIndex = source.Count - endIndex.Value;
 			}
 			
-			var targetLength = endIndex - startIndex;
+			var targetLength = endIndex.Value - startIndex.Value;
 			var target = new T[targetLength];
 
 			for (var i = 0; i < targetLength; i++)
 			{
-				target[i] = source[startIndex + i];
+				target[i] = source[startIndex.Value + i];
 			}
 
 			return target;
@@ -34,9 +35,9 @@ namespace Dingo.Core.Extensions
 		/// <param name="startIndex">Start index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
 		/// <returns>Sequence of items</returns>
-		public static IList<T> SequenceFrom<T>(this IList<T> source, int startIndex)
+		public static IList<T> SequenceFrom<T>(this IList<T> source, Index startIndex)
 		{
-			return Sequence(source, startIndex, -1);
+			return Sequence(source, startIndex, ^1);
 		}
 		
 		/// <summary> Select sequence from list of item beginning with first item and ending at endIndex </summary>
@@ -44,7 +45,7 @@ namespace Dingo.Core.Extensions
 		/// <param name="endIndex">End index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
 		/// <returns>Sequence of items</returns>
-		public static IList<T> SequenceTo<T>(this IList<T> source, int endIndex)
+		public static IList<T> SequenceTo<T>(this IList<T> source, Index endIndex)
 		{
 			return Sequence(source, 0, endIndex);
 		}
@@ -54,13 +55,8 @@ namespace Dingo.Core.Extensions
 		/// <param name="index">Index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
 		/// <returns>Item at specified index</returns>
-		public static T GetItem<T>(this IList<T> source, int index)
+		public static T GetItem<T>(this IList<T> source, Index index)
 		{
-			if (index < 0)
-			{
-				index = source.Count - index.Negate();
-			}
-			
 			return source[index];
 		}
 	}

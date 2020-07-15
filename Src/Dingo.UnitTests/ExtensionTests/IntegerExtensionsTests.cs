@@ -1,10 +1,11 @@
 using AutoFixture;
 using Dingo.Core.Extensions;
+using Dingo.UnitTests.Base;
 using Xunit;
 
 namespace Dingo.UnitTests.ExtensionTests
 {
-	public class IntegerExtensionsTests
+	public class IntegerExtensionsTests : UnitTestsBase
 	{
 		[Fact]
 		public void IntegerExtensionsTests__Negate__WhenNotZeroIntegerGiven_ThenIntegerNegated()

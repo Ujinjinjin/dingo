@@ -1,10 +1,11 @@
 using Dingo.Core.Serializers;
+using Dingo.UnitTests.Base;
 using Dingo.UnitTests.Models;
 using Xunit;
 
 namespace Dingo.UnitTests
 {
-	public class JsonInternalSerializerTests
+	public class JsonInternalSerializerTests : UnitTestsBase
 	{
 		[Fact]
 		public void JsonInternalSerializerTests__Serialize__WhenValidObjectGiven_ThenObjectSerialized()
