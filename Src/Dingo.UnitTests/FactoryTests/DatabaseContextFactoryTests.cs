@@ -31,10 +31,10 @@ namespace Dingo.UnitTests.FactoryTests
 			
 			fixture.Register(() => configWrapperMock.Object);
 
-			var internalSerializerFactory = fixture.Create<DatabaseContextFactory>();
+			var databaseContextFactory = fixture.Create<DatabaseContextFactory>();
 
 			// Act
-			var databaseContext = internalSerializerFactory.CreateDatabaseContext();
+			var databaseContext = databaseContextFactory.CreateDatabaseContext();
 
 			// Assert
 			Assert.IsAssignableFrom<IDatabaseContext>(databaseContext);
@@ -57,10 +57,10 @@ namespace Dingo.UnitTests.FactoryTests
 			
 			fixture.Register(() => configWrapperMock.Object);
 
-			var internalSerializerFactory = fixture.Create<DatabaseContextFactory>();
+			var databaseContextFactory = fixture.Create<DatabaseContextFactory>();
 
 			// Act & Assert
-			Assert.Throws<ArgumentOutOfRangeException>(() => internalSerializerFactory.CreateDatabaseContext());
+			Assert.Throws<ArgumentOutOfRangeException>(() => databaseContextFactory.CreateDatabaseContext());
 		}
 	}
 }
