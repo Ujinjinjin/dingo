@@ -4,7 +4,7 @@ using Dingo.UnitTests.Models;
 using System.Runtime.Serialization;
 using Xunit;
 
-namespace Dingo.UnitTests
+namespace Dingo.UnitTests.SerializerTests
 {
 	public class YamlInternalSerializerTests : UnitTestsBase
 	{

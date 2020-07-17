@@ -50,7 +50,7 @@ namespace Dingo.Core.Extensions
 			return Sequence(source, 0, endIndex);
 		}
 		
-		/// <summary> Get item from source list at specified index with support of negative index where -1=last </summary>
+		/// <summary> Get item from source list at specified index </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="index">Index</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
@@ -58,6 +58,15 @@ namespace Dingo.Core.Extensions
 		public static T GetItem<T>(this IList<T> source, Index index)
 		{
 			return source[index];
+		}
+		
+		/// <summary> Get random item from source list </summary>
+		/// <param name="source">Source list of items</param>
+		/// <typeparam name="T">The type of items in the list</typeparam>
+		/// <returns>Random item from list</returns>
+		public static T GetRandom<T>(this IList<T> source)
+		{
+			return source[new Random().Next(0, source.Count)];
 		}
 	}
 }

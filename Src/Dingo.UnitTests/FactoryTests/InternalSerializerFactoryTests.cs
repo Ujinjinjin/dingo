@@ -5,7 +5,7 @@ using Dingo.UnitTests.Base;
 using System;
 using Xunit;
 
-namespace Dingo.UnitTests
+namespace Dingo.UnitTests.FactoryTests
 {
 	public class InternalSerializerFactoryTests : UnitTestsBase
 	{

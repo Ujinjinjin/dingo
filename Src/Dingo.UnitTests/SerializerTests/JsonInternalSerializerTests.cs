@@ -3,7 +3,7 @@ using Dingo.UnitTests.Base;
 using Dingo.UnitTests.Models;
 using Xunit;
 
-namespace Dingo.UnitTests
+namespace Dingo.UnitTests.SerializerTests
 {
 	public class JsonInternalSerializerTests : UnitTestsBase
 	{
