@@ -1,5 +1,6 @@
 ﻿namespace Dingo.Core.Models
 {
+	/// <summary> Migration status </summary>
 	public enum MigrationStatus
 	{
 		/// <summary> Unknown action </summary>

@@ -1,5 +1,6 @@
 ﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
+using Dingo.Core.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace Dingo.Core.Operations
 				_configWrapper.ProviderName = string.Empty;
 				await _configWrapper.SaveAsync(configPath);
 
-				await _renderer.ShowMessageAsync("Dingo config file successfully initialized!");	
+				await _renderer.ShowMessageAsync("Dingo config file successfully initialized!", MessageType.Info);	
 			}
 		}
 

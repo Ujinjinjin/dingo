@@ -1,6 +1,7 @@
 ﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Constants;
+using Dingo.Core.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Dingo.Core.Operations
 			);
 			
 			await _configWrapper.SaveAsync(configPath);
-			await _renderer.ShowMessageAsync($"Database provider successfully updated to `{_configWrapper.ProviderName}`");
+			await _renderer.ShowMessageAsync($"Database provider successfully updated to `{_configWrapper.ProviderName}`", MessageType.Info);
 		}
 
 		/// <inheritdoc />
@@ -47,11 +48,11 @@ namespace Dingo.Core.Operations
 
 			if (DbProvider.SupportedDatabaseProviderNames.Contains(_configWrapper.ProviderName))
 			{
-				await _renderer.ShowMessageAsync($"Chosen database provider `{_configWrapper.ProviderName}` is supported");
+				await _renderer.ShowMessageAsync($"Chosen database provider `{_configWrapper.ProviderName}` is supported", MessageType.Info);
 			}
 			else
 			{
-				await _renderer.ShowMessageAsync($"Warning! Chosen database provider `{_configWrapper.ProviderName}` is not supported yet");
+				await _renderer.ShowMessageAsync($"Chosen database provider `{_configWrapper.ProviderName}` is not supported yet", MessageType.Warning);
 			}
 		}
 	}

@@ -2,6 +2,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
+using Dingo.Core.Models;
 using Dingo.Core.Operations;
 using Moq;
 using System.Threading;
@@ -155,7 +156,7 @@ namespace Dingo.UnitTests.OperationsTests
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
-			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>()), Times.Once());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Info)), Times.Once());
 		}
 
 		[Fact]
@@ -193,7 +194,7 @@ namespace Dingo.UnitTests.OperationsTests
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
-			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>()), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.IsAny<MessageType>()), Times.Never());
 		}
 
 		[Fact]
@@ -231,7 +232,7 @@ namespace Dingo.UnitTests.OperationsTests
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Never());
-			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>()), Times.Once());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Info)), Times.Once());
 		}
 	}
 }

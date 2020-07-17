@@ -40,9 +40,9 @@ namespace Dingo.Cli.Implementors
 		}
 
 		/// <inheritdoc />
-		public async Task ShowMessageAsync(string message)
+		public async Task ShowMessageAsync(string message, MessageType messageType)
 		{
-			await _consoleQueue.EnqueueOutputAsync(message);
+			await _consoleQueue.EnqueueOutputAsync(messageType.AddPrefixToMessage(message));
 		}
 
 		/// <inheritdoc />

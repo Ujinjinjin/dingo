@@ -44,11 +44,11 @@ namespace Dingo.Core.Operations
 
 			if (await _databaseHelper.HandshakeDatabaseConnectionAsync())
 			{
-				await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!");
+				await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!", MessageType.Info);
 			}
 			else
 			{
-				await _renderer.ShowMessageAsync("Connection to database cannot be established. Please, check your configs and try again.");
+				await _renderer.ShowMessageAsync("Connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace Dingo.Core.Operations
 
 			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
 			{
-				await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.");
+				await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
 				return;
 			}
 
@@ -90,7 +90,7 @@ namespace Dingo.Core.Operations
 
 			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
 			{
-				await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.");
+				await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
 				return;
 			}
 

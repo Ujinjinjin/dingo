@@ -14,7 +14,8 @@ namespace Dingo.Core.Abstractions
 
 		/// <summary> Show non-interactive message to user </summary>
 		/// <param name="message">Message shown to user</param>
-		Task ShowMessageAsync(string message);
+		/// <param name="messageType">Message type</param>
+		Task ShowMessageAsync(string message, MessageType messageType);
 
 		/// <summary> Print text </summary>
 		/// <param name="text">Text to print</param>
