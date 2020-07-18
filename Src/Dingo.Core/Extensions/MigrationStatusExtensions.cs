@@ -12,19 +12,14 @@ namespace Dingo.Core.Extensions
 		/// <exception cref="ArgumentOutOfRangeException">Unknown migration status</exception>
 		public static string ToDisplayText(this MigrationStatus source)
 		{
-			switch (source)
+			return source switch
 			{
-				case MigrationStatus.Unknown:
-					return "Unknown migration status.";
-				case MigrationStatus.New:
-					return "Migration is new and will be installed.";
-				case MigrationStatus.Outdated:
-					return "Migration is outdated, newer version will be installed.";
-				case MigrationStatus.UpToDate:
-					return "Migration is up to date. No actions required.";
-				default:
-					throw new ArgumentOutOfRangeException(nameof(source), source, null);
-			}
+				MigrationStatus.Unknown => "Unknown migration status.",
+				MigrationStatus.New => "Migration is new and will be installed.",
+				MigrationStatus.Outdated => "Migration is outdated, newer version will be installed.",
+				MigrationStatus.UpToDate => "Migration is up to date. No actions required.",
+				_ => throw new ArgumentOutOfRangeException(nameof(source), source, null),
+			};
 		}
 	}
 }

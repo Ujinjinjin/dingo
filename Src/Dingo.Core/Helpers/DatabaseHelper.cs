@@ -1,4 +1,5 @@
 ﻿using Dingo.Core.Config;
+using Dingo.Core.Facades;
 using Dingo.Core.Factories;
 using Dingo.Core.Models;
 using Dingo.Core.Repository.DbClasses;
@@ -15,12 +16,19 @@ namespace Dingo.Core.Helpers
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IConfigWrapper _configWrapper;
+		private readonly IFileFacade _fileFacade;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
 
-		public DatabaseHelper(IPathHelper pathHelper, IConfigWrapper configWrapper, IDatabaseContextFactory databaseContextFactory)
+		public DatabaseHelper(
+			IPathHelper pathHelper,
+			IConfigWrapper configWrapper,
+			IFileFacade fileFacade,
+			IDatabaseContextFactory databaseContextFactory
+		)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
+			_fileFacade = fileFacade ?? throw new ArgumentNullException(nameof(fileFacade));
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
 		}
 
@@ -38,7 +46,7 @@ namespace Dingo.Core.Helpers
 		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
 			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
-			var sqlScriptText = await File.ReadAllTextAsync(sqlScriptPath);
+			var sqlScriptText = await _fileFacade.ReadAllTextAsync(sqlScriptPath);
 
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
@@ -47,13 +55,13 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
-		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool silent = false)
+		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true)
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
 				await dbContext.ExecuteRawSqlAsync(sql);
 
-				if (!silent)
+				if (registerMigrations)
 				{
 					await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
 				}

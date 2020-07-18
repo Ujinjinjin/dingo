@@ -1,4 +1,5 @@
 ﻿using Dingo.Core.Config;
+using Dingo.Core.Facades;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Dingo.Core.Operations;
@@ -25,6 +26,8 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 			serviceCollection.AddSingleton<IHashMaker, HashMaker>();
 			serviceCollection.AddSingleton<IPathHelper, PathHelper>();
+			
+			serviceCollection.AddSingleton<IFileFacade, FileFacade>();
 			
 			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			serviceCollection.AddSingleton<IConfigOperations, ConfigOperations>();

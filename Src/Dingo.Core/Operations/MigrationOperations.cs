@@ -1,11 +1,11 @@
 ﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Extensions;
+using Dingo.Core.Facades;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Operations
@@ -19,6 +19,7 @@ namespace Dingo.Core.Operations
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
 		private readonly IRenderer _renderer;
+		private readonly IFileFacade _fileFacade;
 
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
@@ -26,7 +27,8 @@ namespace Dingo.Core.Operations
 			IDirectoryScanner directoryScanner,
 			IHashMaker hashMaker,
 			IPathHelper pathHelper,
-			IRenderer renderer
+			IRenderer renderer,
+			IFileFacade fileFacade
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
@@ -35,6 +37,7 @@ namespace Dingo.Core.Operations
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+			_fileFacade = fileFacade ?? throw new ArgumentNullException(nameof(fileFacade));
 		}
 
 		/// <inheritdoc />
@@ -134,8 +137,8 @@ namespace Dingo.Core.Operations
 			{
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
-					var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-					await _databaseHelper.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, true);
+					var sqlScriptText = await _fileFacade.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
+					await _databaseHelper.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
 				}
 
 				for (var i = 0; i < migrationInfoList.Count; i++)
@@ -168,7 +171,7 @@ namespace Dingo.Core.Operations
 				}
 
 				await _renderer.PrintTextAsync("Reading migration file contents...", silent);
-				var sqlScriptText = await File.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
+				var sqlScriptText = await _fileFacade.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
 
 				await _renderer.PrintTextAsync("Applying migration...", silent);
 				await _databaseHelper.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);

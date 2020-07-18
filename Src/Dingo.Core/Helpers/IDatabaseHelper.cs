@@ -18,8 +18,8 @@ namespace Dingo.Core.Helpers
 		/// <param name="sql">Sql text of migration</param>
 		/// <param name="migrationPath">Path to migration file</param>
 		/// <param name="migrationHash">MD5 hash of migration file</param>
-		/// <param name="silent">If true, migration will be applied, but not registred in migrations table</param>
-		Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool silent = false);
+		/// <param name="registerMigrations">If true, migration will be applied, but not registered in migrations table</param>
+		Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true);
 		
 		/// <summary> Register migration without applying it </summary>
 		/// <param name="migrationPath">Path to migration file</param>

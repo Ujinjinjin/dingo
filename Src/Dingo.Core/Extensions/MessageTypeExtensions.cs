@@ -11,15 +11,12 @@ namespace Dingo.Core.Extensions
 		/// <returns>Message with prefix</returns>
 		public static string AddPrefixToMessage(this MessageType source, string message)
 		{
-			switch (source)
+			return source switch
 			{
-				case MessageType.Warning:
-					return $"Warning! {message}";
-				case MessageType.Error:
-					return $"Error! {message}";
-				default:
-					return message;
-			}
+				MessageType.Warning => $"Warning! {message}",
+				MessageType.Error => $"Error! {message}",
+				_ => message,
+			};
 		}
 	}
 }
