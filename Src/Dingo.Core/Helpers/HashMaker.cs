@@ -11,12 +11,6 @@ namespace Dingo.Core.Helpers
 	internal class HashMaker : IHashMaker
 	{
 		/// <inheritdoc />
-		public Task<string> GetFileHashAsync(string filename)
-		{
-			return Task.FromResult(GetFileHash(filename));
-		}
-
-		/// <inheritdoc />
 		public string GetFileHash(string filename)
 		{
 			using (var md5 = MD5.Create())
@@ -30,22 +24,6 @@ namespace Dingo.Core.Helpers
 						.ToLowerInvariant();
 				}
 			}
-		}
-		
-		/// <inheritdoc />
-		public async Task<IList<MigrationInfo>> GetMigrationInfoListAsync(IList<FilePath> filePathList)
-		{
-			var migrationInfoList = new MigrationInfo[filePathList.Count];
-			for (var i = 0; i < filePathList.Count; i++)
-			{
-				migrationInfoList[i] = new MigrationInfo
-				{
-					Path = filePathList[i],
-					NewHash = await GetFileHashAsync(filePathList[i].Absolute)
-				};
-			}
-
-			return migrationInfoList;
 		}
 		
 		/// <inheritdoc />

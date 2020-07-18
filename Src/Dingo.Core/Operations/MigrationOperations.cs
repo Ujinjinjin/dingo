@@ -96,8 +96,8 @@ namespace Dingo.Core.Operations
 
 			await RunSystemMigrationsAsync(true);
 
-			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
+			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
 			var migrationsStatusList = await _databaseHelper.GetMigrationsStatusAsync(migrationInfoList);
 
 			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
@@ -110,8 +110,8 @@ namespace Dingo.Core.Operations
 		{
 			await _renderer.PrintTextAsync("Running project migrations...", silent);
 
-			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
+			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
 
 			await ReadAndApplyMigrationList(migrationInfoList, silent);
 		}
@@ -126,9 +126,9 @@ namespace Dingo.Core.Operations
 			var migrationTableExists = await _databaseHelper.CheckMigrationTableExistenceAsync();
 
 			var migrationsRootPath = _pathHelper.GetApplicationBaseDirectory() + _configWrapper.DingoMigrationsRootPath;
-			var filePathList = await _directoryScanner.GetFilePathListAsync(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 
-			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
+			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
 
 			if (!migrationTableExists)
 			{

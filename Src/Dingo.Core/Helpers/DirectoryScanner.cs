@@ -11,12 +11,6 @@ namespace Dingo.Core.Helpers
 	internal class DirectoryScanner : IDirectoryScanner
 	{
 		/// <inheritdoc />
-		public Task<IList<FilePath>> GetFilePathListAsync(string rootPath, string searchPattern)
-		{
-			return Task.FromResult(GetFilePathList(rootPath, searchPattern));
-		}
-	
-		/// <inheritdoc />
 		public IList<FilePath> GetFilePathList(string rootPath, string searchPattern)
 		{
 			var fileList = Directory.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories)
