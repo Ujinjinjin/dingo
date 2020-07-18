@@ -6,6 +6,7 @@ using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Operations;
+using Dingo.UnitTests.Base;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +15,15 @@ using Xunit;
 
 namespace Dingo.UnitTests.OperationsTests
 {
-	public class ProviderOperationsTests
+	public class ProviderOperationsTests : UnitTestsBase
 	{
 		[Fact]
 		public void ProviderOperationsTests__ListSupportedDatabaseProvidersAsync__SmokeTest()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-			
 			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
+			
+			var fixture = CreateFixture(rendererMock);
 
 			var providerOperations = fixture.Create<ProviderOperations>();
 
@@ -39,21 +38,18 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ProviderOperationsTests__ChooseDatabaseProviderAsync__WhenUserChoseProviderFromList_ThenConfigUpdated()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
+			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var promptMock = new Mock<IPrompt>();
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
+			
 			var userChoice = DbProvider.SupportedDatabaseProviderNames.GetRandom();
 			
-			var configWrapperMock = new Mock<IConfigWrapper>();
 			configWrapperMock.SetupAllProperties();
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
-			var promptMock = new Mock<IPrompt>();
 			promptMock
 				.Setup(x => x.Choose(It.IsAny<string>(), It.Is<IList<string>>(y => y.SequenceEqual(DbProvider.SupportedDatabaseProviderNames))))
 				.Returns(userChoice);
-			fixture.Register(() => promptMock.Object);
 
 			var providerOperations = fixture.Create<ProviderOperations>();
 
@@ -72,15 +68,13 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ProviderOperationsTests__ValidateDatabaseProviderAsync__WhenSupportedProviderNameGiven_ThenInfoMessageShown()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock);
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock.Object.ProviderName = DbProvider.SupportedDatabaseProviderNames.GetRandom();
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
 			
 			var providerOperations = fixture.Create<ProviderOperations>();
 
@@ -97,15 +91,13 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ProviderOperationsTests__ValidateDatabaseProviderAsync__WhenNotSupportedProviderNameGiven_ThenWarningMessageShown()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock);
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock.Object.ProviderName = fixture.Create<string>();
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
 			
 			var providerOperations = fixture.Create<ProviderOperations>();
 

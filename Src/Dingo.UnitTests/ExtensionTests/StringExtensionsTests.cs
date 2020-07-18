@@ -24,7 +24,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void StringExtensionsTests__NotContains__WhenTwoStringsCompared_ThenInverseContainsResultReturned()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var initialString = fixture.Create<string>();
 			var substring = fixture.Create<string>();
 			

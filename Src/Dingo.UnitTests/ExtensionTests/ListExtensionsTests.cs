@@ -13,7 +13,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void ListExtensionsTests__GetItem__WhenNegativeIndexGiven_ThenIndexCountGoesBackwards()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var index = new Random().Next(0, array.Count);
 			
@@ -28,7 +28,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void ListExtensionsTests__Sequence__WhenValidIndicesGiven_ThenReturnedSequence()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var startIndex = new Random().Next(0, array.Count / 2);
 			var endIndex = new Random().Next(array.Count / 2, array.Count);
@@ -48,7 +48,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void ListExtensionsTests__Sequence__WhenEndIndexOutOfRangeGiven_ThenExceptionThrown()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var startIndex = new Random().Next(0, array.Count / 2);
 			var endIndex = array.Count * 2;
@@ -61,7 +61,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void ListExtensionsTests__SequenceFrom__WhenValidIndicesGiven_ThenSequenceReturnedFromStartIndexToEnd()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var startIndex = new Random().Next(0, array.Count / 2);
 
@@ -77,7 +77,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void ListExtensionsTests__SequenceTo__WhenValidIndicesGiven_ThenSequenceReturnedFromBeginningToEndIndex()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var endIndex = new Random().Next(array.Count / 2, array.Count);
 

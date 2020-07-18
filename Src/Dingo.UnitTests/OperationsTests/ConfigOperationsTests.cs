@@ -4,13 +4,14 @@ using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Models;
 using Dingo.Core.Operations;
+using Dingo.UnitTests.Base;
 using Moq;
 using System.Threading;
 using Xunit;
 
 namespace Dingo.UnitTests.OperationsTests
 {
-	public class ConfigOperationsTests
+	public class ConfigOperationsTests : UnitTestsBase
 	{
 		[Fact]
 		public void ConfigOperationsTests__UpdateProjectConfigurationAsync__WhenValidParamsAreGiven_ThenConfigsUpdated()
@@ -57,16 +58,16 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__UpdateProjectConfigurationAsync__WhenNullParamsAreGiven_ThenConfigsNotUpdated()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
+			var configWrapperMock = new Mock<IConfigWrapper>();
+			
+			var fixture = CreateFixture(configWrapperMock);
 			
 			var connectionString = fixture.Create<string>();
 			var providerName = fixture.Create<string>();
 			var migrationSchema = fixture.Create<string>();
 			var migrationTable = fixture.Create<string>();
 			var searchPattern = fixture.Create<string>();
-
-			var configWrapperMock = new Mock<IConfigWrapper>();
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock.Object.ConnectionString = connectionString;
 			configWrapperMock.Object.ProviderName = providerName;
@@ -98,13 +99,10 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__ShowProjectConfigurationAsync__SmokeTest()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
-			fixture.Register(() => configWrapperMock.Object);
 			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock);
 
 			var configOperations = fixture.Create<ConfigOperations>();
 
@@ -122,22 +120,19 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__InitConfigurationFileAsync__WhenFileExistsAndUserChoseToOverride_ThenConfigInitialized()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var promptMock = new Mock<IPrompt>();
+
+			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
 				.Returns(true);
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
-			var promptMock = new Mock<IPrompt>();
 			promptMock
 				.Setup(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()))
 				.Returns(true);
-			fixture.Register(() => promptMock.Object);
 
 			var configOperations = fixture.Create<ConfigOperations>();
 
@@ -163,19 +158,16 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__InitConfigurationFileAsync__WhenFileExistsAndUserChoseNotToOverride_ThenConfigNotInitialized()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var promptMock = new Mock<IPrompt>();
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
 				.Returns(true);
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
-			var promptMock = new Mock<IPrompt>();
-			fixture.Register(() => promptMock.Object);
 
 			var configOperations = fixture.Create<ConfigOperations>();
 
@@ -201,19 +193,16 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__InitConfigurationFileAsync__WhenFileNotExists_ThenConfigInitializedWithoutUserConfirmation()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var promptMock = new Mock<IPrompt>();
+			
+			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
+			
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
 				.Returns(false);
-			fixture.Register(() => configWrapperMock.Object);
-			var rendererMock = new Mock<IRenderer>();
-			fixture.Register(() => rendererMock.Object);
-			var promptMock = new Mock<IPrompt>();
-			fixture.Register(() => promptMock.Object);
 
 			var configOperations = fixture.Create<ConfigOperations>();
 

@@ -17,8 +17,6 @@ namespace Dingo.Core.Extensions
 					return $"Warning! {message}";
 				case MessageType.Error:
 					return $"Error! {message}";
-				case MessageType.Info:
-				case MessageType.Unknown:
 				default:
 					return message;
 			}

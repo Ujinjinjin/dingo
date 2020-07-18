@@ -11,7 +11,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void IntegerExtensionsTests__Negate__WhenNotZeroIntegerGiven_ThenIntegerNegated()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var initialNumber = fixture.Create<int>();
 			
 			// Act

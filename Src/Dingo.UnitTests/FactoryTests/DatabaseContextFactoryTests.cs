@@ -18,18 +18,16 @@ namespace Dingo.UnitTests.FactoryTests
 		public void DatabaseContextFactoryTests__CreateDatabaseContext__WhenSupportedDbProviderNameGiven_ThenDatabaseContextCreated()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+
+			var fixture = CreateFixture(configWrapperMock);
+			
 			configWrapperMock
 				.Setup(x => x.ProviderName)
 				.Returns(DbProvider.SupportedDatabaseProviderNames.GetRandom());
 			configWrapperMock
 				.Setup(x => x.ConnectionString)
 				.Returns(fixture.Create<string>());
-			
-			fixture.Register(() => configWrapperMock.Object);
 
 			var databaseContextFactory = fixture.Create<DatabaseContextFactory>();
 
@@ -44,18 +42,16 @@ namespace Dingo.UnitTests.FactoryTests
 		public void DatabaseContextFactoryTests__CreateDatabaseContext__WhenNotSupportedDbProviderNameGiven_ThenExceptionThrown()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
-
 			var configWrapperMock = new Mock<IConfigWrapper>();
+
+			var fixture = CreateFixture(configWrapperMock);
+			
 			configWrapperMock
 				.Setup(x => x.ProviderName)
 				.Returns(fixture.Create<string>());
 			configWrapperMock
 				.Setup(x => x.ConnectionString)
 				.Returns(fixture.Create<string>());
-			
-			fixture.Register(() => configWrapperMock.Object);
 
 			var databaseContextFactory = fixture.Create<DatabaseContextFactory>();
 

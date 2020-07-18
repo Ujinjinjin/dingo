@@ -13,7 +13,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		public void MigrationStatusExtensionsTests__ToDisplayText__WhenValidEnumValueGiven_ThenDisplayTextReturned()
 		{
 			// Arrange
-			var fixture = new Fixture();
+			var fixture = CreateFixture();
 			var enumValue = fixture.Create<MigrationStatus>();
 			
 			// Act
