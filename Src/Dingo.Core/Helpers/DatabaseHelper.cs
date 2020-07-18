@@ -32,28 +32,6 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
-		public async Task<bool> CheckMigrationTableExistenceAsync()
-		{
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
-			{
-				var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
-				return result.SystemCheckTableExistence;
-			}
-		}
-
-		/// <inheritdoc />
-		public async Task InstallCheckTableExistenceProcedureAsync()
-		{
-			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
-			var sqlScriptText = await _fileFacade.ReadAllTextAsync(sqlScriptPath);
-
-			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
-			{
-				await dbContext.ExecuteRawSqlAsync(sqlScriptText);
-			}
-		}
-
-		/// <inheritdoc />
 		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true)
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
@@ -68,11 +46,12 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
-		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
+		public async Task<bool> CheckMigrationTableExistenceAsync()
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
-				await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+				var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
+				return result.SystemCheckTableExistence;
 			}
 		}
 
@@ -127,6 +106,27 @@ namespace Dingo.Core.Helpers
 				return false;
 			}
 			return true;
+		}
+
+		/// <inheritdoc />
+		public async Task InstallCheckTableExistenceProcedureAsync()
+		{
+			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
+			var sqlScriptText = await _fileFacade.ReadAllTextAsync(sqlScriptPath);
+
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
+			{
+				await dbContext.ExecuteRawSqlAsync(sqlScriptText);
+			}
+		}
+
+		/// <inheritdoc />
+		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
+		{
+			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
+			{
+				await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+			}
 		}
 	}
 }

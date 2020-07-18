@@ -22,6 +22,41 @@ namespace Dingo.Cli.Implementors
 		}
 
 		/// <inheritdoc />
+		public async Task ListItemsAsync(IList<string> itemList)
+		{
+			for (var i = 0; i < itemList.Count; i++)
+			{
+				await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {itemList[i]}");
+			}
+		}
+
+		/// <inheritdoc />
+		public async Task PrintBreakLineAsync(
+			bool silent,
+			int? length = null,
+			char symbol = '-',
+			bool newLineBefore = true,
+			bool newLineAfter = true
+		)
+		{
+			if (silent)
+			{
+				return;
+			}
+			await _consoleQueue.EnqueueBreakLine(length, symbol, newLineBefore, newLineAfter);
+		}
+
+		/// <inheritdoc />
+		public async Task PrintTextAsync(string text, bool silent)
+		{
+			if (silent)
+			{
+				return;
+			}
+			await _consoleQueue.EnqueueOutputAsync(text);
+		}
+
+		/// <inheritdoc />
 		public async Task ShowConfigAsync(IConfigWrapper configWrapper)
 		{
 			var configFileString = string.IsNullOrWhiteSpace(configWrapper.ActiveConfigFile)
@@ -43,41 +78,6 @@ namespace Dingo.Cli.Implementors
 		public async Task ShowMessageAsync(string message, MessageType messageType)
 		{
 			await _consoleQueue.EnqueueOutputAsync(messageType.AddPrefixToMessage(message));
-		}
-
-		/// <inheritdoc />
-		public async Task PrintTextAsync(string text, bool silent)
-		{
-			if (silent)
-			{
-				return;
-			}
-			await _consoleQueue.EnqueueOutputAsync(text);
-		}
-
-		/// <inheritdoc />
-		public async Task PrintBreakLineAsync(
-			bool silent,
-			int? length = null,
-			char symbol = '-',
-			bool newLineBefore = true,
-			bool newLineAfter = true
-		)
-		{
-			if (silent)
-			{
-				return;
-			}
-			await _consoleQueue.EnqueueBreakLine(length, symbol, newLineBefore, newLineAfter);
-		}
-
-		/// <inheritdoc />
-		public async Task ListItemsAsync(IList<string> itemList)
-		{
-			for (var i = 0; i < itemList.Count; i++)
-			{
-				await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {itemList[i]}");
-			}
 		}
 
 		/// <inheritdoc />

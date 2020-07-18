@@ -39,6 +39,16 @@ namespace Dingo.Core.Repository
 		}
 
 		/// <inheritdoc />
+		public async Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList)
+		{
+			var result = await QueryAsync<DbMigrationInfoOutput>(
+				"system__get_migrations_status",
+				new DataParameter("pti_migration_info_input", dbMigrationInfoInputList)
+			);
+			return result.ToArray();
+		}
+
+		/// <inheritdoc />
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated)
 		{
 			await ExecuteAsync(
@@ -47,16 +57,6 @@ namespace Dingo.Core.Repository
 				new DataParameter("p_migration_hash", migrationHash),
 				new DataParameter("p_date_updated", dateUpdated)
 			);
-		}
-
-		/// <inheritdoc />
-		public async Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList)
-		{
-			var result = await QueryAsync<DbMigrationInfoOutput>(
-				"system__get_migrations_status",
-				new DataParameter("pti_migration_info_input", dbMigrationInfoInputList)
-			);
-			return result.ToArray();
 		}
 	}
 }

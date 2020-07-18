@@ -25,7 +25,7 @@ namespace Dingo.Core.Config
 
 		public string ConnectionString
 		{
-			get => "";
+			get => "Server=172.18.223.189;Port=5432;Database=dingo_db;User Id=local_user;Password=qwer1234;";
 			set => throw new NotImplementedException();
 		}
 

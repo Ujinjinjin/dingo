@@ -23,7 +23,7 @@ namespace Dingo.Cli.Infrastructure
 			collection.AddSingleton(rootCommand);
 			
 			collection.AddDingo();
-			collection.AddCliff();
+			collection.UseCliff();
 			
 			collection.AddSingleton<IRenderer, CliRenderer>();
 			collection.AddSingleton<IPrompt, CliPrompt>();

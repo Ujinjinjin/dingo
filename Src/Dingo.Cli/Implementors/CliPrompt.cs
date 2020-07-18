@@ -8,15 +8,15 @@ namespace Dingo.Cli.Implementors
 	public class CliPrompt : IPrompt
 	{
 		/// <inheritdoc />
-		public bool Confirm(string message, bool? defaultValue = null)
-		{
-			return Prompt.Confirm(message, defaultValue);
-		}
-
-		/// <inheritdoc />
 		public T Choose<T>(string message, IList<T> choiceList)
 		{
 			return Prompt.Select(message, choiceList);
+		}
+		
+		/// <inheritdoc />
+		public bool Confirm(string message, bool? defaultValue = null)
+		{
+			return Prompt.Confirm(message, defaultValue);
 		}
 	}
 }

@@ -22,12 +22,6 @@ namespace Dingo.Core.Operations
 		}
 
 		/// <inheritdoc />
-		public async Task ListSupportedDatabaseProvidersAsync()
-		{
-			await _renderer.ListItemsAsync(DbProvider.SupportedDatabaseProviderNames);
-		}
-
-		/// <inheritdoc />
 		public async Task ChooseDatabaseProviderAsync(string configPath = null)
 		{
 			await _configWrapper.LoadAsync(configPath);
@@ -39,6 +33,12 @@ namespace Dingo.Core.Operations
 			
 			await _configWrapper.SaveAsync(configPath);
 			await _renderer.ShowMessageAsync($"Database provider successfully updated to `{_configWrapper.ProviderName}`", MessageType.Info);
+		}
+
+		/// <inheritdoc />
+		public async Task ListSupportedDatabaseProvidersAsync()
+		{
+			await _renderer.ListItemsAsync(DbProvider.SupportedDatabaseProviderNames);
 		}
 
 		/// <inheritdoc />

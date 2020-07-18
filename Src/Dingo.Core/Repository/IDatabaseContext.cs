@@ -16,14 +16,14 @@ namespace Dingo.Core.Repository
 		/// <param name="sql">Raw sql query</param>
 		Task ExecuteRawSqlAsync(string sql);
 		
+		/// <summary> Get status of migration list </summary>
+		/// <param name="dbMigrationInfoInputList">List of migrations</param>
+		Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList);
+		
 		/// <summary> Register migration in database </summary>
 		/// <param name="migrationPath">Path to migration file</param>
 		/// <param name="migrationHash">Hash of migration file</param>
 		/// <param name="dateUpdated">Timestamp when migration was updated in database</param>
 		Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated);
-		
-		/// <summary> Get status of migration list </summary>
-		/// <param name="dbMigrationInfoInputList">List of migrations</param>
-		Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList);
 	}
 }

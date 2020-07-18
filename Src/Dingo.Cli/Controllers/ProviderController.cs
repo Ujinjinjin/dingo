@@ -25,16 +25,16 @@ namespace Dingo.Cli.Controllers
 			var command = CreateCommand("provider", "Group of commands to manage database provider");
 
 			command.AddCommand(CreateCommand(
-				"list",
-				"Display list of supported database providers",
-				CommandHandler.Create(_providerOperations.ListSupportedDatabaseProvidersAsync)
-			));
-
-			command.AddCommand(CreateCommand(
 				"choose",
 				"Choose database provider from supported list",
 				CommandHandler.Create<string>(_providerOperations.ChooseDatabaseProviderAsync),
 				CreateOption(new[] {"--configPath", "-c"}, "Custom path to configuration file", typeof(string), false)
+			));
+
+			command.AddCommand(CreateCommand(
+				"list",
+				"Display list of supported database providers",
+				CommandHandler.Create(_providerOperations.ListSupportedDatabaseProvidersAsync)
 			));
 
 			command.AddCommand(CreateCommand(

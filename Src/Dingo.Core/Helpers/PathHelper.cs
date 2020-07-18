@@ -14,20 +14,6 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
-		public string GetApplicationBaseDirectory()
-		{
-			return AppDomain.CurrentDomain.BaseDirectory
-				.ReplaceBackslashesWithSlashes();
-		}
-
-		/// <inheritdoc />
-		public string GetExecutionBaseDirectory()
-		{
-			return $"{Directory.GetCurrentDirectory()}/"
-				.ReplaceBackslashesWithSlashes();
-		}
-
-		/// <inheritdoc />
 		public string GetAbsolutePathFromRelative(string relativePath)
 		{
 			relativePath = relativePath
@@ -37,12 +23,26 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
+		public string GetApplicationBaseDirectory()
+		{
+			return AppDomain.CurrentDomain.BaseDirectory
+				.ReplaceBackslashesWithSlashes();
+		}
+
+		/// <inheritdoc />
 		public string GetAppRootPathFromRelative(string relativePath)
 		{
 			relativePath = relativePath
 				.ReplaceBackslashesWithSlashes();
 
 			return GetApplicationBaseDirectory() + relativePath;
+		}
+
+		/// <inheritdoc />
+		public string GetExecutionBaseDirectory()
+		{
+			return $"{Directory.GetCurrentDirectory()}/"
+				.ReplaceBackslashesWithSlashes();
 		}
 	}
 }

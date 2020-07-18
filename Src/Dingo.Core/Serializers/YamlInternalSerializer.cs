@@ -14,6 +14,20 @@ namespace Dingo.Core.Serializers
 		public string DefaultFileExtension => FileExtension.Yml;
 
 		/// <inheritdoc />
+		public T Deserialize<T>(string contents)
+		{
+			var serializer = new YamlSerializer();
+			var deserializationResult = serializer.Deserialize(contents, typeof(T));
+			
+			if (deserializationResult.Length != 1)
+			{
+				throw new SerializationException();
+			}
+
+			return (T) deserializationResult[0];
+		}
+
+		/// <inheritdoc />
 		public string Serialize<T>(T data)
 		{
 			var config = new YamlConfig
@@ -43,20 +57,6 @@ namespace Dingo.Core.Serializers
 			var serializedObject = string.Join("\n", cleanSerializedList);
 			
 			return serializedObject.ToUnixEol();
-		}
-
-		/// <inheritdoc />
-		public T Deserialize<T>(string contents)
-		{
-			var serializer = new YamlSerializer();
-			var deserializationResult = serializer.Deserialize(contents, typeof(T));
-			
-			if (deserializationResult.Length != 1)
-			{
-				throw new SerializationException();
-			}
-
-			return (T) deserializationResult[0];
 		}
 	}
 }

@@ -31,13 +31,6 @@ namespace Cliff.ConsoleUtils
 		}
 
 		/// <inheritdoc />
-		public Task EnqueueOutputAsync(string value)
-		{
-			_outputQueue.Enqueue(value);
-			return Task.CompletedTask;
-		}
-
-		/// <inheritdoc />
 		public async Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true)
 		{
 			length ??= Console.WindowWidth;
@@ -56,6 +49,13 @@ namespace Cliff.ConsoleUtils
 			}
 			
 			await EnqueueOutputAsync(stringBuilder.ToString());
+		}
+
+		/// <inheritdoc />
+		public Task EnqueueOutputAsync(string value)
+		{
+			_outputQueue.Enqueue(value);
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />

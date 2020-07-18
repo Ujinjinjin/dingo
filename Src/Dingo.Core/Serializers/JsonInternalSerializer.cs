@@ -10,6 +10,12 @@ namespace Dingo.Core.Serializers
 		public string DefaultFileExtension => FileExtension.Json;
 
 		/// <inheritdoc />
+		public T Deserialize<T>(string contents)
+		{
+			return JsonSerializer.Deserialize<T>(contents);
+		}
+
+		/// <inheritdoc />
 		public string Serialize<T>(T data)
 		{
 			var options = new JsonSerializerOptions
@@ -21,12 +27,6 @@ namespace Dingo.Core.Serializers
 			var serializedObject = JsonSerializer.Serialize(data, options);
 
 			return serializedObject.ToUnixEol();
-		}
-
-		/// <inheritdoc />
-		public T Deserialize<T>(string contents)
-		{
-			return JsonSerializer.Deserialize<T>(contents);
 		}
 	}
 }

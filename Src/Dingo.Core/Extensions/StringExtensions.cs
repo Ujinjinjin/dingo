@@ -3,19 +3,19 @@
 	/// <summary> Collection of extensions for <see cref="string"/> </summary>
 	internal static class StringExtensions
 	{
-		/// <summary> Replace all `\` with `/` in given string </summary>
-		/// <param name="value">Source string</param>
-		public static string ReplaceBackslashesWithSlashes(this string value)
-		{
-			return value.Replace("\\", "/");
-		}
-
 		/// <summary> Returns a value indicating whether a specified substring does not occur within this string </summary>
 		/// <param name="source">Source string</param>
 		/// <param name="value">Substring to search</param>
 		public static bool NotContains(this string source, string value)
 		{
 			return !source.Contains(value);
+		}
+		
+		/// <summary> Replace all `\` with `/` in given string </summary>
+		/// <param name="value">Source string</param>
+		public static string ReplaceBackslashesWithSlashes(this string value)
+		{
+			return value.Replace("\\", "/");
 		}
 
 		/// <summary> Replace all `\r\n` with `\n` in given string </summary>

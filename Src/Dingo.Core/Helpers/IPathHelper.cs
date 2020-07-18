@@ -10,22 +10,22 @@
 		/// <returns>Absolute path to the file</returns>
 		string BuildFilePath(string path, string filename, string extension);
 		
-		/// <summary> Get directory where application executables are stored </summary>
-		/// <returns>Application base directory</returns>
-		string GetApplicationBaseDirectory();
-		
-		/// <summary> Get directory from where application was executed </summary>
-		/// <returns>Execution base directory</returns>
-		string GetExecutionBaseDirectory();
-		
 		/// <summary> Build absolute path from relative to execution directory </summary>
 		/// <param name="relativePath">Relative path</param>
 		/// <returns>Absolute path</returns>
 		string GetAbsolutePathFromRelative(string relativePath);
 		
+		/// <summary> Get directory where application executables are stored </summary>
+		/// <returns>Application base directory</returns>
+		string GetApplicationBaseDirectory();
+		
 		/// <summary> Build absolute path from relative to application base directory </summary>
 		/// <param name="relativePath">Relative path</param>
 		/// <returns>Absolute path</returns>
 		string GetAppRootPathFromRelative(string relativePath);
+		
+		/// <summary> Get directory from where application was executed </summary>
+		/// <returns>Execution base directory</returns>
+		string GetExecutionBaseDirectory();
 	}
 }
