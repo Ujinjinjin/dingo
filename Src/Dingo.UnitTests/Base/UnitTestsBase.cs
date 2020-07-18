@@ -10,13 +10,18 @@ namespace Dingo.UnitTests.Base
 	{
 		protected IFixture CreateFixture()
 		{
-			return new Fixture().Customize(new AutoMoqCustomization());
+			var fixture = new Fixture();
+			
+			new AutoMoqCustomization().Customize(fixture);
+			// new SupportMutableValueTypesCustomization().Customize(fixture);
+			
+			return fixture;
 		}
 		
 		protected IFixture CreateFixture<T1>(Mock<T1> T1Value) 
 			where T1 : class
 		{
-			var fixture = new Fixture().Customize(new AutoMoqCustomization());
+			var fixture = CreateFixture();
 			
 			fixture.Register(() => T1Value.Object);
 
@@ -27,7 +32,7 @@ namespace Dingo.UnitTests.Base
 			where T1 : class 
 			where T2 : class
 		{
-			var fixture = new Fixture().Customize(new AutoMoqCustomization());
+			var fixture = CreateFixture();
 			
 			fixture.Register(() => T1Value.Object);
 			fixture.Register(() => T2Value.Object);
@@ -40,7 +45,7 @@ namespace Dingo.UnitTests.Base
 			where T2 : class
 			where T3 : class
 		{
-			var fixture = new Fixture().Customize(new AutoMoqCustomization());
+			var fixture = CreateFixture();
 			
 			fixture.Register(() => T1Value.Object);
 			fixture.Register(() => T2Value.Object);
@@ -55,8 +60,8 @@ namespace Dingo.UnitTests.Base
 			where T3 : class
 			where T4 : class
 		{
-			var fixture = new Fixture().Customize(new AutoMoqCustomization());
-			
+			var fixture = CreateFixture();
+
 			fixture.Register(() => T1Value.Object);
 			fixture.Register(() => T2Value.Object);
 			fixture.Register(() => T3Value.Object);
@@ -67,16 +72,28 @@ namespace Dingo.UnitTests.Base
 		
 		protected IList<int> CreateIntArray(int length)
 		{
+			var array = CreateItemArray<int>(length);
+			
+			for (var i = 0; i < length; i++)
+			{
+				array[i] = i;
+			}
+
+			return array;
+		}
+		
+		protected IList<T> CreateItemArray<T>(int length)
+		{
 			if (length < 0)
 			{
 				length = length.Negate();
 			}
 			
-			var array = new int[length];
+			var array = new T[length];
 			
 			for (var i = 0; i < length; i++)
 			{
-				array[i] = i;
+				array[i] = default;
 			}
 
 			return array;
