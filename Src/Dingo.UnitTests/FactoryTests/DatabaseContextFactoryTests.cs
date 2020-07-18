@@ -1,5 +1,4 @@
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using Dingo.Core.Config;
 using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
