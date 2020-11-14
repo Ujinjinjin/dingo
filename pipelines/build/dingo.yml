@@ -1,6 +1,5 @@
-# Azure Pipelines yml instructions
-
 trigger:
+  batch: true
   branches:
     include:
     - master
@@ -13,8 +12,8 @@ pr:
     - master
 
 variables:
-  - name: 'buildName'
-    value: 'Dingo build'
+  - name: 'pipeline_name'
+    value: 'Dingo. Test coverage'
   - name: 'solution'
     value: 'src/dingo.sln'
   - name: 'buildPlatform'
@@ -22,37 +21,20 @@ variables:
   - name: 'buildConfiguration'
     value: 'Release'
 
-name: $[variables.buildName]
-
+name: '${{ variables.pipeline_name }} - $(Rev:r)'
 
 jobs:
-  - job: windows
+  - job: Windows
     pool:
       vmImage: 'windows-latest'
     
     steps:
-    - task: NuGetToolInstaller@1
-      displayName: 'install nuget'
-
-    - task: NuGetCommand@2
-      displayName: 'nuget restore'
-      inputs:
-        restoreSolution: '$(solution)'
-
-    - task: VSBuild@1
-      displayName: 'build project'
-      inputs:
-        solution: '$(solution)'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'run unit tests'
-      inputs:
-        command: 'test'
-        projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
-        testRunTitle: 'Unit tests'
-        arguments: '-c $(buildConfiguration) --collect "Code coverage"'
+    - template: ../templates/build-template.yml
+      parameters:
+        solution: $(solution)
+        buildPlatform: $(buildPlatform)
+        buildConfiguration: $(buildConfiguration)
+        collectCodeCoverage: true
     
     - task: PublishCodeCoverageResults@1
       displayName: 'publish code coverage result'

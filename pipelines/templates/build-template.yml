@@ -1,0 +1,35 @@
+parameters:
+  - name: 'solution'
+    default: ''
+  - name: 'buildPlatform'
+    default: ''
+  - name: 'buildConfiguration'
+    default: ''
+  - name: 'collectCodeCoverage'
+    type: boolean
+    default: false
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'nuget restore'
+  inputs:
+    command: 'restore'
+    projects: ${{ parameters.solution }}
+
+- task: DotNetCoreCLI@2
+  displayName: 'build projects'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '-c ${{ parameters.buildConfiguration }}'
+
+- task: DotNetCoreCLI@2
+  displayName: 'run unit tests'
+  inputs:
+    command: 'test'
+    projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
+    testRunTitle: 'Unit tests'
+    ${{ if eq(parameters.collectCodeCoverage, true) }}:
+      arguments: '-c ${{ parameters.buildConfiguration }} --collect "Code coverage"'
+    ${{ if eq(parameters.collectCodeCoverage, false) }}:
+      arguments: '-c ${{ parameters.buildConfiguration }}'
