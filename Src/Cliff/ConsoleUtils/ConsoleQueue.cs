@@ -62,7 +62,7 @@ namespace Cliff.ConsoleUtils
 		public void Dispose()
 		{
 			_outputQueue?.Clear();
-			_thread.Abort();
+			_thread.Interrupt();
 		}
 	}
 }

@@ -2,12 +2,4 @@
 
 ## Summary
 
-- published debian package
-
-## Added
-
-## Removed
-
-## Known issues
-
-## Fixed issues
+- ported to .NET 5.0

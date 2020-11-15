@@ -1,10 +1,10 @@
 ﻿using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
+using Jarl.Yaml;
+using Jarl.Yaml.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Yaml;
-using System.Yaml.Serialization;
 
 namespace Dingo.Core.Serializers
 {
@@ -32,8 +32,9 @@ namespace Dingo.Core.Serializers
 		{
 			var config = new YamlConfig
 			{
-				DontUseVerbatimTag = true,
-				OmitTagForRootNode = true
+				DoNotUseVerbatimTag = true,
+				OmitTagForRootNode = true,
+				LineBreakForOutput = "\n"
 			};
 			var serializer = new YamlSerializer(config);
 
