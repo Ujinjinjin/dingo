@@ -1,6 +1,7 @@
-﻿using Dingo.Core.Config;
-using Dingo.Core.Facades;
+﻿using Dingo.Core.Adapters;
+using Dingo.Core.Config;
 using Dingo.Core.Factories;
+using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Repository.DbClasses;
 using System;
@@ -8,26 +9,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Helpers
+namespace Dingo.Core.Repository
 {
 	/// <inheritdoc />
-	internal class DatabaseHelper : IDatabaseHelper
+	internal class DatabaseRepository : IDatabaseRepository
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IConfigWrapper _configWrapper;
-		private readonly IFileFacade _fileFacade;
+		private readonly IFileAdapter _fileAdapter;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
 
-		public DatabaseHelper(
+		public DatabaseRepository(
 			IPathHelper pathHelper,
 			IConfigWrapper configWrapper,
-			IFileFacade fileFacade,
+			IFileAdapter fileAdapter,
 			IDatabaseContextFactory databaseContextFactory
 		)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
-			_fileFacade = fileFacade ?? throw new ArgumentNullException(nameof(fileFacade));
+			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
 		}
 
@@ -112,7 +113,7 @@ namespace Dingo.Core.Helpers
 		public async Task InstallCheckTableExistenceProcedureAsync()
 		{
 			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
-			var sqlScriptText = await _fileFacade.ReadAllTextAsync(sqlScriptPath);
+			var sqlScriptText = await _fileAdapter.ReadAllTextAsync(sqlScriptPath);
 
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{

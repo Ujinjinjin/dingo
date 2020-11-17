@@ -1,7 +1,6 @@
 using AutoFixture;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
-using Dingo.UnitTests.Base;
 using System;
 using Xunit;
 

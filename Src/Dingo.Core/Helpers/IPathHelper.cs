@@ -27,5 +27,10 @@
 		/// <summary> Get directory from where application was executed </summary>
 		/// <returns>Execution base directory</returns>
 		string GetExecutionBaseDirectory();
+
+		/// <summary> Extract root folder from path </summary>
+		/// <param name="path">Path</param>
+		/// <returns>Root folder name</returns>
+		string GetRootFolder(string path);
 	}
 }

@@ -3,10 +3,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Facades
+namespace Dingo.Core.Adapters
 {
 	/// <inheritdoc />
-	public class FileFacade : IFileFacade
+	public class FileAdapter : IFileAdapter
 	{
 		
 		/// <inheritdoc />

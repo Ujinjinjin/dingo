@@ -3,10 +3,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Facades
+namespace Dingo.Core.Adapters
 {
 	/// <summary> Facade over <see cref="System.IO.File"/> for unit testing purposes </summary>
-	public interface IFileFacade
+	public interface IFileAdapter
 	{
 		/// <inheritdoc cref="File.Exists"/>
 		bool Exists(string path);

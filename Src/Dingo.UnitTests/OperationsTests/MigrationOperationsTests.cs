@@ -4,7 +4,7 @@ using Dingo.Core.Config;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Operations;
-using Dingo.UnitTests.Base;
+using Dingo.Core.Repository;
 using Moq;
 using System.Collections.Generic;
 using System.Threading;
@@ -21,7 +21,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
 			
@@ -46,7 +46,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
 			
@@ -71,7 +71,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
 			
@@ -98,7 +98,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
 			
@@ -125,7 +125,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
 			
@@ -152,7 +152,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			var databaseHelperMock = new Mock<IDatabaseHelper>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
 			var hashMakerMock = new Mock<IHashMaker>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock, hashMakerMock);

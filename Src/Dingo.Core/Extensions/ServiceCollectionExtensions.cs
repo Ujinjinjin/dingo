@@ -1,5 +1,5 @@
-﻿using Dingo.Core.Config;
-using Dingo.Core.Facades;
+﻿using Dingo.Core.Adapters;
+using Dingo.Core.Config;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Dingo.Core.Operations;
@@ -22,12 +22,13 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<IDatabaseContextFactory, DatabaseContextFactory>();
 			serviceCollection.AddSingleton<IInternalSerializerFactory, InternalSerializerFactory>();
 			
-			serviceCollection.AddSingleton<IDatabaseHelper, DatabaseHelper>();
+			serviceCollection.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 			serviceCollection.AddSingleton<IHashMaker, HashMaker>();
 			serviceCollection.AddSingleton<IPathHelper, PathHelper>();
 			
-			serviceCollection.AddSingleton<IFileFacade, FileFacade>();
+			serviceCollection.AddSingleton<IDirectoryAdapter, DirectoryAdapter>();
+			serviceCollection.AddSingleton<IFileAdapter, FileAdapter>();
 			
 			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			serviceCollection.AddSingleton<IConfigOperations, ConfigOperations>();

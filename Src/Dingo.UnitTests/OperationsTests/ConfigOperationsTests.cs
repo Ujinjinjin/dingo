@@ -4,7 +4,6 @@ using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Models;
 using Dingo.Core.Operations;
-using Dingo.UnitTests.Base;
 using Moq;
 using System.Threading;
 using Xunit;

@@ -4,7 +4,6 @@ using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
 using Dingo.Core.Factories;
 using Dingo.Core.Repository;
-using Dingo.UnitTests.Base;
 using Moq;
 using System;
 using Xunit;

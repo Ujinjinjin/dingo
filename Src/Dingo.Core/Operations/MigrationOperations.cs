@@ -1,9 +1,10 @@
 ﻿using Dingo.Core.Abstractions;
+using Dingo.Core.Adapters;
 using Dingo.Core.Config;
 using Dingo.Core.Extensions;
-using Dingo.Core.Facades;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
+using Dingo.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,30 +15,30 @@ namespace Dingo.Core.Operations
 	internal class MigrationOperations : IMigrationOperations
 	{
 		private readonly IConfigWrapper _configWrapper;
-		private readonly IDatabaseHelper _databaseHelper;
+		private readonly IDatabaseRepository _databaseRepository;
 		private readonly IDirectoryScanner _directoryScanner;
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
 		private readonly IRenderer _renderer;
-		private readonly IFileFacade _fileFacade;
+		private readonly IFileAdapter _fileAdapter;
 
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
-			IDatabaseHelper databaseHelper,
+			IDatabaseRepository databaseRepository,
 			IDirectoryScanner directoryScanner,
 			IHashMaker hashMaker,
 			IPathHelper pathHelper,
 			IRenderer renderer,
-			IFileFacade fileFacade
+			IFileAdapter fileAdapter
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
-			_databaseHelper = databaseHelper ?? throw new ArgumentNullException(nameof(databaseHelper));
+			_databaseRepository = databaseRepository ?? throw new ArgumentNullException(nameof(databaseRepository));
 			_directoryScanner = directoryScanner ?? throw new ArgumentNullException(nameof(directoryScanner));
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
-			_fileFacade = fileFacade ?? throw new ArgumentNullException(nameof(fileFacade));
+			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 		}
 
 		/// <inheritdoc />
@@ -45,7 +46,7 @@ namespace Dingo.Core.Operations
 		{
 			await _configWrapper.LoadAsync(configPath);
 
-			if (await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			if (await _databaseRepository.HandshakeDatabaseConnectionAsync())
 			{
 				await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!", MessageType.Info);
 			}
@@ -73,7 +74,7 @@ namespace Dingo.Core.Operations
 			_configWrapper.MigrationSchema = migrationSchema ?? _configWrapper.MigrationSchema;
 			_configWrapper.MigrationTable = migrationTable ?? _configWrapper.MigrationTable;
 
-			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
 			{
 				await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
 				return;
@@ -91,7 +92,7 @@ namespace Dingo.Core.Operations
 		{
 			await _configWrapper.LoadAsync(configPath);
 
-			if (!await _databaseHelper.HandshakeDatabaseConnectionAsync())
+			if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
 			{
 				await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
 				return;
@@ -101,7 +102,7 @@ namespace Dingo.Core.Operations
 
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
-			var migrationsStatusList = await _databaseHelper.GetMigrationsStatusAsync(migrationInfoList);
+			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 
 			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
 		}
@@ -124,9 +125,9 @@ namespace Dingo.Core.Operations
 		{
 			await _renderer.PrintTextAsync("Running system migrations...", silent);
 
-			await _databaseHelper.InstallCheckTableExistenceProcedureAsync();
+			await _databaseRepository.InstallCheckTableExistenceProcedureAsync();
 
-			var migrationTableExists = await _databaseHelper.CheckMigrationTableExistenceAsync();
+			var migrationTableExists = await _databaseRepository.CheckMigrationTableExistenceAsync();
 
 			var migrationsRootPath = _pathHelper.GetApplicationBaseDirectory() + _configWrapper.DingoMigrationsRootPath;
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
@@ -137,13 +138,13 @@ namespace Dingo.Core.Operations
 			{
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
-					var sqlScriptText = await _fileFacade.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-					await _databaseHelper.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
+					var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
+					await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
 				}
 
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
-					await _databaseHelper.RegisterMigrationAsync(migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
+					await _databaseRepository.RegisterMigrationAsync(migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
 				}
 			}
 			else
@@ -157,7 +158,7 @@ namespace Dingo.Core.Operations
 		/// <param name="silent">Show less info on progress</param>
 		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
-			var migrationsStatusList = await _databaseHelper.GetMigrationsStatusAsync(migrationInfoList);
+			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
 			
 			for (var i = 0; i < migrationsStatusList.Count; i++)
@@ -171,10 +172,10 @@ namespace Dingo.Core.Operations
 				}
 
 				await _renderer.PrintTextAsync("Reading migration file contents...", silent);
-				var sqlScriptText = await _fileFacade.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
+				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
 
 				await _renderer.PrintTextAsync("Applying migration...", silent);
-				await _databaseHelper.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
+				await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
 
 				await _renderer.PrintTextAsync("Migration successfully applied.", silent);
 			}

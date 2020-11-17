@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Helpers
+namespace Dingo.Core.Repository
 {
 	/// <summary> Database helper </summary>
-	internal interface IDatabaseHelper
+	internal interface IDatabaseRepository
 	{
 		/// <summary> Apply migration </summary>
 		/// <param name="sql">Sql text of migration</param>

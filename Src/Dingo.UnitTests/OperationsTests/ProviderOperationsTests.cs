@@ -5,7 +5,6 @@ using Dingo.Core.Constants;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Operations;
-using Dingo.UnitTests.Base;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;

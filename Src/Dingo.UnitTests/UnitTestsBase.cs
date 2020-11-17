@@ -4,7 +4,7 @@ using Dingo.Core.Extensions;
 using Moq;
 using System.Collections.Generic;
 
-namespace Dingo.UnitTests.Base
+namespace Dingo.UnitTests
 {
 	public class UnitTestsBase
 	{

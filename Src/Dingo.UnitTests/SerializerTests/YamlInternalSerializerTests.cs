@@ -1,5 +1,4 @@
 using Dingo.Core.Serializers;
-using Dingo.UnitTests.Base;
 using Dingo.UnitTests.Models;
 using System.Runtime.Serialization;
 using Xunit;

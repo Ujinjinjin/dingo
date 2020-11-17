@@ -1,5 +1,5 @@
-﻿using Dingo.Core.Constants;
-using Dingo.Core.Facades;
+﻿using Dingo.Core.Adapters;
+using Dingo.Core.Constants;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
@@ -14,17 +14,17 @@ namespace Dingo.Core.Config
 	internal class ConfigLoader : IConfigLoader
 	{
 		private readonly IPathHelper _pathHelper;
-		private readonly IFileFacade _fileFacade;
+		private readonly IFileAdapter _fileAdapter;
 		private readonly IInternalSerializerFactory _internalSerializerFactory;
 
 		public ConfigLoader(
 			IPathHelper pathHelper,
-			IFileFacade fileFacade,
+			IFileAdapter fileAdapter,
 			IInternalSerializerFactory internalSerializerFactory
 		)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_fileFacade = fileFacade ?? throw new ArgumentNullException(nameof(fileFacade));
+			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 			_internalSerializerFactory = internalSerializerFactory ?? throw new ArgumentNullException(nameof(internalSerializerFactory));
 		}
 
@@ -51,7 +51,7 @@ namespace Dingo.Core.Config
 
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
 			
-			if (!_fileFacade.Exists(configPath))
+			if (!_fileAdapter.Exists(configPath))
 			{
 				return new LoadConfigResult
 				{
@@ -60,7 +60,7 @@ namespace Dingo.Core.Config
 				};
 			}
 
-			var fileContents = await _fileFacade.ReadAllTextAsync(configPath, cancellationToken);
+			var fileContents = await _fileAdapter.ReadAllTextAsync(configPath, cancellationToken);
 
 			return new LoadConfigResult
 			{

@@ -53,10 +53,10 @@ specifying:
 or
 
 ```shell
-$ dingo migrations run -m SQL_MIGRATIONS_PATH\
-                       --connectionString CONNECTION_STRING\
-                       --providerName PROVIDER_NAME\
-                       --migrationSchema MIGRATIONS_SCHEMA\
+$ dingo migrations run -m SQL_MIGRATIONS_PATH \
+                       --connectionString CONNECTION_STRING \
+                       --providerName PROVIDER_NAME \
+                       --migrationSchema MIGRATIONS_SCHEMA \
                        --migrationTable MIGRATIONS_TABLE
 ```
 

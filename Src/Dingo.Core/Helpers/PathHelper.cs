@@ -44,5 +44,18 @@ namespace Dingo.Core.Helpers
 			return $"{Directory.GetCurrentDirectory()}/"
 				.ReplaceBackslashesWithSlashes();
 		}
+		
+		/// <inheritdoc />
+		public string GetRootFolder(string path)
+		{
+			while (true)
+			{
+				var temp = Path.GetDirectoryName(path);
+				if (string.IsNullOrEmpty(temp))
+					break;
+				path = temp;
+			}
+			return path;
+		}
 	}
 }
