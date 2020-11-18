@@ -1,5 +1,4 @@
 ﻿using Dingo.Core.DbUtils;
-using Dingo.Core.Loggers;
 using Dingo.Core.Repository.DbClasses;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
@@ -12,12 +11,15 @@ namespace Dingo.Core.Repository
 {
 	internal class DatabaseContext : DataConnectionBase, IDatabaseContext
 	{
-		private static readonly ILogger Logger = new ConsoleLogger(LogLevel.None);
-		
 		protected internal DatabaseContext(
 			string providerName,
-			string connectionString
-		) : base(providerName, connectionString, Logger)
+			string connectionString,
+			ILoggerFactory loggerFactory
+		) : base(
+			providerName,
+			connectionString,
+			loggerFactory.CreateLogger<DatabaseContext>() ?? throw new ArgumentNullException(nameof(loggerFactory))
+		)
 		{
 		}
 

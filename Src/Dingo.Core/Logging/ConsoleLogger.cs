@@ -1,15 +1,17 @@
-﻿using Dingo.Core.Helpers.Static;
+using Dingo.Core.Helpers.Static;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Dingo.Core.Loggers
+namespace Dingo.Core.Logging
 {
 	internal class ConsoleLogger : ILogger
 	{
+		private readonly string _categoryName;
 		private readonly LogLevel _logLevel;
 
-		public ConsoleLogger(LogLevel logLevel)
+		public ConsoleLogger(string categoryName, LogLevel logLevel)
 		{
+			_categoryName = categoryName ?? throw new ArgumentNullException(nameof(categoryName));
 			_logLevel = logLevel;
 		}
 
@@ -36,7 +38,7 @@ namespace Dingo.Core.Loggers
 				return;
 			}
 
-			message = $"{logLevel} | {DateTime.UtcNow} | {message}";
+			message = $"{logLevel} | {DateTime.UtcNow} | {_categoryName} | {message}";
 			
 			Console.WriteLine(message);
 		}

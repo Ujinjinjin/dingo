@@ -1,6 +1,14 @@
-## Welcome to dingo
+# dingo
 
-This repo contains core functionality helping to automate database installation.
+Dingo is platform agnostic database migration tool, helping to automate database schema updates. Because it uses plain `.sql` scripts for writing database migrations, tt can be used alongside with applications written in any known programming language.
+
+## Key features
+
+- Supports PostgreSQL
+- Migrations are timestamp-versioned
+- Migrations are written using plain `.sql`
+- Project configs can be stored in `.yml`
+- Config file can be specified as command line argument
 
 ## Summary
 

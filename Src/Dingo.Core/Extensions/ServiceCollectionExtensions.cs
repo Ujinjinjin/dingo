@@ -5,6 +5,7 @@ using Dingo.Core.Helpers;
 using Dingo.Core.Operations;
 using Dingo.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Extensions
 {
@@ -19,21 +20,23 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<IConfigSaver, ConfigSaver>();
 			serviceCollection.AddSingleton<IConfigWrapper, ConfigWrapper>();
 			
+			serviceCollection.AddSingleton<ILoggerFactory, DingoLoggerFactory>();
+			serviceCollection.AddSingleton<IOutputQueueFactory, OutputQueueFactory>();
 			serviceCollection.AddSingleton<IDatabaseContextFactory, DatabaseContextFactory>();
 			serviceCollection.AddSingleton<IInternalSerializerFactory, InternalSerializerFactory>();
 			
-			serviceCollection.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 			serviceCollection.AddSingleton<IHashMaker, HashMaker>();
 			serviceCollection.AddSingleton<IPathHelper, PathHelper>();
 			
 			serviceCollection.AddSingleton<IDirectoryAdapter, DirectoryAdapter>();
 			serviceCollection.AddSingleton<IFileAdapter, FileAdapter>();
-			
+
 			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			serviceCollection.AddSingleton<IConfigOperations, ConfigOperations>();
 			serviceCollection.AddSingleton<IProviderOperations, ProviderOperations>();
 			
+			serviceCollection.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 			serviceCollection.AddSingleton<IDatabaseContext, DatabaseContext>();
 		}
 	}
