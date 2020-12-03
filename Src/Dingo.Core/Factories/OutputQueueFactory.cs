@@ -7,5 +7,8 @@ namespace Dingo.Core.Factories
 	{
 		/// <inheritdoc />
 		public IOutputQueue CreateFileOutputQueue() => new FileOutputQueue();
+		
+		/// <inheritdoc />
+		public IOutputQueue CreateConsoleOutputQueue() => new ConsoleOutputQueue();
 	}
 }

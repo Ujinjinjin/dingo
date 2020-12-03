@@ -4,8 +4,8 @@ namespace Dingo.Core.IO
 	internal interface IOutputQueue
 	{
 		/// <summary> Put string in output queue </summary>
-		/// <param name="outputPath">Path where output will be written</param>
 		/// <param name="outputValue">Item to queue</param>
-		void EnqueueOutput(string outputPath, string outputValue);
+		/// <param name="outputPath">Path where output will be written</param>
+		void EnqueueOutput(string outputValue, string outputPath);
 	}
 }

@@ -1,6 +1,8 @@
 # dingo
 
-Dingo is platform agnostic database migration tool, helping to automate database schema updates. Because it uses plain `.sql` scripts for writing database migrations, tt can be used alongside with applications written in any known programming language.
+Dingo is platform agnostic database migration tool, helping to automate database schema updates.
+
+Because it uses plain `.sql` scripts for writing database migrations, tt can be used alongside with applications written in any known programming language.
 
 ## Key features
 
