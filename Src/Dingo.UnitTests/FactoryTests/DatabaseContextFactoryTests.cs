@@ -33,6 +33,7 @@ namespace Dingo.UnitTests.FactoryTests
 			var databaseContext = databaseContextFactory.CreateDatabaseContext();
 
 			// Assert
+			Assert.NotNull(databaseContext);
 			Assert.IsAssignableFrom<IDatabaseContext>(databaseContext);
 		}
 		

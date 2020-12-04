@@ -19,6 +19,8 @@ namespace Dingo.UnitTests.FactoryTests
 			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
 			// Assert
+			Assert.NotNull(internalSerializer);
+			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
 			Assert.Equal(typeof(JsonInternalSerializer), internalSerializer.GetType());
 			Assert.Equal(FileExtension.Json, internalSerializer.DefaultFileExtension);
 		}
@@ -34,6 +36,8 @@ namespace Dingo.UnitTests.FactoryTests
 			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
 			// Assert
+			Assert.NotNull(internalSerializer);
+			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
 			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
 			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
 		}
@@ -49,6 +53,8 @@ namespace Dingo.UnitTests.FactoryTests
 			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
 			// Assert
+			Assert.NotNull(internalSerializer);
+			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
 			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
 			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
 		}
