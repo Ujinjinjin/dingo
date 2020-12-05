@@ -42,12 +42,12 @@ namespace Cliff.ConsoleUtils
 			}
 
 			stringBuilder.Append(new string(symbol, length.Value));
-			
+
 			if (newLineAfter)
 			{
 				stringBuilder.Append("\n");
 			}
-			
+
 			await EnqueueOutputAsync(stringBuilder.ToString());
 		}
 

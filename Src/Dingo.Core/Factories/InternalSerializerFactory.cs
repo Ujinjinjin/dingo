@@ -14,7 +14,7 @@ namespace Dingo.Core.Factories
 			var fileExtension = filename
 				.Split('.')
 				.GetItem(^1);
-			
+
 			switch (fileExtension)
 			{
 				case FileExtension.Json:

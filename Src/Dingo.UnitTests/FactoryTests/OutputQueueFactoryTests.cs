@@ -1,3 +1,4 @@
+using AutoFixture;
 using Dingo.Core.Factories;
 using Dingo.Core.IO;
 using Xunit;
@@ -10,7 +11,8 @@ namespace Dingo.UnitTests.FactoryTests
 		public void OutputQueueFactoryTests__CreateFileOutputQueue__WhenFactoryMethodInvoked_ThenFileOutputQueueReturned()
 		{
 			// Arrange
-			var outputQueueFactory = new OutputQueueFactory();
+			var fixture = CreateFixture();
+			var outputQueueFactory = fixture.Create<OutputQueueFactory>();
 
 			// Act
 			var fileOutputQueue = outputQueueFactory.CreateFileOutputQueue();
@@ -25,7 +27,8 @@ namespace Dingo.UnitTests.FactoryTests
 		public void OutputQueueFactoryTests__CreateConsoleOutputQueue__WhenFactoryMethodInvoked_ThenConsoleOutputQueueReturned()
 		{
 			// Arrange
-			var outputQueueFactory = new OutputQueueFactory();
+			var fixture = CreateFixture();
+			var outputQueueFactory = fixture.Create<OutputQueueFactory>();
 
 			// Act
 			var consoleOutputQueue = outputQueueFactory.CreateConsoleOutputQueue();

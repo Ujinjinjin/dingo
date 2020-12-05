@@ -17,14 +17,14 @@ namespace Dingo.Core.Helpers
 				using (var stream = File.OpenRead(filename))
 				{
 					var hash = md5.ComputeHash(stream);
-					
+
 					return BitConverter.ToString(hash)
 						.Replace("-", "")
 						.ToLowerInvariant();
 				}
 			}
 		}
-		
+
 		/// <inheritdoc />
 		public IList<MigrationInfo> GetMigrationInfoList(IList<FilePath> filePathList)
 		{

@@ -18,7 +18,7 @@ namespace Dingo.Core.Repository
 		) : base(
 			providerName,
 			connectionString,
-			loggerFactory.CreateLogger<DatabaseContext>() ?? throw new ArgumentNullException(nameof(loggerFactory))
+			loggerFactory?.CreateLogger<DatabaseContext>()
 		)
 		{
 		}

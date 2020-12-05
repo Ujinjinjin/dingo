@@ -15,7 +15,7 @@ namespace Dingo.Core.Extensions
 		{
 			logger.Log(logLevel, exception, message);
 		}
-		
+
 		/// <summary> Log message with <see cref="LogLevel.Debug"/> log level </summary>
 		/// <param name="logger">Logger</param>
 		/// <param name="message">Message to be logged</param>

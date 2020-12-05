@@ -7,7 +7,7 @@ namespace Dingo.Core.Models
 	{
 		/// <summary> Path from which configs were loaded </summary>
 		public string ConfigPath { get; set; }
-		
+
 		/// <summary> Project config </summary>
 		public IConfiguration Configuration { get; set; }
 	}

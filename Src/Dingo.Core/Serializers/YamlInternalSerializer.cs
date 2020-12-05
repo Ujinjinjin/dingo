@@ -18,7 +18,7 @@ namespace Dingo.Core.Serializers
 		{
 			var serializer = new YamlSerializer();
 			var deserializationResult = serializer.Deserialize(contents, typeof(T));
-			
+
 			if (deserializationResult.Length != 1)
 			{
 				throw new SerializationException();
@@ -42,7 +42,7 @@ namespace Dingo.Core.Serializers
 				.ToUnixEol()
 				.Split("\n");
 			var cleanSerializedList = new List<string>();
-			
+
 			for (var i = 0; i < dirtySerializedArray.Length; i++)
 			{
 				if (dirtySerializedArray[i].NotContains(": null"))
@@ -56,7 +56,7 @@ namespace Dingo.Core.Serializers
 				.ToList();
 
 			var serializedObject = string.Join("\n", cleanSerializedList);
-			
+
 			return serializedObject.ToUnixEol();
 		}
 	}

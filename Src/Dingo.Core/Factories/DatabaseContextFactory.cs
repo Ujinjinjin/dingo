@@ -13,13 +13,13 @@ namespace Dingo.Core.Factories
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly ILoggerFactory _loggerFactory;
-		
+
 		public DatabaseContextFactory(IConfigWrapper configWrapper, ILoggerFactory loggerFactory)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
-		
+
 		/// <inheritdoc />
 		/// <exception cref="ArgumentOutOfRangeException">Specified database provider not supported yet</exception>
 		public IDatabaseContext CreateDatabaseContext()

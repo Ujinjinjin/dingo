@@ -50,7 +50,7 @@ namespace Dingo.Core.Config
 			}
 
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
-			
+
 			if (!_fileAdapter.Exists(configPath))
 			{
 				return new LoadConfigResult

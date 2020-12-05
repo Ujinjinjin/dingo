@@ -69,7 +69,7 @@ namespace Dingo.Core.Repository
 					})
 					.ToArray();
 				var dbMigrationStatuses = await dbContext.GetMigrationsStatusAsync(input);
-				
+
 				var result = new MigrationInfo[dbMigrationStatuses.Count];
 				for (var i = 0; i < dbMigrationStatuses.Count; i++)
 				{

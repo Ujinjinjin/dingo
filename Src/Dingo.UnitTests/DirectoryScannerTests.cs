@@ -21,8 +21,8 @@ namespace Dingo.UnitTests
 			var rootPath = "/usr/home/projects/dingo/";
 
 			mockPathHelper
-				.Setup(x => x.GetRootFolder(It.IsAny<string>()))
-				.Returns<string>(x => pathHelper.GetRootFolder(x));
+				.Setup(x => x.GetRootDirectory(It.IsAny<string>()))
+				.Returns<string>(x => pathHelper.GetRootDirectory(x));
 			directoryAdapter
 				.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
 				.Returns(new[]

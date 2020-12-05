@@ -17,28 +17,28 @@ namespace Dingo.Core.Operations
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseRepository _databaseRepository;
 		private readonly IDirectoryScanner _directoryScanner;
+		private readonly IFileAdapter _fileAdapter;
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
 		private readonly IRenderer _renderer;
-		private readonly IFileAdapter _fileAdapter;
 
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
 			IDatabaseRepository databaseRepository,
 			IDirectoryScanner directoryScanner,
+			IFileAdapter fileAdapter,
 			IHashMaker hashMaker,
 			IPathHelper pathHelper,
-			IRenderer renderer,
-			IFileAdapter fileAdapter
+			IRenderer renderer
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_databaseRepository = databaseRepository ?? throw new ArgumentNullException(nameof(databaseRepository));
 			_directoryScanner = directoryScanner ?? throw new ArgumentNullException(nameof(directoryScanner));
+			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
-			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 		}
 
 		/// <inheritdoc />

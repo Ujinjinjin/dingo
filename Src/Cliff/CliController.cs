@@ -9,15 +9,15 @@ namespace Cliff
 	{
 		/// <summary> Root cli command </summary>
 		protected readonly RootCommand RootCommand;
-		
+
 		protected CliController(RootCommand rootCommand)
 		{
 			RootCommand = rootCommand ?? throw new ArgumentNullException(nameof(rootCommand));
 		}
-		
+
 		/// <inheritdoc />
 		public abstract void Register();
-		
+
 		/// <summary> Create CLI command </summary>
 		/// <param name="name">Command name</param>
 		/// <param name="description">Command description</param>

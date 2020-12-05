@@ -15,7 +15,7 @@ namespace Dingo.Core.Extensions
 		{
 			return source[index];
 		}
-		
+
 		/// <summary> Get random item from source list </summary>
 		/// <param name="source">Source list of items</param>
 		/// <typeparam name="T">The type of items in the list</typeparam>
@@ -24,7 +24,7 @@ namespace Dingo.Core.Extensions
 		{
 			return source[new Random().Next(0, source.Count)];
 		}
-		
+
 		/// <summary> Select sequence from list of item beginning at startIndex and ending at endIndex </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="startIndex">Start index</param>
@@ -37,7 +37,7 @@ namespace Dingo.Core.Extensions
 			{
 				endIndex = source.Count - endIndex.Value;
 			}
-			
+
 			var targetLength = endIndex.Value - startIndex.Value;
 			var target = new T[targetLength];
 
@@ -48,7 +48,7 @@ namespace Dingo.Core.Extensions
 
 			return target;
 		}
-		
+
 		/// <summary> Select sequence from list of item beginning at startIndex and ending with last item </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="startIndex">Start index</param>
@@ -58,7 +58,7 @@ namespace Dingo.Core.Extensions
 		{
 			return Sequence(source, startIndex, ^1);
 		}
-		
+
 		/// <summary> Select sequence from list of item beginning with first item and ending at endIndex </summary>
 		/// <param name="source">Source list of items</param>
 		/// <param name="endIndex">End index</param>

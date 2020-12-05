@@ -20,9 +20,15 @@ namespace Dingo.Core.Logging
 			_logLevel = logLevel;
 			_outputQueue = outputQueue ?? throw new ArgumentNullException(nameof(outputQueue));
 		}
-		
+
 		/// <inheritdoc />
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		public void Log<TState>(
+			LogLevel logLevel,
+			EventId eventId,
+			TState state,
+			Exception exception,
+			Func<TState, Exception, string> formatter
+		)
 		{
 			if (!IsEnabled(logLevel))
 			{
@@ -45,8 +51,8 @@ namespace Dingo.Core.Logging
 				return;
 			}
 
-			message = $"{logLevel} | {DateTime.UtcNow} | {_categoryName} | {message}";
-			
+			message = $"{logLevel} | {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | {_categoryName} | {message}";
+
 			_outputQueue.EnqueueOutput(message, OutputPath);
 		}
 

@@ -1,5 +1,4 @@
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Models;
@@ -16,8 +15,7 @@ namespace Dingo.UnitTests.OperationsTests
 		public void ConfigOperationsTests__UpdateProjectConfigurationAsync__WhenValidParamsAreGiven_ThenConfigsUpdated()
 		{
 			// Arrange
-			var fixture = new Fixture()
-				.Customize(new AutoMoqCustomization());
+			var fixture = CreateFixture();
 
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			configWrapperMock.SetupAllProperties();

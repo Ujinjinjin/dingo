@@ -11,7 +11,7 @@ namespace Cliff.ConsoleUtils
 		/// <param name="newLineBefore">Insert new line symbol before</param>
 		/// <param name="newLineAfter">Insert new line symbol after</param>
 		Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true);
-		
+
 		/// <summary> Enqueue output string </summary>
 		/// <param name="value">String to enqueue</param>
 		public Task EnqueueOutputAsync(string value);

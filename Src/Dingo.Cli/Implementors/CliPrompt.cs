@@ -12,7 +12,7 @@ namespace Dingo.Cli.Implementors
 		{
 			return Prompt.Select(message, choiceList);
 		}
-		
+
 		/// <inheritdoc />
 		public bool Confirm(string message, bool? defaultValue = null)
 		{

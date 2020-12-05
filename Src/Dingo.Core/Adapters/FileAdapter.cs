@@ -8,23 +8,26 @@ namespace Dingo.Core.Adapters
 	/// <inheritdoc />
 	public class FileAdapter : IFileAdapter
 	{
-		
 		/// <inheritdoc />
-		public bool Exists(string path)
-		{
-			return File.Exists(path);
-		}
-		
-		/// <inheritdoc />
-		public async Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
-		{
-			return await File.ReadAllTextAsync(path, cancellationToken);
-		}
+		public StreamWriter AppendText(string path) => File.AppendText(path);
 
 		/// <inheritdoc />
-		public async Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
-		{
-			return await File.ReadAllTextAsync(path, encoding, cancellationToken);
-		}
+		public FileStream Create(string path) => File.Create(path);
+
+		/// <inheritdoc />
+		public bool Exists(string path) => File.Exists(path);
+
+		/// <inheritdoc />
+		public async Task<string> ReadAllTextAsync(
+			string path,
+			CancellationToken cancellationToken = default
+		) => await File.ReadAllTextAsync(path, cancellationToken);
+
+		/// <inheritdoc />
+		public async Task<string> ReadAllTextAsync(
+			string path,
+			Encoding encoding,
+			CancellationToken cancellationToken = default
+		) => await File.ReadAllTextAsync(path, encoding, cancellationToken);
 	}
 }

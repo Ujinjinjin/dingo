@@ -14,7 +14,7 @@ namespace Dingo.Core.Config
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IInternalSerializerFactory _internalSerializerFactory;
-		
+
 		public ConfigSaver(IPathHelper pathHelper, IInternalSerializerFactory internalSerializerFactory)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
@@ -42,9 +42,9 @@ namespace Dingo.Core.Config
 			{
 				configPath = _pathHelper.GetAbsolutePathFromRelative(configPath);
 			}
-			
+
 			var internalSerializer = _internalSerializerFactory.CreateInternalSerializer(configPath);
-			
+
 			var stringBuilder = new StringBuilder();
 			stringBuilder.Append(internalSerializer.Serialize(configuration));
 

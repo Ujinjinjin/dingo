@@ -24,9 +24,9 @@ namespace Dingo.Core.Helpers
 		public IList<FilePath> GetFilePathList(string rootPath, string searchPattern)
 		{
 			var fileList = _directoryAdapter.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories);
-			
+
 			var filePathList = new FilePath[fileList.Length];
-			
+
 			for (var i = 0; i < fileList.Length; i++)
 			{
 				var absolutePath = fileList[i].ReplaceBackslashesWithSlashes();
@@ -36,10 +36,10 @@ namespace Dingo.Core.Helpers
 					Absolute = absolutePath,
 					Relative = relativePath,
 					Filename = Path.GetFileName(absolutePath),
-					Module = _pathHelper.GetRootFolder(relativePath)
+					Module = _pathHelper.GetRootDirectory(relativePath)
 				};
 			}
-			
+
 			return filePathList
 				.OrderBy(x => x.Module)
 				.ThenBy(x => x.Filename)

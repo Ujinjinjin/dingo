@@ -28,9 +28,13 @@
 		/// <returns>Execution base directory</returns>
 		string GetExecutionBaseDirectory();
 
+		/// <summary> Get directory path where logs are stored </summary>
+		/// <returns>Logs directory</returns>
+		string GetLogsDirectory();
+
 		/// <summary> Extract root folder from path </summary>
 		/// <param name="path">Path</param>
 		/// <returns>Root folder name</returns>
-		string GetRootFolder(string path);
+		string GetRootDirectory(string path);
 	}
 }

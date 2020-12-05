@@ -23,7 +23,7 @@ namespace Dingo.Core.Serializers
 				IgnoreNullValues = true,
 				WriteIndented = true,
 			};
-			
+
 			var serializedObject = JsonSerializer.Serialize(data, options);
 
 			return serializedObject.ToUnixEol();

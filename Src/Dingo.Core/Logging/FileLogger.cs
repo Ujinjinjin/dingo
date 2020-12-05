@@ -1,3 +1,4 @@
+using Dingo.Core.Extensions;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,8 @@ namespace Dingo.Core.Logging
 	{
 		private readonly IPathHelper _pathHelper;
 
-		protected override string OutputPath => $"{_pathHelper.GetApplicationBaseDirectory()}/logs/{DateTime.UtcNow:yyyyMMdd}.log";
+		protected override string OutputPath => _pathHelper.GetLogsDirectory()
+			.ConcatPath($"{DateTime.UtcNow:yyyyMMdd}.log");
 
 		internal FileLogger(
 			string categoryName,

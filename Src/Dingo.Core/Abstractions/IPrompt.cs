@@ -11,7 +11,7 @@ namespace Dingo.Core.Abstractions
 		/// <typeparam name="T">Type of choice item</typeparam>
 		/// <returns>User's choice</returns>
 		T Choose<T>(string message, IList<T> choiceList);
-		
+
 		/// <summary> Show confirmation message to user and return his choice </summary>
 		/// <param name="message">Message shown to user</param>
 		/// <param name="defaultValue">Default value (null if none)</param>

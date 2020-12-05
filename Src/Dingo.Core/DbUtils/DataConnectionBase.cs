@@ -11,7 +11,7 @@ namespace Dingo.Core.DbUtils
 	internal class DataConnectionBase : DataConnection
 	{
 		private readonly ILogger _logger;
-		
+
 		protected DataConnectionBase(
 			string dataProviderName,
 			string connectionString,
@@ -20,19 +20,19 @@ namespace Dingo.Core.DbUtils
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
-		
+
 		/// <summary> Execute sql returning nothing </summary>
 		protected async Task ExecuteAsync(string sql, params DataParameter[] parameters)
 		{
 			await ExecuteAsync(sql, CommandType.StoredProcedure, true, parameters);
 		}
-		
+
 		/// <summary> Execute sql returning nothing </summary>
 		protected async Task ExecuteSqlAsync(string sql, params DataParameter[] parameters)
 		{
 			await ExecuteAsync(sql, CommandType.Text, true, parameters);
 		}
-		
+
 		/// <summary> Execute sql returning nothing </summary>
 		protected async Task ExecuteAsync(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
 		{
@@ -53,7 +53,7 @@ namespace Dingo.Core.DbUtils
 				{
 					Command?.Parameters.Clear();
 					CommandTimeout = request.CommandTimeout;
-				
+
 					await CreateCommand(request).ExecuteAsync();
 				}
 				catch (Exception exception)
@@ -63,13 +63,13 @@ namespace Dingo.Core.DbUtils
 				}
 			}
 		}
-		
+
 		/// <summary> Execute command and return data reader </summary>
 		protected async Task<DataReaderAsync> ExecuteReaderAsync(string sql, params DataParameter[] parameters)
 		{
 			return await ExecuteReaderAsync(sql, CommandType.StoredProcedure, true, parameters);
 		}
-		
+
 		/// <summary> Execute command and return data reader </summary>
 		protected async Task<DataReaderAsync> ExecuteReaderSqlAsync(string sql, params DataParameter[] parameters)
 		{
@@ -96,7 +96,7 @@ namespace Dingo.Core.DbUtils
 				{
 					Command?.Parameters.Clear();
 					CommandTimeout = request.CommandTimeout;
-				
+
 					return await CreateCommand(request).ExecuteReaderAsync();
 				}
 				catch (Exception exception)
@@ -106,7 +106,7 @@ namespace Dingo.Core.DbUtils
 				}
 			}
 		}
-		
+
 		/// <summary> Execute command and return typed list of objects </summary>
 		protected IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters)
 		{
@@ -163,7 +163,7 @@ namespace Dingo.Core.DbUtils
 				}
 			}
 		}
-		
+
 		/// <summary> Create execution command </summary>
 		private CommandInfo CreateCommand(DbRequest request)
 		{
@@ -172,6 +172,6 @@ namespace Dingo.Core.DbUtils
 				CommandType = request.CommandType,
 			};
 		}
-		
+
 	}
 }

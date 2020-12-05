@@ -11,12 +11,12 @@ namespace Cliff.Infrastructure
 	{
 		/// <inheritdoc />
 		public IServiceProvider ServiceProvider { get; }
-		
+
 		public CliService(IServiceProvider serviceProvider)
 		{
 			ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 		}
-		
+
 		/// <inheritdoc />
 		public async Task ExecuteAsync(string[] args)
 		{

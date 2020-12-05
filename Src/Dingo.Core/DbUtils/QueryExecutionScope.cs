@@ -11,7 +11,7 @@ namespace Dingo.Core.DbUtils
 		private readonly Stopwatch _stopwatch;
 		private readonly ILogger _logger;
 		private readonly string _scopeGuid;
-		
+
 		public QueryExecutionScope(ILogger logger)
 		{
 			_stopwatch = Stopwatch.StartNew();
