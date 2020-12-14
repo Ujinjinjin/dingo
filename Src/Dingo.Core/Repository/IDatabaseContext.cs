@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Repository
 {
+	/// <summary> Database context which executes stored procedures and passes data parameters into them </summary>
 	internal interface IDatabaseContext: IDisposable
 	{
 		/// <summary> Check if table exists in specified schema </summary>

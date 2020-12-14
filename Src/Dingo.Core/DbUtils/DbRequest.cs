@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -29,6 +30,11 @@ namespace Dingo.Core.DbUtils
 		/// <param name="commandText"> Command text or stored procedure name to execute </param>
 		public DbRequest(string commandText)
 		{
+			if (string.IsNullOrWhiteSpace(commandText))
+			{
+				throw new ArgumentNullException(nameof(commandText));
+			}
+			
 			CommandText = commandText;
 		}
 	}

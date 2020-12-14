@@ -1,5 +1,6 @@
 ﻿using Dingo.Core.DbUtils;
 using Dingo.Core.Repository.DbClasses;
+using Dingo.Core.Repository.DbConverters;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,16 +12,20 @@ namespace Dingo.Core.Repository
 {
 	internal class DatabaseContext : DataConnectionBase, IDatabaseContext
 	{
+		private readonly IDatabaseContractConverter _databaseContractConverter;
+		
 		protected internal DatabaseContext(
 			string providerName,
 			string connectionString,
-			ILoggerFactory loggerFactory
+			ILoggerFactory loggerFactory,
+			IDatabaseContractConverter databaseContractConverter
 		) : base(
 			providerName,
 			connectionString,
 			loggerFactory?.CreateLogger<DatabaseContext>()
 		)
 		{
+			_databaseContractConverter = databaseContractConverter ?? throw new ArgumentNullException(nameof(databaseContractConverter));
 		}
 
 		/// <inheritdoc />
@@ -45,7 +50,7 @@ namespace Dingo.Core.Repository
 		{
 			var result = await QueryAsync<DbMigrationInfoOutput>(
 				"system__get_migrations_status",
-				new DataParameter("pti_migration_info_input", dbMigrationInfoInputList)
+				_databaseContractConverter.ToDataParameter("pti_migration_info_input", dbMigrationInfoInputList)
 			);
 			return result.ToArray();
 		}

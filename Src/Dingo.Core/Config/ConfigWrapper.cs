@@ -74,6 +74,7 @@ namespace Dingo.Core.Config
 
 			ActiveConfigFile = loadConfigResult.ConfigPath;
 			_projectConfiguration = loadConfigResult.Configuration;
+			_defaultConfiguration.ProviderName = _projectConfiguration.ProviderName ?? _defaultConfiguration.ProviderName;
 		}
 
 		/// <inheritdoc />

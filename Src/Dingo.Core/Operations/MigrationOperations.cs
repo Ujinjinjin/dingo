@@ -5,6 +5,7 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Dingo.Core.Operations
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
 		private readonly IRenderer _renderer;
+		private readonly ILogger _logger;
 
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
@@ -29,7 +31,8 @@ namespace Dingo.Core.Operations
 			IFileAdapter fileAdapter,
 			IHashMaker hashMaker,
 			IPathHelper pathHelper,
-			IRenderer renderer
+			IRenderer renderer,
+			ILoggerFactory loggerFactory
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
@@ -39,6 +42,7 @@ namespace Dingo.Core.Operations
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+			_logger = loggerFactory?.CreateLogger<MigrationOperations>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
 		/// <inheritdoc />
@@ -117,7 +121,7 @@ namespace Dingo.Core.Operations
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
 
-			await ReadAndApplyMigrationList(migrationInfoList, silent);
+			await ReadAndApplyMigrationList(migrationInfoList, silent, true);
 		}
 
 		/// <summary> Read all system migrations and apply if needed </summary>
@@ -149,18 +153,22 @@ namespace Dingo.Core.Operations
 			}
 			else
 			{
-				await ReadAndApplyMigrationList(migrationInfoList, silent);
+				await ReadAndApplyMigrationList(migrationInfoList, silent, false);
 			}
 		}
 
 		/// <summary> Read migration files and apply if needed </summary>
 		/// <param name="migrationInfoList">List of migration infos</param>
 		/// <param name="silent">Show less info on progress</param>
-		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList, bool silent)
+		/// <param name="isProject">Describes if project migrations are being applied</param>
+		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList, bool silent, bool isProject)
 		{
 			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
-			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
-			
+			if (isProject)
+			{
+				await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);	
+			}
+
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
 				await _renderer.PrintTextAsync($"{i + 1}) Processing migration '{migrationsStatusList[i].Path.Relative}' - {migrationsStatusList[i].Status.ToDisplayText()}", silent);

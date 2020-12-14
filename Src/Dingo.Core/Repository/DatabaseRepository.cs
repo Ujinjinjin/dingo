@@ -4,6 +4,7 @@ using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Repository.DbClasses;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,21 @@ namespace Dingo.Core.Repository
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IFileAdapter _fileAdapter;
 		private readonly IDatabaseContextFactory _databaseContextFactory;
+		private readonly ILogger _logger;
 
 		public DatabaseRepository(
 			IPathHelper pathHelper,
 			IConfigWrapper configWrapper,
 			IFileAdapter fileAdapter,
-			IDatabaseContextFactory databaseContextFactory
+			IDatabaseContextFactory databaseContextFactory,
+			ILoggerFactory loggerFactory
 		)
 		{
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
+			_logger = loggerFactory?.CreateLogger<DatabaseRepository>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
 		/// <inheritdoc />
@@ -37,11 +41,19 @@ namespace Dingo.Core.Repository
 		{
 			using (var dbContext = _databaseContextFactory.CreateDatabaseContext())
 			{
-				await dbContext.ExecuteRawSqlAsync(sql);
-
-				if (registerMigrations)
+				try
 				{
-					await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+					await dbContext.ExecuteRawSqlAsync(sql);
+
+					if (registerMigrations)
+					{
+						await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, $"Error applying migration: {migrationPath}");
+					throw;
 				}
 			}
 		}
@@ -102,8 +114,9 @@ namespace Dingo.Core.Repository
 			{
 				await InstallCheckTableExistenceProcedureAsync();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				_logger.LogError(ex, "DatabaseRepository:Error:HandshakeDatabaseConnectionAsync;");
 				return false;
 			}
 			return true;

@@ -6,6 +6,7 @@ using Dingo.Core.Models;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Dingo.Cli.Implementors
@@ -24,10 +25,18 @@ namespace Dingo.Cli.Implementors
 		/// <inheritdoc />
 		public async Task ListItemsAsync(IList<string> itemList)
 		{
+			var stringBuilder = new StringBuilder();
 			for (var i = 0; i < itemList.Count; i++)
 			{
-				await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {itemList[i]}");
+				stringBuilder.Append($"{i + 1}. {itemList[i]}");
+
+				if (i != itemList.Count - 1)
+				{
+					stringBuilder.Append('\n');
+				}
 			}
+
+			await _consoleQueue.EnqueueOutputAsync(stringBuilder.ToString());
 		}
 
 		/// <inheritdoc />
@@ -83,8 +92,8 @@ namespace Dingo.Cli.Implementors
 		/// <inheritdoc />
 		public async Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
-			await _consoleQueue.EnqueueBreakLine(newLineAfter: false);
-			await _consoleQueue.EnqueueOutputAsync($"Total migrations count: {migrationInfoList.Count}.");
+			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: false);
+			await _consoleQueue.EnqueueOutputAsync($"Total migrations count: {migrationInfoList.Count}.\n");
 
 			if (silent)
 			{
@@ -120,12 +129,12 @@ namespace Dingo.Cli.Implementors
 				{
 					var migrationInfo = migrationInfoList[i];
 
-					await _consoleQueue.EnqueueOutputAsync($"{i + 1}. {migrationInfo.Path.Relative}");
+					await _consoleQueue.EnqueueOutputAsync($"{i + 1}. '{migrationInfo.Path.Relative}'");
 					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash}");
 					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}\n");
 				}
 			}
-			await _consoleQueue.EnqueueBreakLine(newLineBefore: false);
+			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: false);
 		}
 	}
 }

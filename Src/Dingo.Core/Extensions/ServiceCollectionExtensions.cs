@@ -20,10 +20,11 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<IConfigSaver, ConfigSaver>();
 			serviceCollection.AddSingleton<IConfigWrapper, ConfigWrapper>();
 
+			serviceCollection.AddSingleton<IDatabaseContextFactory, DatabaseContextFactory>();
+			serviceCollection.AddSingleton<IDatabaseContractConverterFactory, DatabaseContractConverterFactory>();
+			serviceCollection.AddSingleton<IInternalSerializerFactory, InternalSerializerFactory>();
 			serviceCollection.AddSingleton<ILoggerFactory, DingoLoggerFactory>();
 			serviceCollection.AddSingleton<IOutputQueueFactory, OutputQueueFactory>();
-			serviceCollection.AddSingleton<IDatabaseContextFactory, DatabaseContextFactory>();
-			serviceCollection.AddSingleton<IInternalSerializerFactory, InternalSerializerFactory>();
 
 			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 			serviceCollection.AddSingleton<IHashMaker, HashMaker>();

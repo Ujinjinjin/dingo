@@ -7,7 +7,7 @@ namespace Dingo.Core.Config
 	{
 		public string CheckTableExistenceProcedurePath
 		{
-			get => $"Database/{ProviderName}/procedures/system__check_table_existence.sql";
+			get => $"Database/{ProviderName}/3. procedures/system__check_table_existence.sql";
 			set => throw new NotImplementedException();
 		}
 
@@ -29,11 +29,7 @@ namespace Dingo.Core.Config
 			set => throw new NotImplementedException();
 		}
 
-		public string ProviderName
-		{
-			get => LinqToDB.ProviderName.PostgreSQL95;
-			set => throw new NotImplementedException();
-		}
+		public string ProviderName { get; set; } = LinqToDB.ProviderName.PostgreSQL95;
 
 		public string MigrationSchema
 		{

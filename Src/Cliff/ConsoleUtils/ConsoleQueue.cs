@@ -9,7 +9,7 @@ namespace Cliff.ConsoleUtils
 	/// <inheritdoc cref="Cliff.ConsoleUtils.IConsoleQueue" />
 	internal class ConsoleQueue : IConsoleQueue, IDisposable
 	{
-		private readonly ConcurrentQueue<string> _outputQueue = new ConcurrentQueue<string>();
+		private readonly ConcurrentQueue<string> _outputQueue = new();
 		private readonly Thread _thread;
 
 		public ConsoleQueue()
@@ -21,7 +21,7 @@ namespace Cliff.ConsoleUtils
 					{
 						if (_outputQueue.TryDequeue(out var value))
 						{
-							Console.WriteLine(value);	
+							Console.WriteLine(value);
 						}
 					}
 					// ReSharper disable once FunctionNeverReturns

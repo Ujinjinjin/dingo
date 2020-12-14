@@ -172,6 +172,5 @@ namespace Dingo.Core.DbUtils
 				CommandType = request.CommandType,
 			};
 		}
-
 	}
 }

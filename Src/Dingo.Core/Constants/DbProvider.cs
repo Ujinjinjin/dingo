@@ -9,7 +9,8 @@ namespace Dingo.Core.Constants
 		/// <summary> List of currently supported database providers </summary>
 		public static readonly IList<string> SupportedDatabaseProviderNames = new[]
 		{
-			ProviderName.PostgreSQL95
+			ProviderName.PostgreSQL95,
+			ProviderName.SqlServer2017,
 		};
 	}
 }

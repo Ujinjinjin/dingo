@@ -1,9 +1,7 @@
 ﻿using Dingo.Core.Config;
 using Dingo.Core.Repository;
-using Dingo.Core.Repository.DbClasses;
 using LinqToDB;
 using Microsoft.Extensions.Logging;
-using Npgsql;
 using System;
 
 namespace Dingo.Core.Factories
@@ -12,26 +10,42 @@ namespace Dingo.Core.Factories
 	internal class DatabaseContextFactory : IDatabaseContextFactory
 	{
 		private readonly IConfigWrapper _configWrapper;
+		private readonly IDatabaseContractConverterFactory _databaseContractConverterFactory;
 		private readonly ILoggerFactory _loggerFactory;
+		private readonly ILogger _logger;
 
-		public DatabaseContextFactory(IConfigWrapper configWrapper, ILoggerFactory loggerFactory)
+		public DatabaseContextFactory(
+			IConfigWrapper configWrapper,
+			IDatabaseContractConverterFactory databaseContractConverterFactory,
+			ILoggerFactory loggerFactory
+		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
+			_databaseContractConverterFactory = databaseContractConverterFactory ?? throw new ArgumentNullException(nameof(databaseContractConverterFactory));
 			_loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+			_logger = loggerFactory?.CreateLogger<DatabaseContextFactory>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
 		/// <inheritdoc />
 		/// <exception cref="ArgumentOutOfRangeException">Specified database provider not supported yet</exception>
 		public IDatabaseContext CreateDatabaseContext()
 		{
-			switch (_configWrapper.ProviderName)
+			return _configWrapper.ProviderName switch
 			{
-				case ProviderName.PostgreSQL95:
-					NpgsqlConnection.GlobalTypeMapper.MapComposite<DbMigrationInfoInput>("t_migration_info_input");
-					return new DatabaseContext(_configWrapper.ProviderName, _configWrapper.ConnectionString, _loggerFactory);
-				default:
-					throw new ArgumentOutOfRangeException(_configWrapper.ProviderName);
-			}
+				ProviderName.PostgreSQL95 => new DatabaseContext(
+					_configWrapper.ProviderName,
+					_configWrapper.ConnectionString,
+					_loggerFactory,
+					_databaseContractConverterFactory.CreatePostgresContractConverter()
+				),
+				ProviderName.SqlServer2017 => new DatabaseContext(
+					_configWrapper.ProviderName,
+					_configWrapper.ConnectionString,
+					_loggerFactory,
+					_databaseContractConverterFactory.CreateSqlServerContractConverter()
+				),
+				_ => throw new ArgumentOutOfRangeException(_configWrapper.ProviderName)
+			};
 		}
 	}
 }
