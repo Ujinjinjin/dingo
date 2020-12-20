@@ -1,5 +1,6 @@
 ﻿using Dingo.Core.Abstractions;
 using Sharprompt;
+using System;
 using System.Collections.Generic;
 
 namespace Dingo.Cli.Implementors
@@ -8,9 +9,9 @@ namespace Dingo.Cli.Implementors
 	public class CliPrompt : IPrompt
 	{
 		/// <inheritdoc />
-		public T Choose<T>(string message, IList<T> choiceList)
+		public T Choose<T>(string message, IList<T> choiceList, Func<T, string> valueSelector = null)
 		{
-			return Prompt.Select(message, choiceList);
+			return Prompt.Select(message, choiceList, valueSelector: valueSelector);
 		}
 
 		/// <inheritdoc />

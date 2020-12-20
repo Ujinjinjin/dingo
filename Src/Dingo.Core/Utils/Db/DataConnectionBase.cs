@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.DbUtils
+namespace Dingo.Core.Utils.Db
 {
 	internal class DataConnectionBase : DataConnection
 	{

@@ -1,7 +1,7 @@
+using Dingo.Core.Config;
 using Dingo.Core.Extensions;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
-using Microsoft.Extensions.Logging;
 using System;
 
 namespace Dingo.Core.Logging
@@ -16,12 +16,12 @@ namespace Dingo.Core.Logging
 
 		internal FileLogger(
 			string categoryName,
-			LogLevel logLevel,
+			IConfigWrapper configWrapper,
 			IOutputQueueFactory outputQueueFactory,
 			IPathHelper pathHelper
 		) : base(
 			categoryName,
-			logLevel,
+			configWrapper,
 			outputQueueFactory?.CreateFileOutputQueue()
 		)
 		{

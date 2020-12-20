@@ -23,5 +23,8 @@
 
 		/// <summary> Database table, where all migrations are stored </summary>
 		string MigrationTable { get; set; }
+
+		/// <summary> Configurable logging level </summary>
+		int? LogLevel { get; set; }
 	}
 }

@@ -24,7 +24,7 @@ namespace Dingo.UnitTests.SerializerTests
 			// Assert
 			Assert.Equal(expectedSerializedData, serializedData);
 		}
-		
+
 		[Fact]
 		public void JsonInternalSerializerTests__Serialize__WhenStructWithNullValuePropertiesGiven_ThenObjectSerializedWithoutNullValues()
 		{
@@ -43,7 +43,7 @@ namespace Dingo.UnitTests.SerializerTests
 			// Assert
 			Assert.Equal(expectedSerializedData, serializedData);
 		}
-		
+
 		[Fact]
 		public void JsonInternalSerializerTests__Deserialize__WhenSerializedDataWithMissingOfPropertiesGiven_ThenObjectDeserializedAndMissingPropertiesAreNull()
 		{
@@ -62,7 +62,7 @@ namespace Dingo.UnitTests.SerializerTests
 			// Assert
 			Assert.Equal(expectedData, data);
 		}
-		
+
 		[Fact]
 		public void JsonInternalSerializerTests__Deserialize__WhenSufficientSerializedDataGiven_ThenObjectDeserializedWithAllProperties()
 		{

@@ -1,3 +1,4 @@
+using Dingo.Core.Config;
 using Dingo.Core.Helpers.Static;
 using Dingo.Core.IO;
 using Microsoft.Extensions.Logging;
@@ -9,16 +10,20 @@ namespace Dingo.Core.Logging
 	internal abstract class LoggerBase : ILogger
 	{
 		private readonly string _categoryName;
-		private readonly LogLevel _logLevel;
+		private readonly IConfigWrapper _configWrapper;
 		private readonly IOutputQueue _outputQueue;
 
 		protected virtual string OutputPath => null;
 
-		protected LoggerBase(string categoryName, LogLevel logLevel, IOutputQueue outputQueue)
+		protected LoggerBase(
+			string categoryName,
+			IConfigWrapper configWrapper,
+			IOutputQueue outputQueue
+		)
 		{
 			_categoryName = categoryName ?? throw new ArgumentNullException(nameof(categoryName));
-			_logLevel = logLevel;
 			_outputQueue = outputQueue ?? throw new ArgumentNullException(nameof(outputQueue));
+			_configWrapper = configWrapper;
 		}
 
 		/// <inheritdoc />
@@ -59,7 +64,7 @@ namespace Dingo.Core.Logging
 		/// <inheritdoc />
 		public bool IsEnabled(LogLevel logLevel)
 		{
-			return logLevel >= _logLevel;
+			return logLevel >= (LogLevel) (_configWrapper.LogLevel ?? (int) LogLevel.None);
 		}
 
 		/// <inheritdoc />

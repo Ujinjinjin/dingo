@@ -26,7 +26,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			var fixture = CreateFixture();
 			var initialString = fixture.Create<string>();
 			var substring = fixture.Create<string>();
-			
+
 			// Act
 			var result = initialString.NotContains(substring);
 			var expectedResult = !initialString.Contains(substring);
@@ -40,7 +40,7 @@ namespace Dingo.UnitTests.ExtensionTests
 		{
 			// Arrange
 			var initialString = "\n\r\n\r";
-			
+
 			// Act
 			var result = initialString.ToUnixEol();
 

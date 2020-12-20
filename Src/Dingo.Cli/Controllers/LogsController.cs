@@ -21,6 +21,14 @@ namespace Dingo.Cli.Controllers
 			var command = CreateCommand("logs", "Group of command to work with logs");
 
 			command.AddCommand(CreateCommand(
+				"level", 
+				"Switch level of logging",
+				CommandHandler.Create<string, int?>(_logsOperations.SwitchLogLevelAsync),
+				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
+				CreateOption(new[] {"--log-level", "-l"}, "Integer representation of logging level", typeof(int?), false)
+			));
+
+			command.AddCommand(CreateCommand(
 				"prune", 
 				"Prune dingo log files",
 				CommandHandler.Create(_logsOperations.PruneLogsAsync)

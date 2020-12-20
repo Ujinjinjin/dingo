@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dingo.Core.Abstractions
 {
@@ -8,9 +9,10 @@ namespace Dingo.Core.Abstractions
 		/// <summary> Show list of items to user and return his choice </summary>
 		/// <param name="message">Message shown to user</param>
 		/// <param name="choiceList">List of choices shown to user</param>
+		/// <param name="valueSelector">Value selector</param>
 		/// <typeparam name="T">Type of choice item</typeparam>
 		/// <returns>User's choice</returns>
-		T Choose<T>(string message, IList<T> choiceList);
+		T Choose<T>(string message, IList<T> choiceList, Func<T, string> valueSelector = null);
 
 		/// <summary> Show confirmation message to user and return his choice </summary>
 		/// <param name="message">Message shown to user</param>

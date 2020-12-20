@@ -5,6 +5,7 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
+using Dingo.Core.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,8 @@ namespace Dingo.Core.Operations
 		/// <inheritdoc />
 		public async Task HandshakeDatabaseConnectionAsync(string configPath = null)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			if (await _databaseRepository.HandshakeDatabaseConnectionAsync())
@@ -71,6 +74,8 @@ namespace Dingo.Core.Operations
 			string migrationTable = null
 		)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			_configWrapper.ConnectionString = connectionString ?? _configWrapper.ConnectionString;
@@ -85,15 +90,17 @@ namespace Dingo.Core.Operations
 			}
 
 			await RunSystemMigrationsAsync(silent);
-			
+
 			await _renderer.PrintBreakLineAsync(silent);
-			
+
 			await RunProjectMigrationsAsync(migrationsRootPath, silent);
 		}
 
 		/// <inheritdoc />
 		public async Task ShowMigrationsStatusAsync(string migrationsRootPath, string configPath = null, bool silent = false)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
@@ -116,6 +123,8 @@ namespace Dingo.Core.Operations
 		/// <param name="silent">Show less info about migration status</param>
 		private async Task RunProjectMigrationsAsync(string migrationsRootPath, bool silent)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _renderer.PrintTextAsync("Running project migrations...", silent);
 
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
@@ -127,6 +136,8 @@ namespace Dingo.Core.Operations
 		/// <summary> Read all system migrations and apply if needed </summary>
 		private async Task RunSystemMigrationsAsync(bool silent)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _renderer.PrintTextAsync("Running system migrations...", silent);
 
 			await _databaseRepository.InstallCheckTableExistenceProcedureAsync();
@@ -163,6 +174,8 @@ namespace Dingo.Core.Operations
 		/// <param name="isProject">Describes if project migrations are being applied</param>
 		private async Task ReadAndApplyMigrationList(IList<MigrationInfo> migrationInfoList, bool silent, bool isProject)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 			if (isProject)
 			{

@@ -12,7 +12,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			// Arrange
 			var fixture = CreateFixture();
 			var initialNumber = fixture.Create<int>();
-			
+
 			// Act
 			var result = initialNumber.Negate();
 

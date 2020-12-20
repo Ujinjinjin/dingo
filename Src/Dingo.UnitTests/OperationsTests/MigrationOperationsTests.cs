@@ -24,7 +24,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(true));
@@ -39,7 +39,7 @@ namespace Dingo.UnitTests.OperationsTests
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Info)), Times.Once());
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
 		}
-		
+
 		[Fact]
 		public void MigrationOperationsTests__HandshakeDatabaseConnectionAsync__WhenHandshakeNotEstablished_ThenErrorMessageShown()
 		{
@@ -49,7 +49,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(false));
@@ -74,7 +74,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(false));
@@ -101,7 +101,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(true));
@@ -128,7 +128,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var databaseHelperMock = new Mock<IDatabaseRepository>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock);
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(false));
@@ -156,9 +156,9 @@ namespace Dingo.UnitTests.OperationsTests
 			var hashMakerMock = new Mock<IHashMaker>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock, hashMakerMock);
-			
+
 			var migrationInfoList = CreateItemArray<MigrationInfo>(fixture.Create<int>());
-			
+
 			databaseHelperMock
 				.Setup(x => x.HandshakeDatabaseConnectionAsync())
 				.Returns(Task.FromResult(true));

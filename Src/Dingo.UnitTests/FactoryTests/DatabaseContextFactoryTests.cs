@@ -19,7 +19,7 @@ namespace Dingo.UnitTests.FactoryTests
 			var configWrapperMock = new Mock<IConfigWrapper>();
 
 			var fixture = CreateFixture(configWrapperMock);
-			
+
 			configWrapperMock
 				.Setup(x => x.ProviderName)
 				.Returns(DbProvider.SupportedDatabaseProviderNames.GetRandom());
@@ -36,7 +36,7 @@ namespace Dingo.UnitTests.FactoryTests
 			Assert.NotNull(databaseContext);
 			Assert.IsAssignableFrom<IDatabaseContext>(databaseContext);
 		}
-		
+
 		[Fact]
 		public void DatabaseContextFactoryTests__CreateDatabaseContext__WhenNotSupportedDbProviderNameGiven_ThenExceptionThrown()
 		{
@@ -44,7 +44,7 @@ namespace Dingo.UnitTests.FactoryTests
 			var configWrapperMock = new Mock<IConfigWrapper>();
 
 			var fixture = CreateFixture(configWrapperMock);
-			
+
 			configWrapperMock
 				.Setup(x => x.ProviderName)
 				.Returns(fixture.Create<string>());

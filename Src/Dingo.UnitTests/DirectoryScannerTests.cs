@@ -44,22 +44,22 @@ namespace Dingo.UnitTests
 			// Assert
 			Assert.Equal("20201111000000_create.sql", filePathList[0].Filename);
 			Assert.Equal("1. migrations", filePathList[0].Module);
-			
+
 			Assert.Equal("20201116000000_create.sql", filePathList[1].Filename);
 			Assert.Equal("1. migrations", filePathList[1].Module);
-			
+
 			Assert.Equal("20201118000000_create.sql", filePathList[2].Filename);
 			Assert.Equal("1. migrations", filePathList[2].Module);
-			
+
 			Assert.Equal("20201119000000_alter.sql", filePathList[3].Filename);
 			Assert.Equal("1. migrations", filePathList[3].Module);
-			
+
 			Assert.Equal("t_user_filter.sql", filePathList[4].Filename);
 			Assert.Equal("2. date_types", filePathList[4].Module);
-			
+
 			Assert.Equal("create_user.sql", filePathList[5].Filename);
 			Assert.Equal("3. procedures", filePathList[5].Module);
-			
+
 			Assert.Equal("get_user_by_id.sql", filePathList[6].Filename);
 			Assert.Equal("3. procedures", filePathList[6].Module);
 		}

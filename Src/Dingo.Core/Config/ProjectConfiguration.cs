@@ -10,5 +10,6 @@
 		public string ProviderName { get; set; }
 		public string MigrationSchema { get; set; }
 		public string MigrationTable { get; set; }
+		public int? LogLevel { get; set; }
 	}
 }

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 
-namespace Dingo.Core.DbUtils
+namespace Dingo.Core.Utils.Db
 {
 	/// <summary> Disposable query execution scope </summary>
 	internal class QueryExecutionScope : IDisposable

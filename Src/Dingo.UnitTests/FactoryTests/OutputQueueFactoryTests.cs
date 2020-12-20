@@ -22,7 +22,7 @@ namespace Dingo.UnitTests.FactoryTests
 			Assert.IsAssignableFrom<IOutputQueue>(fileOutputQueue);
 			Assert.Equal(typeof(FileOutputQueue), fileOutputQueue.GetType());
 		}
-		
+
 		[Fact]
 		public void OutputQueueFactoryTests__CreateConsoleOutputQueue__WhenFactoryMethodInvoked_ThenConsoleOutputQueueReturned()
 		{

@@ -1,6 +1,8 @@
 ﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Models;
+using Dingo.Core.Utils;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -12,27 +14,34 @@ namespace Dingo.Core.Operations
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IPrompt _prompt;
 		private readonly IRenderer _renderer;
+		private readonly ILogger _logger;
 
 		public ConfigOperations(
 			IConfigWrapper configWrapper,
 			IPrompt prompt,
-			IRenderer renderer
+			IRenderer renderer,
+			ILoggerFactory loggerFactory
 		)
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_prompt = prompt ?? throw new ArgumentNullException(nameof(prompt));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+			_logger = loggerFactory?.CreateLogger<ConfigOperations>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
 		/// <inheritdoc />
 		public async Task InitConfigurationFileAsync(string configPath = null)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			if (!_configWrapper.ConfigFileExists || _prompt.Confirm($"Config file {_configWrapper.ActiveConfigFile} already exists, do you want to override it?"))
 			{
 				_configWrapper.ConnectionString = string.Empty;
 				_configWrapper.ProviderName = string.Empty;
+				_configWrapper.LogLevel = (int)LogLevel.Information;
+
 				await _configWrapper.SaveAsync(configPath);
 
 				await _renderer.ShowMessageAsync("Dingo config file successfully initialized!", MessageType.Info);	
@@ -42,6 +51,8 @@ namespace Dingo.Core.Operations
 		/// <inheritdoc />
 		public async Task ShowProjectConfigurationAsync(string configPath = null)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			await _renderer.ShowConfigAsync(_configWrapper);
@@ -57,6 +68,8 @@ namespace Dingo.Core.Operations
 			string searchPattern = null
 		)
 		{
+			using var _ = new CodeTiming(_logger);
+
 			await _configWrapper.LoadAsync(configPath);
 
 			_configWrapper.ConnectionString = string.IsNullOrWhiteSpace(connectionString)

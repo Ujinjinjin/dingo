@@ -15,7 +15,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			var fixture = CreateFixture();
 			var array = CreateIntArray(fixture.Create<int>());
 			var index = new Random().Next(0, array.Count);
-			
+
 			// Act
 			var result = array.GetItem(index);
 
@@ -31,7 +31,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			var array = CreateIntArray(fixture.Create<int>());
 			var startIndex = new Random().Next(0, array.Count / 2);
 			var endIndex = new Random().Next(array.Count / 2, array.Count);
-			
+
 			// Act
 			var result = array.Sequence(startIndex, endIndex);
 			var expectedValue = array
@@ -67,7 +67,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			// Act
 			var result = array.SequenceFrom(startIndex);
 			var expectedValue = array.Sequence(startIndex, ^1);
-			
+
 			// Assert
 			Assert.Equal(expectedValue, result);
 		}
@@ -83,7 +83,7 @@ namespace Dingo.UnitTests.ExtensionTests
 			// Act
 			var result = array.SequenceTo(endIndex);
 			var expectedValue = array.Sequence(0, endIndex);
-			
+
 			// Assert
 			Assert.Equal(expectedValue, result);
 		}

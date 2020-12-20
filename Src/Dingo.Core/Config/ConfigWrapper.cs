@@ -48,6 +48,12 @@ namespace Dingo.Core.Config
 			set => _projectConfiguration.MigrationTable = value;
 		}
 
+		public int? LogLevel
+		{
+			get => _projectConfiguration.LogLevel ?? _defaultConfiguration.LogLevel ?? (int)Microsoft.Extensions.Logging.LogLevel.None;
+			set => _projectConfiguration.LogLevel = value;
+		}
+
 		public string ActiveConfigFile { get; private set; }
 		public bool ConfigFileExists => !string.IsNullOrWhiteSpace(ActiveConfigFile);
 
@@ -74,7 +80,9 @@ namespace Dingo.Core.Config
 
 			ActiveConfigFile = loadConfigResult.ConfigPath;
 			_projectConfiguration = loadConfigResult.Configuration;
+
 			_defaultConfiguration.ProviderName = _projectConfiguration.ProviderName ?? _defaultConfiguration.ProviderName;
+			_defaultConfiguration.LogLevel = _projectConfiguration.LogLevel ?? _defaultConfiguration.LogLevel;
 		}
 
 		/// <inheritdoc />

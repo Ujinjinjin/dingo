@@ -1,5 +1,5 @@
+using Dingo.Core.Config;
 using Dingo.Core.Factories;
-using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Logging
 {
@@ -8,11 +8,11 @@ namespace Dingo.Core.Logging
 	{
 		public ConsoleLogger(
 			string categoryName,
-			LogLevel logLevel,
+			IConfigWrapper configWrapper,
 			IOutputQueueFactory outputQueueFactory
 		) : base(
 			categoryName,
-			logLevel,
+			configWrapper,
 			outputQueueFactory?.CreateConsoleOutputQueue()
 		)
 		{

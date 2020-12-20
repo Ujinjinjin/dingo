@@ -28,7 +28,7 @@ namespace Dingo.Cli.Controllers
 				"choose",
 				"Choose database provider from supported list",
 				CommandHandler.Create<string>(_providerOperations.ChooseDatabaseProviderAsync),
-				CreateOption(new[] {"--configPath", "-c"}, "Custom path to configuration file", typeof(string), false)
+				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
 			));
 
 			command.AddCommand(CreateCommand(
@@ -41,7 +41,7 @@ namespace Dingo.Cli.Controllers
 				"validate",
 				"Validate chosen database provider",
 				CommandHandler.Create<string>(_providerOperations.ValidateDatabaseProviderAsync),
-				CreateOption(new[] {"--configPath", "-c"}, "Custom path to configuration file", typeof(string), false)
+				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
 			));
 
 			RootCommand.AddCommand(command);

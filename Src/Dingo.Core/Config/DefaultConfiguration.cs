@@ -42,5 +42,7 @@ namespace Dingo.Core.Config
 			get => "dingo_migration";
 			set => throw new NotImplementedException();
 		}
+
+		public int? LogLevel { get; set; } = (int)Microsoft.Extensions.Logging.LogLevel.Information;
 	}
 }

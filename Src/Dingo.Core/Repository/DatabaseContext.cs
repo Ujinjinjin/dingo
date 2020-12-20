@@ -1,6 +1,6 @@
-﻿using Dingo.Core.DbUtils;
-using Dingo.Core.Repository.DbClasses;
+﻿using Dingo.Core.Repository.DbClasses;
 using Dingo.Core.Repository.DbConverters;
+using Dingo.Core.Utils.Db;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
 using System;

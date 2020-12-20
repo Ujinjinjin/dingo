@@ -19,11 +19,11 @@ namespace Dingo.UnitTests.OperationsTests
 
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			configWrapperMock.SetupAllProperties();
-			
+
 			fixture.Register(() => configWrapperMock.Object);
 
 			var configOperations = fixture.Create<ConfigOperations>();
-			
+
 			var connectionString = fixture.Create<string>();
 			var providerName = fixture.Create<string>();
 			var migrationSchema = fixture.Create<string>();
@@ -46,32 +46,32 @@ namespace Dingo.UnitTests.OperationsTests
 			Assert.Equal(migrationSchema, configWrapperMock.Object.MigrationSchema);
 			Assert.Equal(migrationTable, configWrapperMock.Object.MigrationTable);
 			Assert.Equal(searchPattern, configWrapperMock.Object.MigrationsSearchPattern);
-			
+
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 		}
-		
+
 		[Fact]
 		public void ConfigOperationsTests__UpdateProjectConfigurationAsync__WhenNullParamsAreGiven_ThenConfigsNotUpdated()
 		{
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
-			
+
 			var fixture = CreateFixture(configWrapperMock);
-			
+
 			var connectionString = fixture.Create<string>();
 			var providerName = fixture.Create<string>();
 			var migrationSchema = fixture.Create<string>();
 			var migrationTable = fixture.Create<string>();
 			var searchPattern = fixture.Create<string>();
-			
+
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock.Object.ConnectionString = connectionString;
 			configWrapperMock.Object.ProviderName = providerName;
 			configWrapperMock.Object.MigrationSchema = migrationSchema;
 			configWrapperMock.Object.MigrationTable = migrationTable;
 			configWrapperMock.Object.MigrationsSearchPattern = searchPattern;
-			
+
 			fixture.Register(() => configWrapperMock.Object);
 
 			var configOperations = fixture.Create<ConfigOperations>();
@@ -87,7 +87,7 @@ namespace Dingo.UnitTests.OperationsTests
 			Assert.Equal(migrationSchema, configWrapperMock.Object.MigrationSchema);
 			Assert.Equal(migrationTable, configWrapperMock.Object.MigrationTable);
 			Assert.Equal(searchPattern, configWrapperMock.Object.MigrationsSearchPattern);
-			
+
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 		}
@@ -98,7 +98,7 @@ namespace Dingo.UnitTests.OperationsTests
 			// Arrange
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
-			
+
 			var fixture = CreateFixture(configWrapperMock, rendererMock);
 
 			var configOperations = fixture.Create<ConfigOperations>();
@@ -122,7 +122,7 @@ namespace Dingo.UnitTests.OperationsTests
 			var promptMock = new Mock<IPrompt>();
 
 			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
-			
+
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
@@ -144,7 +144,7 @@ namespace Dingo.UnitTests.OperationsTests
 			Assert.Null(configWrapperMock.Object.MigrationSchema);
 			Assert.Null(configWrapperMock.Object.MigrationTable);
 			Assert.Null(configWrapperMock.Object.MigrationsSearchPattern);
-			
+
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
@@ -158,9 +158,9 @@ namespace Dingo.UnitTests.OperationsTests
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
 			var promptMock = new Mock<IPrompt>();
-			
+
 			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
-			
+
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
@@ -179,7 +179,7 @@ namespace Dingo.UnitTests.OperationsTests
 			Assert.Null(configWrapperMock.Object.MigrationSchema);
 			Assert.Null(configWrapperMock.Object.MigrationTable);
 			Assert.Null(configWrapperMock.Object.MigrationsSearchPattern);
-			
+
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Once());
@@ -193,9 +193,9 @@ namespace Dingo.UnitTests.OperationsTests
 			var configWrapperMock = new Mock<IConfigWrapper>();
 			var rendererMock = new Mock<IRenderer>();
 			var promptMock = new Mock<IPrompt>();
-			
+
 			var fixture = CreateFixture(configWrapperMock, rendererMock, promptMock);
-			
+
 			configWrapperMock.SetupAllProperties();
 			configWrapperMock
 				.Setup(x => x.ConfigFileExists)
@@ -214,7 +214,7 @@ namespace Dingo.UnitTests.OperationsTests
 			Assert.Null(configWrapperMock.Object.MigrationSchema);
 			Assert.Null(configWrapperMock.Object.MigrationTable);
 			Assert.Null(configWrapperMock.Object.MigrationsSearchPattern);
-			
+
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			configWrapperMock.Verify(x => x.SaveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			promptMock.Verify(x => x.Confirm(It.IsAny<string>(), It.IsAny<bool?>()), Times.Never());

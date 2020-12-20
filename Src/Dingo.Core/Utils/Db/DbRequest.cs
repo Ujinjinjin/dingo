@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Dingo.Core.DbUtils
+namespace Dingo.Core.Utils.Db
 {
 	/// <summary> Database request containing information for command execution </summary>
 	[UsedImplicitly]

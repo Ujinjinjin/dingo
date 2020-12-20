@@ -22,7 +22,7 @@ namespace Dingo.UnitTests.FactoryTests
 			Assert.IsAssignableFrom<IDatabaseContractConverter>(postgresContractConverter);
 			Assert.Equal(typeof(PostgresContractConverter), postgresContractConverter.GetType());
 		}
-		
+
 		[Fact]
 		public void DatabaseContractConverterFactoryTests__CreateSqlServerContractConverter__WhenFactoryMethodInvoked_ThenSqlServerContractConverterReturned()
 		{
