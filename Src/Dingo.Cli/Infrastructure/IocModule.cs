@@ -19,10 +19,10 @@ namespace Dingo.Cli.Infrastructure
 		{
 			var collection = new ServiceCollection();
 
-			var rootCommand = new RootCommand("dingo is incremental database installer") {Name = "dingo"};
+			var rootCommand = new RootCommand("dingo is framework-agnostic and lightweight database migration tool") {Name = "dingo"};
 			collection.AddSingleton(rootCommand);
 
-			collection.AddDingo();
+			collection.UseDingo();
 			collection.UseCliff();
 
 			collection.AddSingleton<IRenderer, CliRenderer>();

@@ -26,7 +26,7 @@ namespace Dingo.Cli.Controllers
 
 			var subCommandNew = CreateCommand(
 				"new",
-				"create new migration file",
+				"Create new migration file",
 				CommandHandler.Create<string, string>(_migrationOperations.CreateMigrationFileAsync),
 				CreateOption(new[] {"--name", "-n"}, "Migration name", typeof(string), true),
 				CreateOption(new[] {"--path", "-p"}, "Custom path to configuration file", typeof(string), true)
@@ -36,14 +36,14 @@ namespace Dingo.Cli.Controllers
 
 			command.AddCommand(CreateCommand(
 				"handshake",
-				"perform handshake connection to database to validate connection string",
+				"Perform handshake connection to database to validate connection string",
 				CommandHandler.Create<string>(_migrationOperations.HandshakeDatabaseConnectionAsync),
 				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
 			));
 
 			command.AddCommand(CreateCommand(
 				"run",
-				"run migrations",
+				"Run migrations",
 				CommandHandler.Create<string, string, bool, string, string, string, string>(_migrationOperations.RunMigrationsAsync),
 				CreateOption(new[] {"--migrations-root-path", "-m"}, "Root path to database migration files", typeof(string), true),
 				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
@@ -56,7 +56,7 @@ namespace Dingo.Cli.Controllers
 
 			command.AddCommand(CreateCommand(
 				"status",
-				"show migration status",
+				"Show migration status",
 				CommandHandler.Create<string, string, bool>(_migrationOperations.ShowMigrationsStatusAsync),
 				CreateOption(new[] {"--migrations-root-path", "-m"}, "Root path to database migration files", typeof(string), true),
 				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),

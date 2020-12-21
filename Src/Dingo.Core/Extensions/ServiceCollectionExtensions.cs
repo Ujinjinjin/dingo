@@ -14,7 +14,7 @@ namespace Dingo.Core.Extensions
 	{
 		/// <summary> Add dingo dependencies to service collection </summary>
 		/// <param name="serviceCollection">Target service collection</param>
-		public static void AddDingo(this IServiceCollection serviceCollection)
+		public static void UseDingo(this IServiceCollection serviceCollection)
 		{
 			serviceCollection.AddSingleton<IConfigLoader, ConfigLoader>();
 			serviceCollection.AddSingleton<IConfigSaver, ConfigSaver>();
