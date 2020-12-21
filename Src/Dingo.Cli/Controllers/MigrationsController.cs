@@ -24,6 +24,16 @@ namespace Dingo.Cli.Controllers
 		{
 			var command = CreateCommand("migrations", "Group of command to work with migrations");
 
+			var subCommandNew = CreateCommand(
+				"new",
+				"create new migration file",
+				CommandHandler.Create<string, string>(_migrationOperations.CreateMigrationFileAsync),
+				CreateOption(new[] {"--name", "-n"}, "Migration name", typeof(string), true),
+				CreateOption(new[] {"--path", "-p"}, "Custom path to configuration file", typeof(string), true)
+			);
+
+			command.AddCommand(subCommandNew);
+
 			command.AddCommand(CreateCommand(
 				"handshake",
 				"perform handshake connection to database to validate connection string",
@@ -53,6 +63,7 @@ namespace Dingo.Cli.Controllers
 				CreateOption(new[] {"--silent", "-s"}, "Show less info about migration status", typeof(bool), false)
 			));
 
+			RootCommand.AddCommand(subCommandNew);
 			RootCommand.AddCommand(command);
 		}
 	}

@@ -18,6 +18,7 @@ namespace Dingo.Core.Operations
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseRepository _databaseRepository;
+		private readonly IDirectoryAdapter _directoryAdapter;
 		private readonly IDirectoryScanner _directoryScanner;
 		private readonly IFileAdapter _fileAdapter;
 		private readonly IHashMaker _hashMaker;
@@ -28,6 +29,7 @@ namespace Dingo.Core.Operations
 		public MigrationOperations(
 			IConfigWrapper configWrapper,
 			IDatabaseRepository databaseRepository,
+			IDirectoryAdapter directoryAdapter,
 			IDirectoryScanner directoryScanner,
 			IFileAdapter fileAdapter,
 			IHashMaker hashMaker,
@@ -38,12 +40,36 @@ namespace Dingo.Core.Operations
 		{
 			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 			_databaseRepository = databaseRepository ?? throw new ArgumentNullException(nameof(databaseRepository));
+			_directoryAdapter = directoryAdapter ?? throw new ArgumentNullException(nameof(directoryAdapter));
 			_directoryScanner = directoryScanner ?? throw new ArgumentNullException(nameof(directoryScanner));
 			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
 			_logger = loggerFactory?.CreateLogger<MigrationOperations>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+		}
+
+		/// <inheritdoc />
+		public async Task CreateMigrationFileAsync(string name, string path)
+		{
+			using var _ = new CodeTiming(_logger);
+
+			try
+			{
+				if (!_directoryAdapter.Exists(path))
+				{
+					_directoryAdapter.CreateDirectory(path);
+				}
+
+				_fileAdapter
+					.Create(path.ConcatPath($"{DateTime.UtcNow:yyyyMMddHHmmss}_{name}.sql"))
+					?.Close();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error occured while creating migration file.");
+				await _renderer.ShowMessageAsync("Error occured while creating migration file", MessageType.Error);
+			}
 		}
 
 		/// <inheritdoc />
