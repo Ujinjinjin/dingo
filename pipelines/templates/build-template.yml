@@ -11,10 +11,10 @@ parameters:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'use .NET 5.0'
+  displayName: 'use .NET 5'
   inputs:
     packageType: 'sdk'
-    version: '5.0.x'
+    version: '5.x'
 
 - task: DotNetCoreCLI@2
   displayName: 'nuget restore'
