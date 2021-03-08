@@ -9,7 +9,7 @@ namespace Dingo.Core.IO
 	/// <summary> Base output queue. Inherited from <see cref="IOutputQueue"/> </summary>
 	internal abstract class OutputQueueBase : IOutputQueue, IDisposable
 	{
-		private readonly ConcurrentQueue<OutputQueueItem> _outputQueue = new ConcurrentQueue<OutputQueueItem>();
+		private readonly ConcurrentQueue<OutputQueueItem> _outputQueue = new();
 		private readonly Thread _thread;
 
 		protected OutputQueueBase()

@@ -5,6 +5,7 @@ using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +54,18 @@ namespace Dingo.Core.Repository
 				_databaseContractConverter.ToDataParameter("pti_migration_info_input", dbMigrationInfoInputList)
 			);
 			return result.ToArray();
+		}
+
+		/// <inheritdoc />
+		public Task HandshakeDatabaseConnectionAsync()
+		{
+			if (this.Connection.State == ConnectionState.Open)
+			{
+				return Task.CompletedTask;
+			}
+			
+			this.Connection.Open();
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />

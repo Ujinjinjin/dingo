@@ -101,7 +101,7 @@ namespace Dingo.Core.Repository
 						null => MigrationStatus.New,
 						true => MigrationStatus.Outdated,
 						false => MigrationStatus.UpToDate,
-					}
+					},
 				};
 			}
 
@@ -112,10 +112,11 @@ namespace Dingo.Core.Repository
 		public async Task<bool> HandshakeDatabaseConnectionAsync()
 		{
 			using var _ = new CodeTiming(_logger);
+			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
 
 			try
 			{
-				await InstallCheckTableExistenceProcedureAsync();
+				await dbContext.HandshakeDatabaseConnectionAsync();
 			}
 			catch (Exception ex)
 			{

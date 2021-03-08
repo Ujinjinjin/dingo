@@ -21,6 +21,9 @@ namespace Dingo.Core.Repository
 		/// <param name="dbMigrationInfoInputList">List of migrations</param>
 		Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList);
 
+		/// <summary> Perform handshake connection to database to validate connection string </summary>
+		Task HandshakeDatabaseConnectionAsync();
+
 		/// <summary> Register migration in database </summary>
 		/// <param name="migrationPath">Path to migration file</param>
 		/// <param name="migrationHash">Hash of migration file</param>
