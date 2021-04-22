@@ -68,6 +68,9 @@ jobs:
         scriptPath: 'tools/version.py'
         arguments: '--major $(major) --minor $(minor) --patch $(patch) --branch $(Build.SourceBranchName)'
     
+    - script: echo $(pkg_version)
+      displayName: 'display version'
+    
     - task: DotNetCoreCLI@2
       displayName: 'publish app executable'
       inputs:
