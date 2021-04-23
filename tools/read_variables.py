@@ -11,4 +11,4 @@ if __name__ == '__main__':
     with open(args.path, 'r', encoding='utf8') as storage:
         variables = json.load(storage)
 
-    print(f'##vso[task.setvariable variable=version]{variables["version"]}', end='')
+    print(f'##vso[task.setvariable variable=version]{variables["version"]}')
