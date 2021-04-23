@@ -74,11 +74,11 @@ namespace Dingo.Cli.Implementors
 
 			await _consoleQueue.EnqueueOutputAsync(configFileString);
 
-			var configString = $"        connection string: {configWrapper.ConnectionString}\n" +
-							   $"            provider name: {configWrapper.ProviderName}\n" +
-							   $"         migration schema: {configWrapper.MigrationSchema}\n" +
-							   $"          migration table: {configWrapper.MigrationTable}\n" +
-							   $"migrations search pattern: {configWrapper.MigrationsSearchPattern}\n";
+			var configString = $"connection string: {configWrapper.ConnectionString}\n" +
+							   $"    provider name: {configWrapper.ProviderName}\n" +
+							   $" migration schema: {configWrapper.MigrationSchema}\n" +
+							   $"  migration table: {configWrapper.MigrationTable}\n" +
+							   $"   search pattern: {configWrapper.MigrationsSearchPattern}\n";
 
 			await _consoleQueue.EnqueueOutputAsync(configString);
 		}

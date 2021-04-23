@@ -22,7 +22,7 @@ namespace Dingo.Cli.Controllers
 		/// <inheritdoc />
 		public override void Register()
 		{
-			var command = CreateCommand("migrations", "Group of command to work with migrations");
+			var command = CreateCommand("migrations", "Group of commands to work with migrations");
 
 			var subCommandNew = CreateCommand(
 				"new",

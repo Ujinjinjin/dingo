@@ -18,7 +18,7 @@ namespace Dingo.Cli.Controllers
 
 		public override void Register()
 		{
-			var command = CreateCommand("logs", "Group of command to work with logs");
+			var command = CreateCommand("logs", "Group of commands to work with logs");
 
 			command.AddCommand(CreateCommand(
 				"level", 

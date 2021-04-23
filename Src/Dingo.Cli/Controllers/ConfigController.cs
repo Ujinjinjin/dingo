@@ -22,7 +22,7 @@ namespace Dingo.Cli.Controllers
 		/// <inheritdoc />
 		public override void Register()
 		{
-			var command = CreateCommand("config", "Group of command to work with configs");
+			var command = CreateCommand("config", "Group of commands to work with configs");
 
 			command.AddCommand(CreateCommand(
 				"init", 
