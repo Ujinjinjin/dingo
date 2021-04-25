@@ -30,22 +30,22 @@ Because it uses plain `.sql` scripts for writing database migrations, it can be 
 To install `dingo` on Ubuntu-20.04 run following commands:
 
 ```shell
-$ curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
+curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
                                  | grep "browser_download_url.*deb" \
                                  | cut -d '"' -f 4 \
                                  | wget -O dingo.deb -qi -
-$ sudo dpkg --install dingo.deb
+sudo dpkg --install dingo.deb
 ```
 Then add `/usr/share/dingo` to the `$PATH` environment variable. Run following command to validate successful installation:
 
 ```shell
-$ dingo --version
+dingo --version
 ```
 
 To uninstall `dingo` use:
 
 ```shell
-$ sudo dpkg --remove dingo
+sudo dpkg --remove dingo
 ```
 
 ## Usage
@@ -53,7 +53,7 @@ $ sudo dpkg --remove dingo
 To collect and apply database migrations you should use following command:
 
 ```shell
-$ dingo migrations run -m SQL_MIGRATIONS_PATH -c CONFIG_PATH
+dingo migrations run -m SQL_MIGRATIONS_PATH -c CONFIG_PATH
 ```
 
 specifying:
@@ -63,7 +63,7 @@ specifying:
 or
 
 ```shell
-$ dingo migrations run -m SQL_MIGRATIONS_PATH \
+dingo migrations run -m SQL_MIGRATIONS_PATH \
                        --connectionString CONNECTION_STRING \
                        --providerName PROVIDER_NAME \
                        --migrationSchema MIGRATIONS_SCHEMA \
@@ -80,5 +80,5 @@ specifying:
 For additional information on usage refer to [wiki](https://github.com/Ujinjinjin/dingo/wiki) or run:
 
 ```shell
-$ dingo --help
+dingo --help
 ```
