@@ -34,6 +34,9 @@ namespace Dingo.Core.IO
 		}
 
 		/// <inheritdoc />
+		public bool IsEmpty => _outputQueue.IsEmpty;
+
+		/// <inheritdoc />
 		public void Dispose()
 		{
 			_outputQueue?.Clear();

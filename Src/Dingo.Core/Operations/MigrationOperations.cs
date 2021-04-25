@@ -68,7 +68,7 @@ namespace Dingo.Core.Operations
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Error occured while creating migration file.");
+				_logger.LogError(ex, "MigrationOperations:CreateMigrationFileAsync:Error;");
 				await _renderer.ShowMessageAsync("Error occured while creating migration file", MessageType.Error);
 			}
 		}
@@ -78,15 +78,23 @@ namespace Dingo.Core.Operations
 		{
 			using var _ = new CodeTiming(_logger);
 
-			await _configWrapper.LoadAsync(configPath);
+			try
+			{
+				await _configWrapper.LoadAsync(configPath);
 
-			if (await _databaseRepository.HandshakeDatabaseConnectionAsync())
-			{
-				await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!", MessageType.Info);
+				if (await _databaseRepository.HandshakeDatabaseConnectionAsync())
+				{
+					await _renderer.ShowMessageAsync("Successfully connected to database, dingo is ready to go!", MessageType.Info);
+				}
+				else
+				{
+					await _renderer.ShowMessageAsync("Connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				await _renderer.ShowMessageAsync("Connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
+				_logger.LogError(ex, "MigrationOperations:HandshakeDatabaseConnectionAsync:Error;");
+				await _renderer.ShowMessageAsync(ex.Message, MessageType.Error);
 			}
 		}
 
@@ -103,24 +111,32 @@ namespace Dingo.Core.Operations
 		{
 			using var _ = new CodeTiming(_logger);
 
-			await _configWrapper.LoadAsync(configPath);
-
-			_configWrapper.ConnectionString = connectionString ?? _configWrapper.ConnectionString;
-			_configWrapper.ProviderName = providerName ?? _configWrapper.ProviderName;
-			_configWrapper.MigrationSchema = migrationSchema ?? _configWrapper.MigrationSchema;
-			_configWrapper.MigrationTable = migrationTable ?? _configWrapper.MigrationTable;
-
-			if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
+			try
 			{
-				await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
-				return;
+				await _configWrapper.LoadAsync(configPath);
+
+				_configWrapper.ConnectionString = connectionString ?? _configWrapper.ConnectionString;
+				_configWrapper.ProviderName = providerName ?? _configWrapper.ProviderName;
+				_configWrapper.MigrationSchema = migrationSchema ?? _configWrapper.MigrationSchema;
+				_configWrapper.MigrationTable = migrationTable ?? _configWrapper.MigrationTable;
+
+				if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
+				{
+					await _renderer.ShowMessageAsync("Unable to run migrations, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
+					return;
+				}
+
+				await RunSystemMigrationsAsync(silent);
+
+				await _renderer.PrintBreakLineAsync(silent, newLineBefore: false, newLineAfter: false);
+
+				await RunProjectMigrationsAsync(migrationsRootPath, silent);
 			}
-
-			await RunSystemMigrationsAsync(silent);
-
-			await _renderer.PrintBreakLineAsync(silent);
-
-			await RunProjectMigrationsAsync(migrationsRootPath, silent);
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "MigrationOperations:RunMigrationsAsync:Error;");
+				await _renderer.ShowMessageAsync(ex.Message, MessageType.Error);
+			}
 		}
 
 		/// <inheritdoc />
@@ -128,21 +144,29 @@ namespace Dingo.Core.Operations
 		{
 			using var _ = new CodeTiming(_logger);
 
-			await _configWrapper.LoadAsync(configPath);
-
-			if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
+			try
 			{
-				await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
-				return;
+				await _configWrapper.LoadAsync(configPath);
+
+				if (!await _databaseRepository.HandshakeDatabaseConnectionAsync())
+				{
+					await _renderer.ShowMessageAsync("Unable to show migrations status, because connection to database cannot be established. Please, check your configs and try again.", MessageType.Error);
+					return;
+				}
+
+				await RunSystemMigrationsAsync(true);
+
+				var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+				var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
+				var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
+
+				await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
 			}
-
-			await RunSystemMigrationsAsync(true);
-
-			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
-			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
-
-			await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "MigrationOperations:ShowMigrationsStatusAsync:Error;");
+				await _renderer.ShowMessageAsync(ex.Message, MessageType.Error);
+			}
 		}
 
 		/// <summary> Read all migrations from specified path and apply if needed </summary>
@@ -167,7 +191,15 @@ namespace Dingo.Core.Operations
 
 			await _renderer.PrintTextAsync("Running system migrations...", silent);
 
-			await _databaseRepository.InstallCheckTableExistenceProcedureAsync();
+			try
+			{
+				await _databaseRepository.InstallCheckTableExistenceProcedureAsync();
+			}
+			catch (Exception exception)
+			{
+				await _renderer.PrintTextAsync($"Error applying migration: {_configWrapper.CheckTableExistenceProcedurePath}. ERROR: {exception.Message}", false);
+				throw;
+			}
 
 			var migrationTableExists = await _databaseRepository.CheckMigrationTableExistenceAsync();
 
@@ -181,7 +213,7 @@ namespace Dingo.Core.Operations
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
 					var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-					await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
+					await TryApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
 				}
 
 				for (var i = 0; i < migrationInfoList.Count; i++)
@@ -213,6 +245,11 @@ namespace Dingo.Core.Operations
 				.Where(x => x.Status != MigrationStatus.UpToDate)
 				.ToArray();
 
+			if (migrationsStatusList.Count == 0)
+			{
+				await _renderer.PrintTextAsync("Everything is up to date, no actions required.", silent);
+				return;
+			}
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
 				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
@@ -222,9 +259,22 @@ namespace Dingo.Core.Operations
 				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
 
 				await _renderer.PrintTextAsync("Applying migration...", silent);
-				await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
+				await TryApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, true);
 
 				await _renderer.PrintTextAsync("Migration successfully applied.", silent);
+			}
+		}
+
+		private async Task TryApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations)
+		{
+			try
+			{
+				await _databaseRepository.ApplyMigrationAsync(sql, migrationPath, migrationHash, registerMigrations);
+			}
+			catch (Exception exception)
+			{
+				await _renderer.PrintTextAsync($"Error applying migration: {migrationPath}. ERROR: {exception.Message}", false);
+				throw;
 			}
 		}
 	}

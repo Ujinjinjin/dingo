@@ -1,5 +1,5 @@
 linux_exe:
-	make clean_up
+	make full_clean_up
 	mkdir ~/temp ~/temp/dingo ~/temp/dingo/DEBIAN ~/temp/dingo/usr ~/temp/dingo/usr/share ~/temp/dingo/usr/share/dingo
 	make control_content -s > ~/temp/dingo/DEBIAN/control
 	dotnet publish -c release --self-contained --runtime linux-x64 -o bin/linux
@@ -16,6 +16,9 @@ control_content:
 		-d "Local build of dingo"
 
 clean_up:
+	rm -rf bin obj ~/temp
+
+full_clean_up:
 	rm -rf bin obj ~/temp dingo.deb
 
 mssql_start:

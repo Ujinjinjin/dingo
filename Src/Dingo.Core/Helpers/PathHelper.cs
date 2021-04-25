@@ -42,7 +42,7 @@ namespace Dingo.Core.Helpers
 		/// <inheritdoc />
 		public string GetLogsDirectory()
 		{
-			return GetApplicationBaseDirectory().ConcatPath("logs");
+			return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).ConcatPath(".dingo/logs");
 		}
 
 		/// <inheritdoc />
