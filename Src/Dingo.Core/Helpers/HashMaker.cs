@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Dingo.Core.Helpers
 {
@@ -10,13 +11,13 @@ namespace Dingo.Core.Helpers
 	internal class HashMaker : IHashMaker
 	{
 		/// <inheritdoc />
-		public string GetFileHash(string filename)
+		public async Task<string> GetFileHashAsync(string filename)
 		{
 			using (var md5 = MD5.Create())
 			{
 				using (var stream = File.OpenRead(filename))
 				{
-					var hash = md5.ComputeHash(stream);
+					var hash = await md5.ComputeHashAsync(stream);
 
 					return BitConverter.ToString(hash)
 						.Replace("-", "")
@@ -26,7 +27,7 @@ namespace Dingo.Core.Helpers
 		}
 
 		/// <inheritdoc />
-		public IList<MigrationInfo> GetMigrationInfoList(IList<FilePath> filePathList)
+		public async Task<IList<MigrationInfo>> GetMigrationInfoListAsync(IList<FilePath> filePathList)
 		{
 			var migrationInfoList = new MigrationInfo[filePathList.Count];
 			for (var i = 0; i < filePathList.Count; i++)
@@ -34,7 +35,7 @@ namespace Dingo.Core.Helpers
 				migrationInfoList[i] = new MigrationInfo
 				{
 					Path = filePathList[i],
-					NewHash = GetFileHash(filePathList[i].Absolute)
+					NewHash = await GetFileHashAsync(filePathList[i].Absolute)
 				};
 			}
 

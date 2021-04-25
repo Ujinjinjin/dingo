@@ -246,8 +246,8 @@ namespace Dingo.UnitTests.OperationsTests
 				.Setup(x => x.GetMigrationsStatusAsync(It.IsAny<IList<MigrationInfo>>()))
 				.Returns(Task.FromResult(migrationInfoList));
 			hashMakerMock
-				.Setup(x => x.GetMigrationInfoList(It.IsAny<IList<FilePath>>()))
-				.Returns(migrationInfoList);
+				.Setup(x => x.GetMigrationInfoListAsync(It.IsAny<IList<FilePath>>()))
+				.Returns(Task.FromResult(migrationInfoList));
 
 			var migrationOperations = fixture.Create<MigrationOperations>();
 

@@ -157,7 +157,7 @@ namespace Dingo.Core.Operations
 				await RunSystemMigrationsAsync(true);
 
 				var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-				var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
+				var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 				var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 
 				await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);
@@ -179,7 +179,7 @@ namespace Dingo.Core.Operations
 			await _renderer.PrintTextAsync("Running project migrations...", silent);
 
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
+			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 
 			await ReadAndApplyMigrationList(migrationInfoList, silent, true);
 		}
@@ -206,7 +206,7 @@ namespace Dingo.Core.Operations
 			var migrationsRootPath = _pathHelper.GetApplicationBaseDirectory() + _configWrapper.DingoMigrationsRootPath;
 			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 
-			var migrationInfoList = _hashMaker.GetMigrationInfoList(filePathList);
+			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 
 			if (!migrationTableExists)
 			{
@@ -253,15 +253,15 @@ namespace Dingo.Core.Operations
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
 				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
-				await _renderer.PrintTextAsync($"Status: {migrationsStatusList[i].Status.ToDisplayText()}", silent);
+				await _renderer.PrintTextAsync($"\tStatus: {migrationsStatusList[i].Status.ToDisplayText()}", silent);
 
-				await _renderer.PrintTextAsync("Reading migration file contents...", silent);
+				await _renderer.PrintTextAsync("\tReading migration file contents...", silent);
 				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
 
-				await _renderer.PrintTextAsync("Applying migration...", silent);
+				await _renderer.PrintTextAsync("\tApplying migration...", silent);
 				await TryApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, true);
 
-				await _renderer.PrintTextAsync("Migration successfully applied.", silent);
+				await _renderer.PrintTextAsync("\tMigration successfully applied.", silent);
 			}
 		}
 
