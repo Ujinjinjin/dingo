@@ -92,7 +92,7 @@ namespace Dingo.Cli.Implementors
 		/// <inheritdoc />
 		public async Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
-			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: false);
+			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: true);
 			await _consoleQueue.EnqueueOutputAsync($"Total migrations count: {migrationInfoList.Count}.\n");
 
 			if (silent)
@@ -134,7 +134,7 @@ namespace Dingo.Cli.Implementors
 					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}\n");
 				}
 			}
-			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: false);
+			await _consoleQueue.EnqueueBreakLine(newLineBefore: false, newLineAfter: true);
 		}
 	}
 }

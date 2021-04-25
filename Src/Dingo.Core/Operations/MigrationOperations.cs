@@ -9,6 +9,7 @@ using Dingo.Core.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Operations
@@ -208,15 +209,14 @@ namespace Dingo.Core.Operations
 				await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);	
 			}
 
+			migrationsStatusList = migrationsStatusList
+				.Where(x => x.Status != MigrationStatus.UpToDate)
+				.ToArray();
+
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
-				await _renderer.PrintTextAsync($"{i + 1}) Processing migration '{migrationsStatusList[i].Path.Relative}' - {migrationsStatusList[i].Status.ToDisplayText()}", silent);
-
-				if (migrationsStatusList[i].Status == MigrationStatus.UpToDate)
-				{
-					await _renderer.PrintTextAsync("Skipping action.", silent);
-					continue;
-				}
+				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
+				await _renderer.PrintTextAsync($"Status: {migrationsStatusList[i].Status.ToDisplayText()}", silent);
 
 				await _renderer.PrintTextAsync("Reading migration file contents...", silent);
 				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);

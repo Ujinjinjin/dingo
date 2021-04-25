@@ -14,10 +14,10 @@ namespace Dingo.Core.Extensions
 		{
 			return source switch
 			{
-				MigrationStatus.Unknown => "Unknown migration status.",
-				MigrationStatus.New => "Migration is new and will be installed.",
-				MigrationStatus.Outdated => "Migration is outdated, newer version will be installed.",
-				MigrationStatus.UpToDate => "Migration is up to date. No actions required.",
+				MigrationStatus.Unknown => "Unknown",
+				MigrationStatus.New => "New",
+				MigrationStatus.Outdated => "Outdated",
+				MigrationStatus.UpToDate => "Up to date",
 				_ => throw new ArgumentOutOfRangeException(nameof(source), source, null),
 			};
 		}

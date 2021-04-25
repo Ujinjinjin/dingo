@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Threading;
@@ -33,7 +33,7 @@ namespace Cliff.ConsoleUtils
 		/// <inheritdoc />
 		public async Task EnqueueBreakLine(int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true)
 		{
-			length ??= Console.WindowWidth;
+			length ??= Console.WindowWidth - 1;
 			var stringBuilder = new StringBuilder();
 
 			if (newLineBefore)
