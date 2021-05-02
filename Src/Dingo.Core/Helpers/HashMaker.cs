@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Helpers
@@ -14,9 +15,9 @@ namespace Dingo.Core.Helpers
 		public async Task<string> GetFileHashAsync(string filename)
 		{
 			using var sha512 = SHA512.Create();
-			await using var stream = File.OpenRead(filename);
+			var byteContent = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(filename)); 
 
-			var hash = await sha512.ComputeHashAsync(stream);
+			var hash = sha512.ComputeHash(byteContent);
 
 			return BitConverter.ToString(hash)
 				.Replace("-", "")

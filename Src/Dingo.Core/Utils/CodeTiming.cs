@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Dingo.Core.Utils
 {
-	public struct CodeTiming : IDisposable
+	public readonly struct CodeTiming : IDisposable
 	{
 		private readonly ILogger _logger;
 		private readonly long _startTicks;

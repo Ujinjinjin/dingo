@@ -2,4 +2,4 @@
 
 ## Summary
 
-- few cosmetic changes
+- fixed issue when different versions of dingo would compute different hash for migration files
