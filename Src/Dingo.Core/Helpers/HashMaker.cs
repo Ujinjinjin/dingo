@@ -13,17 +13,14 @@ namespace Dingo.Core.Helpers
 		/// <inheritdoc />
 		public async Task<string> GetFileHashAsync(string filename)
 		{
-			using (var md5 = MD5.Create())
-			{
-				using (var stream = File.OpenRead(filename))
-				{
-					var hash = await md5.ComputeHashAsync(stream);
+			using var sha512 = SHA512.Create();
+			await using var stream = File.OpenRead(filename);
 
-					return BitConverter.ToString(hash)
-						.Replace("-", "")
-						.ToLowerInvariant();
-				}
-			}
+			var hash = await sha512.ComputeHashAsync(stream);
+
+			return BitConverter.ToString(hash)
+				.Replace("-", "")
+				.ToLowerInvariant();
 		}
 
 		/// <inheritdoc />

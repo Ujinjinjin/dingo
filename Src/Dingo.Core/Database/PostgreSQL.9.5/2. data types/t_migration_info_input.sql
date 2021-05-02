@@ -9,5 +9,5 @@ end$$;
 -- Create type
 create type t_migration_info_input as (
 	migration_path text,
-	migration_hash text
+	migration_hash varchar(256)
 );

@@ -130,7 +130,7 @@ namespace Dingo.Cli.Implementors
 					var migrationInfo = migrationInfoList[i];
 
 					await _consoleQueue.EnqueueOutputAsync($"{i + 1}) '{migrationInfo.Path.Relative}'");
-					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash}");
+					await _consoleQueue.EnqueueOutputAsync($"Hash: {migrationInfo.NewHash[..10]}");
 					await _consoleQueue.EnqueueOutputAsync($"Status: {migrationInfo.Status.ToDisplayText()}\n");
 				}
 			}

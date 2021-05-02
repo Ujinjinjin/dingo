@@ -1,6 +1,6 @@
 create or alter procedure system__register_migration(
 	@p_migration_path nvarchar(max),
-	@p_migration_hash varchar(32),
+	@p_migration_hash varchar(256),
 	@p_date_updated datetime
 )
 as

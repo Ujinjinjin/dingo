@@ -3,8 +3,8 @@ create or replace function system__get_migrations_status(
 )
 returns table (
 	migration_path text,
-	new_hash text,
-	old_hash text,
+	new_hash varchar(256),
+	old_hash varchar(256),
 	is_outdated bool,
 	date_updated timestamp
 ) as
