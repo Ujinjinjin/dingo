@@ -14,7 +14,7 @@ begin
 	create temp table tt_input as
 	select
 		cast(t1_input.migration_path as text) as migration_path,
-		cast(t1_input.migration_hash as text) as migration_hash
+		cast(t1_input.migration_hash as varchar(256)) as migration_hash
 	from unnest(pti_migration_info_input) as t1_input;
 
 	return query select

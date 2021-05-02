@@ -108,33 +108,27 @@ namespace Dingo.Core.Utils.Db
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
-		protected IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters)
+		protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
 		{
-			return Query<T>(sql, CommandType.StoredProcedure, parameters);
+			return await QueryAsync<T>(sql, CommandType.StoredProcedure, parameters);
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
-		protected Task<IEnumerable<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+		protected async Task<IEnumerable<T>> QuerySql<T>(string sql, params DataParameter[] parameters)
 		{
-			return Task.FromResult(Query<T>(sql, parameters));
+			return await QueryAsync<T>(sql, CommandType.Text, parameters);
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
-		protected IEnumerable<T> QuerySql<T>(string sql, params DataParameter[] parameters)
+		protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, CommandType commandType, params DataParameter[] parameters)
 		{
-			return Query<T>(sql, CommandType.Text, parameters);
+			return await QueryAsync<T>(sql, commandType, true, parameters);
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
-		protected IEnumerable<T> Query<T>(string sql, CommandType commandType, params DataParameter[] parameters)
+		protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
 		{
-			return Query<T>(sql, commandType, true, parameters);
-		}
-
-		/// <summary> Execute command and return typed list of objects </summary>
-		protected IEnumerable<T> Query<T>(string sql, CommandType commandType, bool logEnabled, params DataParameter[] parameters)
-		{
-			return Query<T>(new DbRequest(sql)
+			return await QueryAsync<T>(new DbRequest(sql)
 			{
 				CommandType = commandType,
 				Parameters = parameters,
@@ -143,7 +137,7 @@ namespace Dingo.Core.Utils.Db
 		}
 
 		/// <summary> Execute command and return typed list of objects </summary>
-		private IEnumerable<T> Query<T>(DbRequest request)
+		private async Task<IEnumerable<T>> QueryAsync<T>(DbRequest request)
 		{
 			using (var scope = new QueryExecutionScope(_logger))
 			{
@@ -154,7 +148,7 @@ namespace Dingo.Core.Utils.Db
 
 					var command = CreateCommand(request);
 
-					return command.Query<T>();
+					return await command.QueryToArrayAsync<T>();
 				}
 				catch (Exception exception)
 				{
@@ -167,7 +161,7 @@ namespace Dingo.Core.Utils.Db
 		/// <summary> Create execution command </summary>
 		private CommandInfo CreateCommand(DbRequest request)
 		{
-			return new CommandInfo(this, request.CommandText, request.Parameters.ToArray())
+			return new(this, request.CommandText, request.Parameters.ToArray())
 			{
 				CommandType = request.CommandType,
 			};
