@@ -34,5 +34,8 @@ namespace Dingo.Core.Repository
 		/// <param name="migrationPath">Path to migration file</param>
 		/// <param name="migrationHash">MD5 hash of migration file</param>
 		Task RegisterMigrationAsync(string migrationPath, string migrationHash);
+
+		/// <summary> Reload database types </summary>
+		Task ReloadDatabaseTypesAsync();
 	}
 }

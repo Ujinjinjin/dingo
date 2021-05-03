@@ -148,5 +148,15 @@ namespace Dingo.Core.Repository
 
 			await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
 		}
+
+		/// <inheritdoc />
+		public async Task ReloadDatabaseTypesAsync()
+		{
+			using var _ = new CodeTiming(_logger);
+
+			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+
+			await dbContext.ReloadDatabaseTypesAsync();
+		}
 	}
 }

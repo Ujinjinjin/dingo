@@ -29,5 +29,8 @@ namespace Dingo.Core.Repository
 		/// <param name="migrationHash">Hash of migration file</param>
 		/// <param name="dateUpdated">Timestamp when migration was updated in database</param>
 		Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated);
+
+		/// <summary> Reload database types </summary>
+		Task ReloadDatabaseTypesAsync();
 	}
 }

@@ -3,6 +3,7 @@ using Dingo.Core.Repository.DbConverters;
 using Dingo.Core.Utils.Db;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,6 +78,17 @@ namespace Dingo.Core.Repository
 				new DataParameter("p_migration_hash", migrationHash),
 				new DataParameter("p_date_updated", dateUpdated)
 			);
+		}
+
+		/// <inheritdoc />
+		public Task ReloadDatabaseTypesAsync()
+		{
+			if (Connection is NpgsqlConnection npgsqlConnection)
+			{
+				npgsqlConnection.ReloadTypes();
+			}
+
+			return Task.CompletedTask;
 		}
 	}
 }

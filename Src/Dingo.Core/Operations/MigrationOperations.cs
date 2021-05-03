@@ -220,6 +220,8 @@ namespace Dingo.Core.Operations
 				{
 					await _databaseRepository.RegisterMigrationAsync(migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
 				}
+
+				await _databaseRepository.ReloadDatabaseTypesAsync();
 			}
 			else
 			{
