@@ -9,9 +9,9 @@ namespace Dingo.Cli.Implementors
 	public class CliPrompt : IPrompt
 	{
 		/// <inheritdoc />
-		public T Choose<T>(string message, IList<T> choiceList, Func<T, string> valueSelector = null)
+		public T Choose<T>(string message, IList<T> choiceList, Func<T, string> textSelector = null)
 		{
-			return Prompt.Select(message, choiceList, valueSelector: valueSelector);
+			return Prompt.Select(message, choiceList, textSelector: textSelector);
 		}
 
 		/// <inheritdoc />
