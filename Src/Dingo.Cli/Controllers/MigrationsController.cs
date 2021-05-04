@@ -29,7 +29,7 @@ namespace Dingo.Cli.Controllers
 				"Create new migration file",
 				CommandHandler.Create<string, string>(_migrationOperations.CreateMigrationFileAsync),
 				CreateOption(new[] {"--name", "-n"}, "Migration name", typeof(string), true),
-				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), true)
+				CreateOption(new[] {"--path", "-p"}, "Path where migration file will be created", typeof(string), true)
 			);
 
 			command.AddCommand(subCommandNew);

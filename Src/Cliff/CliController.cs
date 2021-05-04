@@ -56,7 +56,7 @@ namespace Cliff
 		/// <returns><see cref="Option"/></returns>
 		protected Option CreateOption(string[] aliases, string description, Type type, bool required)
 		{
-			return new Option(aliases, description)
+			return new(aliases, description)
 			{
 				Argument = new Argument { ArgumentType = type },
 				Required = required,
