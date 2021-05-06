@@ -6,10 +6,10 @@ Because it uses plain `.sql` scripts for writing database migrations, it can be 
 
 ## Key features
 
-- Supports PostgreSQL
+- Supports PostgreSQL and SQL Server
 - Migrations are timestamp-versioned
 - Migrations are written using plain `.sql`
-- Project configs can be stored in `.yml`
+- Project configs can be stored both in `.yml` and `.json`
 - Config file can be specified as command line argument
 
 ## Summary
