@@ -302,7 +302,7 @@ namespace Dingo.Core.Operations
 		/// <returns>True, if given list contains invalid filenames; False otherwise</returns>
 		private async Task<bool> AnyMigrationHasInvalidFilenameAsync(IList<FilePath> filePathList)
 		{
-			var invalidMigrationsCount = 0;
+			var invalidMigrationFilenames = new List<string>();
 
 			for (var i = 0; i < filePathList.Count; i++)
 			{
@@ -310,19 +310,25 @@ namespace Dingo.Core.Operations
 				{
 					continue;
 				}
-
-				invalidMigrationsCount++;
-				await _renderer.PrintTextAsync($"Invalid migration filename: {filePathList[i].Relative}");
+				
+				invalidMigrationFilenames.Add(filePathList[i].Relative);
 			}
 
-			if (invalidMigrationsCount > 0)
+			if (invalidMigrationFilenames.Count == 0)
 			{
-				await _renderer.ShowMessageAsync($"\nOperation aborted", MessageType.Warning);
-				await _renderer.ShowMessageAsync($"\nFound {invalidMigrationsCount} migrations with invalid filename. Filename must contain only latin symbols, numbers and underscore", MessageType.Warning);
-				return true;
+				return false;
 			}
 
-			return false;
+			await _renderer.ShowMessageAsync("Operation aborted!", MessageType.Warning);
+
+			for (var i = 0; i < invalidMigrationFilenames.Count; i++)
+			{
+				await _renderer.PrintTextAsync($"Invalid migration filename: {invalidMigrationFilenames[i]}");
+			}
+			
+			await _renderer.PrintTextAsync($"Found {invalidMigrationFilenames.Count} migrations with invalid filename. Filename must contain only latin symbols, numbers and underscore");
+
+			return true;
 		}
 	}
 }
