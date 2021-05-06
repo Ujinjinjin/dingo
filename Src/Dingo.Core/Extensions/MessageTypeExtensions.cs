@@ -18,5 +18,19 @@ namespace Dingo.Core.Extensions
 				_ => message,
 			};
 		}
+		
+		/// <summary> Convert message type to text style </summary>
+		/// <param name="source">Message type</param>
+		/// <returns>Text style</returns>
+		public static TextStyle ToTextStyle(this MessageType source)
+		{
+			return source switch
+			{
+				MessageType.Warning => TextStyle.Warning,
+				MessageType.Info => TextStyle.Info,
+				MessageType.Error => TextStyle.Error,
+				_ => TextStyle.Plain,
+			};
+		}
 	}
 }

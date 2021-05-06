@@ -10,7 +10,8 @@ namespace Dingo.Core.Abstractions
 	{
 		/// <summary> Display list of items </summary>
 		/// <param name="itemList">Items to be listed</param>
-		Task ListItemsAsync(IList<string> itemList);
+		/// <param name="textStyle">Text style</param>
+		Task ListItemsAsync(IList<string> itemList, TextStyle textStyle = TextStyle.Plain);
 
 		/// <summary> Print break line </summary>
 		/// <param name="silent">Don't print text if true</param>
@@ -18,12 +19,13 @@ namespace Dingo.Core.Abstractions
 		/// <param name="symbol">Symbol of line</param>
 		/// <param name="newLineBefore">Print empty line before</param>
 		/// <param name="newLineAfter">Print empty line after</param>
-		Task PrintBreakLineAsync(bool silent, int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true);
+		Task PrintBreakLineAsync(bool silent = false, int? length = null, char symbol = '-', bool newLineBefore = true, bool newLineAfter = true);
 
 		/// <summary> Print text </summary>
 		/// <param name="text">Text to print</param>
 		/// <param name="silent">Don't print text if true</param>
-		Task PrintTextAsync(string text, bool silent = false);
+		/// <param name="textStyle">Text style</param>
+		Task PrintTextAsync(string text, bool silent = false, TextStyle textStyle = TextStyle.Plain);
 
 		/// <summary> Show project configurations to user </summary>
 		/// <param name="configWrapper">Configuration wrapper</param>

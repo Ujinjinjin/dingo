@@ -30,7 +30,7 @@ namespace Dingo.UnitTests.OperationsTests
 			providerOperations.ListSupportedDatabaseProvidersAsync().Wait();
 
 			// Assert
-			rendererMock.Verify(x => x.ListItemsAsync(It.Is<IList<string>>(y => y.SequenceEqual(DbProvider.SupportedDatabaseProviderNames))), Times.Once());
+			rendererMock.Verify(x => x.ListItemsAsync(It.Is<IList<string>>(y => y.SequenceEqual(DbProvider.SupportedDatabaseProviderNames)), It.IsAny<TextStyle>()), Times.Once());
 		}
 
 		[Fact]

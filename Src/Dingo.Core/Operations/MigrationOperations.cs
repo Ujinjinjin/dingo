@@ -139,7 +139,7 @@ namespace Dingo.Core.Operations
 				await RunSystemMigrationsAsync(silent);
 
 				await _renderer.PrintBreakLineAsync(silent, newLineBefore: false, newLineAfter: false);
-				await _renderer.PrintTextAsync("Running project migrations...", silent);
+				await _renderer.PrintTextAsync("Running project migrations...", silent, TextStyle.Info);
 
 				var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
 
@@ -200,7 +200,7 @@ namespace Dingo.Core.Operations
 		{
 			using var _ = new CodeTiming(_logger);
 
-			await _renderer.PrintTextAsync("Running system migrations...", silent);
+			await _renderer.PrintTextAsync("Running system migrations...", silent, TextStyle.Info);
 
 			try
 			{
@@ -267,12 +267,6 @@ namespace Dingo.Core.Operations
 				.Where(x => x.Status != MigrationStatus.UpToDate)
 				.ToArray();
 
-			if (migrationsStatusList.Count == 0)
-			{
-				await _renderer.PrintTextAsync("Everything is up to date, no actions required.", silent);
-				return;
-			}
-
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
 				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
@@ -323,10 +317,10 @@ namespace Dingo.Core.Operations
 
 			for (var i = 0; i < invalidMigrationFilenames.Count; i++)
 			{
-				await _renderer.PrintTextAsync($"Invalid migration filename: {invalidMigrationFilenames[i]}");
+				await _renderer.PrintTextAsync($"Invalid migration filename: {invalidMigrationFilenames[i]}", textStyle: TextStyle.Warning);
 			}
 			
-			await _renderer.PrintTextAsync($"Found {invalidMigrationFilenames.Count} migrations with invalid filename. Filename must contain only latin symbols, numbers and underscore");
+			await _renderer.PrintTextAsync("Filename must contain only latin symbols, numbers and underscore", textStyle: TextStyle.Warning);
 
 			return true;
 		}
