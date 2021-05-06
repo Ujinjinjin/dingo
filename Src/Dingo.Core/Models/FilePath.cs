@@ -14,5 +14,8 @@
 
 		/// <summary> Migration file name </summary>
 		public string Filename { get; set; }
+		
+		/// <summary> Defines if filename is valid or not </summary>
+		public bool IsValid { get; set; }
 	}
 }

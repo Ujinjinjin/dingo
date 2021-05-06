@@ -34,12 +34,13 @@ namespace Dingo.UnitTests.OperationsTests
 			var migrationOperations = fixture.Create<MigrationOperations>();
 
 			// Act
-			migrationOperations.CreateMigrationFileAsync(fixture.Create<string>(), fixture.Create<string>()).Wait();
+			migrationOperations.CreateMigrationFileAsync(CreateValidFilename(), fixture.Create<string>()).Wait();
 
 			// Assert
 			directoryAdapterMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Once());
 			fileAdapterMock.Verify(x => x.Create(It.IsAny<string>()), Times.Once());
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Never());
 		}
 		
 		[Fact]
@@ -59,12 +60,13 @@ namespace Dingo.UnitTests.OperationsTests
 			var migrationOperations = fixture.Create<MigrationOperations>();
 
 			// Act
-			migrationOperations.CreateMigrationFileAsync(fixture.Create<string>(), fixture.Create<string>()).Wait();
+			migrationOperations.CreateMigrationFileAsync(CreateValidFilename(), fixture.Create<string>()).Wait();
 
 			// Assert
 			directoryAdapterMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never());
 			fileAdapterMock.Verify(x => x.Create(It.IsAny<string>()), Times.Once());
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Never());
 		}
 		
 		[Fact]
@@ -87,12 +89,42 @@ namespace Dingo.UnitTests.OperationsTests
 			var migrationOperations = fixture.Create<MigrationOperations>();
 
 			// Act
-			migrationOperations.CreateMigrationFileAsync(fixture.Create<string>(), fixture.Create<string>()).Wait();
+			migrationOperations.CreateMigrationFileAsync(CreateValidFilename(), fixture.Create<string>()).Wait();
 
 			// Assert
 			directoryAdapterMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never());
 			fileAdapterMock.Verify(x => x.Create(It.IsAny<string>()), Times.Once());
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Once());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Never());
+		}
+		
+		[Fact]
+		public void MigrationOperationsTests__CreateMigrationFileAsync__WhenInvalidFilenameGiven_ThenWarningDisplayedAndFileNotCreated()
+		{
+			// Arrange
+			var directoryAdapterMock = new Mock<IDirectoryAdapter>();
+			var fileAdapterMock = new Mock<IFileAdapter>();
+			var rendererMock = new Mock<IRenderer>();
+
+			var fixture = CreateFixture(directoryAdapterMock, fileAdapterMock, rendererMock);
+
+			directoryAdapterMock
+				.Setup(x => x.Exists(It.IsAny<string>()))
+				.Returns(true);
+			fileAdapterMock
+				.Setup(x => x.Create(It.IsAny<string>()))
+				.Throws(new Exception());
+
+			var migrationOperations = fixture.Create<MigrationOperations>();
+
+			// Act
+			migrationOperations.CreateMigrationFileAsync(fixture.Create<string>(), fixture.Create<string>()).Wait();
+
+			// Assert
+			directoryAdapterMock.Verify(x => x.CreateDirectory(It.IsAny<string>()), Times.Never());
+			fileAdapterMock.Verify(x => x.Create(It.IsAny<string>()), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Once());
 		}
 
 		[Fact]
@@ -173,6 +205,39 @@ namespace Dingo.UnitTests.OperationsTests
 		}
 
 		[Fact]
+		public void MigrationOperationsTests__ShowMigrationsStatusAsync__WhenAnyMigrationHasInvalidFilename_ThenWarningMessageShownAndCommandTerminated()
+		{
+			// Arrange
+			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
+			var directoryScannerMock = new Mock<IDirectoryScanner>();
+
+			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock, directoryScannerMock);
+
+			databaseHelperMock
+				.Setup(x => x.HandshakeDatabaseConnectionAsync())
+				.Returns(Task.FromResult(true));
+
+			directoryScannerMock
+				.Setup(x => x.GetFilePathList(It.IsAny<string>(), It.IsAny<string>()))
+				.Returns(CreateItemArray<FilePath>(10));
+
+			var migrationOperations = fixture.Create<MigrationOperations>();
+
+			// Act
+			migrationOperations.ShowMigrationsStatusAsync(
+				fixture.Create<string>()
+			).Wait();
+
+			// Assert
+			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Once());
+			rendererMock.Verify(x => x.ShowMigrationsStatusAsync(It.IsAny<IList<MigrationInfo>>(), It.IsAny<bool>()), Times.Never());
+		}
+
+		[Fact]
 		public void MigrationOperationsTests__ShowMigrationsStatusAsync__WhenHandshakeEstablished_ThenCommandExecuted()
 		{
 			// Arrange
@@ -223,6 +288,39 @@ namespace Dingo.UnitTests.OperationsTests
 			// Assert
 			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
 			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Once());
+			rendererMock.Verify(x => x.ShowMigrationsStatusAsync(It.IsAny<IList<MigrationInfo>>(), It.IsAny<bool>()), Times.Never());
+		}
+
+		[Fact]
+		public void MigrationOperationsTests__RunMigrationsAsync__WhenAnyMigrationHasInvalidFilename_ThenWarningMessageShownAndCommandTerminated()
+		{
+			// Arrange
+			var configWrapperMock = new Mock<IConfigWrapper>();
+			var rendererMock = new Mock<IRenderer>();
+			var databaseHelperMock = new Mock<IDatabaseRepository>();
+			var directoryScannerMock = new Mock<IDirectoryScanner>();
+
+			var fixture = CreateFixture(configWrapperMock, rendererMock, databaseHelperMock, directoryScannerMock);
+
+			databaseHelperMock
+				.Setup(x => x.HandshakeDatabaseConnectionAsync())
+				.Returns(Task.FromResult(true));
+
+			directoryScannerMock
+				.Setup(x => x.GetFilePathList(It.IsAny<string>(), It.IsAny<string>()))
+				.Returns(CreateItemArray<FilePath>(10));
+
+			var migrationOperations = fixture.Create<MigrationOperations>();
+
+			// Act
+			migrationOperations.RunMigrationsAsync(
+				fixture.Create<string>()
+			).Wait();
+
+			// Assert
+			configWrapperMock.Verify(x => x.LoadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Error)), Times.Never());
+			rendererMock.Verify(x => x.ShowMessageAsync(It.IsAny<string>(), It.Is<MessageType>(y => y == MessageType.Warning)), Times.Once());
 			rendererMock.Verify(x => x.ShowMigrationsStatusAsync(It.IsAny<IList<MigrationInfo>>(), It.IsAny<bool>()), Times.Never());
 		}
 

@@ -14,6 +14,7 @@ namespace Cliff.ConsoleUtils
 
 		public ConsoleQueue()
 		{
+			// ReSharper disable once UseObjectOrCollectionInitializer
 			_thread = new Thread(
 				() =>
 				{
@@ -38,14 +39,14 @@ namespace Cliff.ConsoleUtils
 
 			if (newLineBefore)
 			{
-				stringBuilder.Append("\n");
+				stringBuilder.Append('\n');
 			}
 
 			stringBuilder.Append(new string(symbol, length.Value));
 
 			if (newLineAfter)
 			{
-				stringBuilder.Append("\n");
+				stringBuilder.Append('\n');
 			}
 
 			await EnqueueOutputAsync(stringBuilder.ToString());

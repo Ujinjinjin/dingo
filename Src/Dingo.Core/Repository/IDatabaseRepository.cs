@@ -11,7 +11,7 @@ namespace Dingo.Core.Repository
 		/// <param name="sql">Sql text of migration</param>
 		/// <param name="migrationPath">Path to migration file</param>
 		/// <param name="migrationHash">MD5 hash of migration file</param>
-		/// <param name="registerMigrations">If true, migration will be applied, but not registered in migrations table</param>
+		/// <param name="registerMigrations">If false, migration will be applied, but not registered in migrations table</param>
 		Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true);
 
 		/// <summary> Check if dingo migrations table exists in database </summary>

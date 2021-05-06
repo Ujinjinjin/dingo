@@ -56,7 +56,7 @@ namespace Dingo.Cli.Implementors
 		}
 
 		/// <inheritdoc />
-		public async Task PrintTextAsync(string text, bool silent)
+		public async Task PrintTextAsync(string text, bool silent = false)
 		{
 			if (silent)
 			{

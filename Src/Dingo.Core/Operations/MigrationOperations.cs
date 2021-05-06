@@ -6,6 +6,7 @@ using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Utils;
+using Dingo.Core.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Dingo.Core.Operations
 		private readonly IHashMaker _hashMaker;
 		private readonly IPathHelper _pathHelper;
 		private readonly IRenderer _renderer;
+		private readonly IValidator<string> _migrationNameValidator;
 		private readonly ILogger _logger;
 
 		public MigrationOperations(
@@ -36,6 +38,7 @@ namespace Dingo.Core.Operations
 			IHashMaker hashMaker,
 			IPathHelper pathHelper,
 			IRenderer renderer,
+			MigrationNameValidator migrationNameValidator,
 			ILoggerFactory loggerFactory
 		)
 		{
@@ -47,6 +50,7 @@ namespace Dingo.Core.Operations
 			_hashMaker = hashMaker ?? throw new ArgumentNullException(nameof(hashMaker));
 			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
 			_renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
+			_migrationNameValidator = migrationNameValidator ?? throw new ArgumentNullException(nameof(migrationNameValidator));
 			_logger = loggerFactory?.CreateLogger<MigrationOperations>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 		}
 
@@ -57,6 +61,12 @@ namespace Dingo.Core.Operations
 
 			try
 			{
+				if (!_migrationNameValidator.Validate(name))
+				{
+					await _renderer.ShowMessageAsync("Invalid migration name. Filename must contain only latin symbols, numbers and underscore", MessageType.Warning);
+					return;
+				}
+				
 				if (!_directoryAdapter.Exists(path))
 				{
 					_directoryAdapter.CreateDirectory(path);
@@ -129,8 +139,18 @@ namespace Dingo.Core.Operations
 				await RunSystemMigrationsAsync(silent);
 
 				await _renderer.PrintBreakLineAsync(silent, newLineBefore: false, newLineAfter: false);
+				await _renderer.PrintTextAsync("Running project migrations...", silent);
 
-				await RunProjectMigrationsAsync(migrationsRootPath, silent);
+				var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+
+				if (await AnyMigrationHasInvalidFilenameAsync(filePathList))
+				{
+					return;
+				}
+				
+				var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
+
+				await ReadAndApplyMigrationList(migrationInfoList, silent, true);
 			}
 			catch (Exception ex)
 			{
@@ -157,6 +177,12 @@ namespace Dingo.Core.Operations
 				await RunSystemMigrationsAsync(true);
 
 				var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
+
+				if (await AnyMigrationHasInvalidFilenameAsync(filePathList))
+				{
+					return;
+				}
+
 				var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 				var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 
@@ -167,21 +193,6 @@ namespace Dingo.Core.Operations
 				_logger.LogError(ex, "MigrationOperations:ShowMigrationsStatusAsync:Error;");
 				await _renderer.ShowMessageAsync(ex.Message, MessageType.Error);
 			}
-		}
-
-		/// <summary> Read all migrations from specified path and apply if needed </summary>
-		/// <param name="migrationsRootPath">Root path where all project migrations are stored</param>
-		/// <param name="silent">Show less info about migration status</param>
-		private async Task RunProjectMigrationsAsync(string migrationsRootPath, bool silent)
-		{
-			using var _ = new CodeTiming(_logger);
-
-			await _renderer.PrintTextAsync("Running project migrations...", silent);
-
-			var filePathList = _directoryScanner.GetFilePathList(migrationsRootPath, _configWrapper.MigrationsSearchPattern);
-			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
-
-			await ReadAndApplyMigrationList(migrationInfoList, silent, true);
 		}
 
 		/// <summary> Read all system migrations and apply if needed </summary>
@@ -197,7 +208,7 @@ namespace Dingo.Core.Operations
 			}
 			catch (Exception exception)
 			{
-				await _renderer.PrintTextAsync($"Error applying migration: {_configWrapper.CheckTableExistenceProcedurePath}. ERROR: {exception.Message}", false);
+				await _renderer.ShowMessageAsync($"Migration: {_configWrapper.CheckTableExistenceProcedurePath}. {exception.Message}", MessageType.Error);
 				throw;
 			}
 
@@ -213,7 +224,16 @@ namespace Dingo.Core.Operations
 				for (var i = 0; i < migrationInfoList.Count; i++)
 				{
 					var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
-					await TryApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
+
+					try
+					{
+						await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, false);
+					}
+					catch (Exception exception)
+					{
+						await _renderer.ShowMessageAsync($"Migration: {migrationInfoList[i].Path.Relative}. {exception.Message}", MessageType.Error);
+						throw;
+					}
 				}
 
 				for (var i = 0; i < migrationInfoList.Count; i++)
@@ -252,6 +272,7 @@ namespace Dingo.Core.Operations
 				await _renderer.PrintTextAsync("Everything is up to date, no actions required.", silent);
 				return;
 			}
+
 			for (var i = 0; i < migrationsStatusList.Count; i++)
 			{
 				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
@@ -261,23 +282,47 @@ namespace Dingo.Core.Operations
 				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
 
 				await _renderer.PrintTextAsync("\tApplying migration...", silent);
-				await TryApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash, true);
+
+				try
+				{
+					await _databaseRepository.ApplyMigrationAsync(sqlScriptText, migrationInfoList[i].Path.Relative, migrationInfoList[i].NewHash);
+				}
+				catch (Exception exception)
+				{
+					await _renderer.ShowMessageAsync($"Migration: {migrationInfoList[i].Path.Relative}. {exception.Message}", MessageType.Error);
+					throw;
+				}
 
 				await _renderer.PrintTextAsync("\tMigration successfully applied.", silent);
 			}
 		}
 
-		private async Task TryApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations)
+		/// <summary> Validate given filename list and show warning if it contains invalid ones </summary>
+		/// <param name="filePathList">List of file paths to validate</param>
+		/// <returns>True, if given list contains invalid filenames; False otherwise</returns>
+		private async Task<bool> AnyMigrationHasInvalidFilenameAsync(IList<FilePath> filePathList)
 		{
-			try
+			var invalidMigrationsCount = 0;
+
+			for (var i = 0; i < filePathList.Count; i++)
 			{
-				await _databaseRepository.ApplyMigrationAsync(sql, migrationPath, migrationHash, registerMigrations);
+				if (filePathList[i].IsValid)
+				{
+					continue;
+				}
+
+				invalidMigrationsCount++;
+				await _renderer.PrintTextAsync($"Invalid migration filename: {filePathList[i].Relative}");
 			}
-			catch (Exception exception)
+
+			if (invalidMigrationsCount > 0)
 			{
-				await _renderer.PrintTextAsync($"Error applying migration: {migrationPath}. ERROR: {exception.Message}", false);
-				throw;
+				await _renderer.ShowMessageAsync($"\nOperation aborted", MessageType.Warning);
+				await _renderer.ShowMessageAsync($"\nFound {invalidMigrationsCount} migrations with invalid filename. Filename must contain only latin symbols, numbers and underscore", MessageType.Warning);
+				return true;
 			}
+
+			return false;
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Dingo.Core.Abstractions
 		/// <summary> Print text </summary>
 		/// <param name="text">Text to print</param>
 		/// <param name="silent">Don't print text if true</param>
-		Task PrintTextAsync(string text, bool silent);
+		Task PrintTextAsync(string text, bool silent = false);
 
 		/// <summary> Show project configurations to user </summary>
 		/// <param name="configWrapper">Configuration wrapper</param>

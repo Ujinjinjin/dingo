@@ -2,6 +2,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Dingo.Core.Extensions;
 using Moq;
+using System;
 using System.Collections.Generic;
 
 namespace Dingo.UnitTests
@@ -97,6 +98,11 @@ namespace Dingo.UnitTests
 			}
 
 			return array;
+		}
+
+		protected string CreateValidFilename()
+		{
+			return $"{Guid.NewGuid():N}.sql";
 		}
 	}
 }

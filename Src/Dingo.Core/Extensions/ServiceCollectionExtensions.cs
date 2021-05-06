@@ -4,6 +4,7 @@ using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
 using Dingo.Core.Operations;
 using Dingo.Core.Repository;
+using Dingo.Core.Validators;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -37,6 +38,8 @@ namespace Dingo.Core.Extensions
 			serviceCollection.AddSingleton<ILogsOperations, LogsOperations>();
 			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
 			serviceCollection.AddSingleton<IProviderOperations, ProviderOperations>();
+
+			serviceCollection.AddSingleton<MigrationNameValidator>();
 
 			serviceCollection.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 			serviceCollection.AddSingleton<IDatabaseContext, DatabaseContext>();

@@ -18,6 +18,11 @@ control_content:
 clean_up:
 	rm -rf bin obj ~/temp
 
+linux_install:
+	sudo dpkg --remove dingo
+	make linux_exe -s
+	sudo dpkg --install dingo.deb
+
 full_clean_up:
 	rm -rf bin obj ~/temp dingo.deb
 
