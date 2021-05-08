@@ -257,20 +257,22 @@ namespace Dingo.Core.Operations
 		{
 			using var _ = new CodeTiming(_logger);
 
-			var migrationsStatusList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
+			migrationInfoList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 			if (isProject)
 			{
-				await _renderer.ShowMigrationsStatusAsync(migrationsStatusList, silent);	
+				await _renderer.ShowMigrationsStatusAsync(migrationInfoList, silent);	
 			}
 
-			migrationsStatusList = migrationsStatusList
-				.Where(x => x.Status != MigrationStatus.UpToDate)
-				.ToArray();
-
-			for (var i = 0; i < migrationsStatusList.Count; i++)
+			var migrationCount = 0;
+			for (var i = 0; i < migrationInfoList.Count; i++)
 			{
-				await _renderer.PrintTextAsync($"{i + 1}) Processing '{migrationsStatusList[i].Path.Relative}'", silent);
-				await _renderer.PrintTextAsync($"\tStatus: {migrationsStatusList[i].Status.ToDisplayText()}", silent);
+				if (migrationInfoList[i].Status == MigrationStatus.UpToDate)
+				{
+					continue;
+				}
+				
+				await _renderer.PrintTextAsync($"{++migrationCount}) Processing '{migrationInfoList[i].Path.Relative}'", silent);
+				await _renderer.PrintTextAsync($"\tStatus: {migrationInfoList[i].Status.ToDisplayText()}", silent);
 
 				await _renderer.PrintTextAsync("\tReading migration file contents...", silent);
 				var sqlScriptText = await _fileAdapter.ReadAllTextAsync(migrationInfoList[i].Path.Absolute);
@@ -288,6 +290,11 @@ namespace Dingo.Core.Operations
 				}
 
 				await _renderer.PrintTextAsync("\tMigration successfully applied.", silent);
+			}
+
+			if (isProject && migrationCount > 0)
+			{
+				await _renderer.ShowMessageAsync($"{migrationCount} migrations were successfully applied", MessageType.Success);
 			}
 		}
 

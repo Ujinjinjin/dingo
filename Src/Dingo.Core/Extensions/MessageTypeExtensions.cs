@@ -29,6 +29,7 @@ namespace Dingo.Core.Extensions
 				MessageType.Warning => TextStyle.Warning,
 				MessageType.Info => TextStyle.Info,
 				MessageType.Error => TextStyle.Error,
+				MessageType.Success => TextStyle.Success,
 				_ => TextStyle.Plain,
 			};
 		}

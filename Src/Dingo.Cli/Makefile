@@ -2,6 +2,7 @@ linux_exe:
 	make full_clean_up
 	mkdir ~/temp ~/temp/dingo ~/temp/dingo/DEBIAN ~/temp/dingo/usr ~/temp/dingo/usr/share ~/temp/dingo/usr/share/dingo
 	make control_content -s > ~/temp/dingo/DEBIAN/control
+	dotnet test ../Dingo.UnitTests/Dingo.UnitTests.csproj -c release
 	dotnet publish -c release --self-contained --runtime linux-x64 -o bin/linux
 	cp -r bin/linux/* ~/temp/dingo/usr/share/dingo
 	dpkg-deb --build ~/temp/dingo

@@ -14,5 +14,8 @@ namespace Dingo.Core.Models
 
 		/// <summary> Error message </summary>
 		Error = 3,
+
+		/// <summary> Success message </summary>
+		Success = 4,
 	}
 }

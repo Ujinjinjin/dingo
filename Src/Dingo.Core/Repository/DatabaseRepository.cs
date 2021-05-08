@@ -89,11 +89,7 @@ namespace Dingo.Core.Repository
 			{
 				result[i] = new MigrationInfo
 				{
-					Path = new FilePath
-					{
-						Relative = dbMigrationStatuses[i].MigrationPath,
-						Absolute = _pathHelper.GetAppRootPathFromRelative(dbMigrationStatuses[i].MigrationPath)
-					},
+					Path = migrationInfoList[i].Path,
 					NewHash = dbMigrationStatuses[i].NewHash,
 					OldHash = dbMigrationStatuses[i].OldHash,
 					Status = dbMigrationStatuses[i].IsOutdated switch
