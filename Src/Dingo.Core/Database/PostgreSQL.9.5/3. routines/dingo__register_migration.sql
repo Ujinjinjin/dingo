@@ -1,4 +1,8 @@
-create or replace function system__register_migration(
+-- Drop function
+select system__drop_routine('dingo__register_migration');
+
+-- Create function
+create function dingo__register_migration(
 	p_migration_path text,
 	p_migration_hash varchar(256),
 	p_date_updated timestamp
@@ -6,6 +10,7 @@ create or replace function system__register_migration(
 returns void as
 $$
 begin
+	----------------------------------------------------------------
 	insert into dingo_migration (
 		migration_path,
 		migration_hash,
@@ -15,6 +20,7 @@ begin
 		p_migration_hash,
 		p_date_updated
 	);
+	----------------------------------------------------------------
 end;
 $$
 language plpgsql;

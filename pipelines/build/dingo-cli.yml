@@ -3,8 +3,8 @@ trigger:
   branches:
     include:
     - master
-    exclude:
     - release/*
+    - hotfix/*
   paths:
     include:
     - pipelines/build/dingo-cli.yml
@@ -17,6 +17,8 @@ pr:
   branches:
     include:
     - master
+    - release/*
+    - hotfix/*
 
 variables:
   - name: 'pipeline_name'
@@ -34,7 +36,7 @@ variables:
   - name: 'major'
     value: 1
   - name: 'minor'
-    value: 1
+    value: 2
   - name: 'patch'
     value: $[counter('dingo_cli', 1)]
 

@@ -4,7 +4,7 @@
 	public interface IConfiguration
 	{
 		/// <summary> Path to the procedure script of checking table existence </summary>
-		string CheckTableExistenceProcedurePath { get; set; }
+		string TableExistsProcedurePath { get; set; }
 
 		/// <summary> Root path to dingo migration files </summary>
 		string DingoMigrationsRootPath { get; set; }

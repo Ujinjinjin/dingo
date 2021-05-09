@@ -66,7 +66,7 @@ namespace Dingo.Core.Repository
 			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
 
 			var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
-			return result.SystemCheckTableExistence;
+			return result.DingoTableExists;
 		}
 
 		/// <inheritdoc />
@@ -127,7 +127,7 @@ namespace Dingo.Core.Repository
 		{
 			using var _ = new CodeTiming(_logger);
 
-			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
+			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.TableExistsProcedurePath);
 			var sqlScriptText = await _fileAdapter.ReadAllTextAsync(sqlScriptPath);
 
 			using var dbContext = _databaseContextFactory.CreateDatabaseContext();

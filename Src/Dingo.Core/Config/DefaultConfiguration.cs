@@ -5,9 +5,9 @@ namespace Dingo.Core.Config
 	/// <summary> Default project configurations </summary>
 	internal class DefaultConfiguration : IConfiguration
 	{
-		public string CheckTableExistenceProcedurePath
+		public string TableExistsProcedurePath
 		{
-			get => $"Database/{ProviderName}/3. procedures/system__check_table_existence.sql";
+			get => $"Database/{ProviderName}/3. routines/dingo__table_exists.sql";
 			set => throw new NotImplementedException();
 		}
 
@@ -33,7 +33,15 @@ namespace Dingo.Core.Config
 
 		public string MigrationSchema
 		{
-			get => "public";
+			get
+			{
+				return ProviderName switch
+				{
+					LinqToDB.ProviderName.PostgreSQL => "public",
+					LinqToDB.ProviderName.SqlServer2017 => "dbo",
+					_ => null
+				};
+			}
 			set => throw new NotImplementedException();
 		}
 

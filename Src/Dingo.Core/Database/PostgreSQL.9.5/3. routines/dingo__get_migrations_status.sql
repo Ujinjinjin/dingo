@@ -1,4 +1,8 @@
-create or replace function system__get_migrations_status(
+-- Drop function
+select system__drop_routine('dingo__get_migrations_status');
+
+-- Create function
+create function dingo__get_migrations_status(
 	pti_migration_info_input t_migration_info_input[]
 )
 returns table (
@@ -10,13 +14,16 @@ returns table (
 ) as
 $$
 begin
+	----------------------------------------------------------------
 	drop table if exists tt_input;
+	----------------------------------------------------------------
 	create temp table tt_input as
+	----------------------------------------------------------------
 	select
 		cast(t1_input.migration_path as text) as migration_path,
 		cast(t1_input.migration_hash as varchar(256)) as migration_hash
 	from unnest(pti_migration_info_input) as t1_input;
-
+	----------------------------------------------------------------
 	return query select
 		outer_table.migration_path,
 		outer_table.new_hash,
@@ -40,6 +47,7 @@ begin
 		limit 1
 	) as outer_table
 	;
+	----------------------------------------------------------------
 end;
 $$
 language plpgsql;

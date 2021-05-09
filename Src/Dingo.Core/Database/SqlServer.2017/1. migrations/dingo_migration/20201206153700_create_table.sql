@@ -1,4 +1,4 @@
-if object_id('dingo_migration') is null
+if dbo.system__exists_table('dingo_migration', default) = 0
 begin
 	create table dingo_migration(
 		dingo_migration_id int not null identity(1, 1),

@@ -11,7 +11,7 @@ namespace Dingo.Core.Repository
 		/// <summary> Check if table exists in specified schema </summary>
 		/// <param name="schema">Database schema</param>
 		/// <param name="table">Database table</param>
-		Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table);
+		Task<DbDingoTableExistsResult> CheckTableExistenceAsync(string schema, string table);
 
 		/// <summary> Execute raw sql query </summary>
 		/// <param name="sql">Raw sql query</param>

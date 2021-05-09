@@ -208,7 +208,7 @@ namespace Dingo.Core.Operations
 			}
 			catch (Exception exception)
 			{
-				await _renderer.ShowMessageAsync($"Migration: {_configWrapper.CheckTableExistenceProcedurePath}. {exception.Message}", MessageType.Error);
+				await _renderer.ShowMessageAsync($"Migration: {_configWrapper.TableExistsProcedurePath}. {exception.Message}", MessageType.Error);
 				throw;
 			}
 
@@ -245,7 +245,7 @@ namespace Dingo.Core.Operations
 			}
 			else
 			{
-				await ReadAndApplyMigrationList(migrationInfoList, silent, false);
+				await ReadAndApplyMigrationList(migrationInfoList, true, false);
 			}
 		}
 

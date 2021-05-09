@@ -24,19 +24,19 @@ namespace Dingo.Core.Repository
 		) : base(
 			providerName,
 			connectionString,
-			loggerFactory?.CreateLogger<DatabaseContext>()
+			loggerFactory?.CreateLogger<DatabaseContext>() ?? throw new ArgumentNullException(nameof(loggerFactory))
 		)
 		{
 			_databaseContractConverter = databaseContractConverter ?? throw new ArgumentNullException(nameof(databaseContractConverter));
 		}
 
 		/// <inheritdoc />
-		public async Task<DbSystemCheckTableExistenceResult> CheckTableExistenceAsync(string schema, string table)
+		public async Task<DbDingoTableExistsResult> CheckTableExistenceAsync(string schema, string table)
 		{
-			var result = await QueryAsync<DbSystemCheckTableExistenceResult>(
-				"system__check_table_existence",
-				new DataParameter("p_table_schema", schema),
-				new DataParameter("p_table_name", table)
+			var result = await QueryAsync<DbDingoTableExistsResult>(
+				"dingo__table_exists",
+				new DataParameter("p_table_name", table),
+				new DataParameter("p_schema_name", schema)
 			);
 			return result.Single();
 		}
@@ -51,7 +51,7 @@ namespace Dingo.Core.Repository
 		public async Task<IList<DbMigrationInfoOutput>> GetMigrationsStatusAsync(IList<DbMigrationInfoInput> dbMigrationInfoInputList)
 		{
 			var result = await QueryAsync<DbMigrationInfoOutput>(
-				"system__get_migrations_status",
+				"dingo__get_migrations_status",
 				_databaseContractConverter.ToDataParameter("pti_migration_info_input", dbMigrationInfoInputList)
 			);
 			return result.ToArray();
@@ -60,12 +60,12 @@ namespace Dingo.Core.Repository
 		/// <inheritdoc />
 		public Task HandshakeDatabaseConnectionAsync()
 		{
-			if (this.Connection.State == ConnectionState.Open)
+			if (Connection.State == ConnectionState.Open)
 			{
 				return Task.CompletedTask;
 			}
 			
-			this.Connection.Open();
+			Connection.Open();
 			return Task.CompletedTask;
 		}
 
@@ -73,7 +73,7 @@ namespace Dingo.Core.Repository
 		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash, DateTime dateUpdated)
 		{
 			await ExecuteAsync(
-				"system__register_migration",
+				"dingo__register_migration",
 				new DataParameter("p_migration_path", migrationPath),
 				new DataParameter("p_migration_hash", migrationHash),
 				new DataParameter("p_date_updated", dateUpdated)

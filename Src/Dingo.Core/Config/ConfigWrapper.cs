@@ -12,10 +12,10 @@ namespace Dingo.Core.Config
 		private readonly IConfigLoader _configLoader;
 		private readonly IConfigSaver _configSaver;
 
-		public string CheckTableExistenceProcedurePath
+		public string TableExistsProcedurePath
 		{
-			get => _projectConfiguration.CheckTableExistenceProcedurePath ?? _defaultConfiguration.CheckTableExistenceProcedurePath;
-			set => _projectConfiguration.CheckTableExistenceProcedurePath = value;
+			get => _projectConfiguration.TableExistsProcedurePath ?? _defaultConfiguration.TableExistsProcedurePath;
+			set => _projectConfiguration.TableExistsProcedurePath = value;
 		}
 		public string DingoMigrationsRootPath
 		{

@@ -3,7 +3,7 @@
 	/// <summary> Project level configurations </summary>
 	internal struct ProjectConfiguration : IConfiguration
 	{
-		public string CheckTableExistenceProcedurePath { get; set; }
+		public string TableExistsProcedurePath { get; set; }
 		public string DingoMigrationsRootPath { get; set; }
 		public string MigrationsSearchPattern { get; set; }
 		public string ConnectionString { get; set; }

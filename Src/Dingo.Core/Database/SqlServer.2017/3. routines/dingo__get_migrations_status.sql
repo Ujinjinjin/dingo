@@ -1,8 +1,7 @@
-create or alter procedure system__get_migrations_status(
+create or alter procedure dingo__get_migrations_status(
 	@pti_migration_info_input t_migration_info_input readonly
 )
 as
-
 begin
 	----------------------------------------------------------------
 	declare @c_unreal_char char = -1;
