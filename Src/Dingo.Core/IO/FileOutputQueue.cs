@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.IO
 {
 	/// <summary> Queue with output to file. Inherited from <see cref="IOutputQueue"/> </summary>
-	internal class FileOutputQueue : OutputQueueBase
+	internal sealed class FileOutputQueue : OutputQueueBase
 	{
 		private readonly IDirectoryAdapter _directoryAdapter;
 		private readonly IFileAdapter _fileAdapter;
@@ -17,6 +17,7 @@ namespace Dingo.Core.IO
 			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
 		}
 
+		/// <inheritdoc />
 		protected override async Task QueueWorkerAsync()
 		{
 			while (true)

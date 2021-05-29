@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Dingo.Core.Repository.DbConverters
 {
 	/// <summary> PostgreSQL database contract converter </summary>
-	internal class PostgresContractConverter : DatabaseContractConverterBase, IDatabaseContractConverter
+	internal sealed class PostgresContractConverter : DatabaseContractConverterBase, IDatabaseContractConverter
 	{
 		/// <summary> Public constructor </summary>
 		public PostgresContractConverter()

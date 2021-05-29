@@ -4,7 +4,7 @@ namespace Dingo.Core.Constants
 {
 	/// <summary> Project defaults </summary>
 	[UsedImplicitly]
-	internal class Defaults
+	internal sealed class Defaults
 	{
 		/// <summary> Default name of dingo configuration file </summary>
 		internal const string DingoConfigFilename = "dingo";

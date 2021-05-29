@@ -4,7 +4,7 @@ namespace Dingo.Core.Constants
 {
 	/// <summary> Known file extensions </summary>
 	[UsedImplicitly]
-	internal class FileExtension
+	internal sealed class FileExtension
 	{
 		/// <summary> Json file extension </summary>
 		public const string Json = "json";

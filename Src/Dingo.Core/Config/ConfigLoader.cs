@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Config
 {
 	/// <inheritdoc />
-	internal class ConfigLoader : IConfigLoader
+	internal sealed class ConfigLoader : IConfigLoader
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IFileAdapter _fileAdapter;

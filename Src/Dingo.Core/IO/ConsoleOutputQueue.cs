@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.IO
 {
 	/// <summary> Queue with output to console. Inherited from <see cref="IOutputQueue"/> </summary>
-	internal class ConsoleOutputQueue : OutputQueueBase
+	internal sealed class ConsoleOutputQueue : OutputQueueBase
 	{
 		protected override Task QueueWorkerAsync()
 		{

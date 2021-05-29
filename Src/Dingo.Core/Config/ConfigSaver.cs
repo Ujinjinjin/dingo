@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Config
 {
 	/// <inheritdoc />
-	internal class ConfigSaver : IConfigSaver
+	internal sealed class ConfigSaver : IConfigSaver
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IInternalSerializerFactory _internalSerializerFactory;

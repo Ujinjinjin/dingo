@@ -3,7 +3,7 @@
 namespace Dingo.Core.Config
 {
 	/// <summary> Default project configurations </summary>
-	internal class DefaultConfiguration : IConfiguration
+	internal sealed class DefaultConfiguration : IConfiguration
 	{
 		public string TableExistsProcedurePath
 		{

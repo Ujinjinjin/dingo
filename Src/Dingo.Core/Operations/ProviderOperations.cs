@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Operations
 {
 	/// <inheritdoc />
-	internal class ProviderOperations : IProviderOperations
+	internal sealed class ProviderOperations : IProviderOperations
 	{
 		private readonly IRenderer _renderer;
 		private readonly IPrompt _prompt;

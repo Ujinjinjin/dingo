@@ -1,4 +1,5 @@
 using Dingo.Core.Config;
+using Dingo.Core.Extensions;
 using Dingo.Core.Helpers.Static;
 using Dingo.Core.IO;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,7 @@ namespace Dingo.Core.Logging
 		{
 			_categoryName = categoryName ?? throw new ArgumentNullException(nameof(categoryName));
 			_outputQueue = outputQueue ?? throw new ArgumentNullException(nameof(outputQueue));
-			_configWrapper = configWrapper;
+			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
 		}
 
 		/// <inheritdoc />
@@ -56,7 +57,9 @@ namespace Dingo.Core.Logging
 				return;
 			}
 
-			message = $"{logLevel} | {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | {_categoryName} | {message}";
+			var dateTimeString = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+
+			message = $"{LogLevelExtensions.ToString(logLevel)} | {dateTimeString} | {_categoryName} | {message}";
 
 			_outputQueue.EnqueueOutput(message, OutputPath);
 		}

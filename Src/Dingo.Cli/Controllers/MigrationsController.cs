@@ -7,7 +7,7 @@ using System.CommandLine.Invocation;
 namespace Dingo.Cli.Controllers
 {
 	/// <summary> Controller allowing to work with migrations </summary>
-	public class MigrationsController : CliController
+	public sealed class MigrationsController : CliController
 	{
 		private readonly IMigrationOperations _migrationOperations;
 

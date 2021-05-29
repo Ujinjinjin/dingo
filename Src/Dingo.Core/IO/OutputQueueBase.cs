@@ -14,6 +14,7 @@ namespace Dingo.Core.IO
 
 		protected OutputQueueBase()
 		{
+			// ReSharper disable once UseObjectOrCollectionInitializer
 			_thread = new Thread(async () => await QueueWorkerAsync());
 			_thread.IsBackground = true;
 			_thread.Start();

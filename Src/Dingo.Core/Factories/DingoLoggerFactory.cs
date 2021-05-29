@@ -7,7 +7,7 @@ using System;
 namespace Dingo.Core.Factories
 {
 	/// <inheritdoc />
-	internal class DingoLoggerFactory : ILoggerFactory
+	internal sealed class DingoLoggerFactory : ILoggerFactory
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IPathHelper _pathHelper;

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace Dingo.Core.Validators
 {
 	/// <summary> Migration filename validator </summary>
-	internal class MigrationNameValidator : Validator<string>
+	internal sealed class MigrationNameValidator : Validator<string>
 	{
 		private readonly Regex _regex = new("^[\\w\\d_]+\\.sql$");
 

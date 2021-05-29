@@ -4,7 +4,7 @@ using Dingo.Core.Factories;
 namespace Dingo.Core.Logging
 {
 	/// <summary> Logger with output to file </summary>
-	internal class ConsoleLogger : LoggerBase
+	internal sealed class ConsoleLogger : LoggerBase
 	{
 		public ConsoleLogger(
 			string categoryName,

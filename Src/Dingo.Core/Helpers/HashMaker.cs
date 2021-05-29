@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Helpers
 {
 	/// <inheritdoc />
-	internal class HashMaker : IHashMaker
+	internal sealed class HashMaker : IHashMaker
 	{
 		/// <inheritdoc />
 		public async Task<string> GetFileHashAsync(string filename)

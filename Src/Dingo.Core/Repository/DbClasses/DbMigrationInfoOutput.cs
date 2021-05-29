@@ -5,7 +5,7 @@ using System;
 namespace Dingo.Core.Repository.DbClasses
 {
 	[UsedImplicitly]
-	internal class DbMigrationInfoOutput
+	internal sealed class DbMigrationInfoOutput
 	{
 		[Column("migration_path")]
 		public string MigrationPath { get; set; }

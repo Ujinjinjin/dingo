@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Config
 {
 	/// <inheritdoc />
-	internal class ConfigWrapper : IConfigWrapper
+	internal sealed class ConfigWrapper : IConfigWrapper
 	{
 		private IConfiguration _projectConfiguration;
 		private readonly IConfiguration _defaultConfiguration;

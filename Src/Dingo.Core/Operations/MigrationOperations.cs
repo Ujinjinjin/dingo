@@ -10,13 +10,12 @@ using Dingo.Core.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dingo.Core.Operations
 {
 	/// <inheritdoc />
-	internal class MigrationOperations : IMigrationOperations
+	internal sealed class MigrationOperations : IMigrationOperations
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseRepository _databaseRepository;
@@ -72,8 +71,9 @@ namespace Dingo.Core.Operations
 					_directoryAdapter.CreateDirectory(path);
 				}
 
+				var dateTimeString = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
 				_fileAdapter
-					.Create(path.ConcatPath($"{DateTime.UtcNow:yyyyMMddHHmmss}_{name}.sql"))
+					.Create(path.ConcatPath($"{dateTimeString}_{name}.sql"))
 					?.Close();
 			}
 			catch (Exception ex)
@@ -271,7 +271,7 @@ namespace Dingo.Core.Operations
 					continue;
 				}
 				
-				await _renderer.PrintTextAsync($"{++migrationCount}) Processing '{migrationInfoList[i].Path.Relative}'", silent);
+				await _renderer.PrintTextAsync($"{(++migrationCount).ToString()}) Processing '{migrationInfoList[i].Path.Relative}'", silent);
 				await _renderer.PrintTextAsync($"\tStatus: {migrationInfoList[i].Status.ToDisplayText()}", silent);
 
 				await _renderer.PrintTextAsync("\tReading migration file contents...", silent);
@@ -294,7 +294,7 @@ namespace Dingo.Core.Operations
 
 			if (isProject && migrationCount > 0)
 			{
-				await _renderer.ShowMessageAsync($"{migrationCount} migrations were successfully applied", MessageType.Success);
+				await _renderer.ShowMessageAsync($"{migrationCount.ToString()} migrations were successfully applied", MessageType.Success);
 			}
 		}
 

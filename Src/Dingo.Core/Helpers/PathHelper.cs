@@ -5,7 +5,7 @@ using System.IO;
 namespace Dingo.Core.Helpers
 {
 	/// <inheritdoc />
-	internal class PathHelper : IPathHelper
+	internal sealed class PathHelper : IPathHelper
 	{
 		/// <inheritdoc />
 		public string BuildFilePath(string path, string filename, string extension)

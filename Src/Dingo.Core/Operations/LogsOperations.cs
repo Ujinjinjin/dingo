@@ -1,5 +1,6 @@
 using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
+using Dingo.Core.Extensions;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Dingo.Core.Utils;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Operations
 {
 	/// <inheritdoc />
-	internal class LogsOperations : ILogsOperations
+	internal sealed class LogsOperations : ILogsOperations
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IPathHelper _pathHelper;
@@ -51,14 +52,14 @@ namespace Dingo.Core.Operations
 				logLevelEnum = _prompt.Choose(
 					"Please, choose desired level of logging",
 					new[] { LogLevel.Trace, LogLevel.Debug, LogLevel.Information, LogLevel.Warning, LogLevel.Error, LogLevel.Critical, LogLevel.None, },
-					x => $"{x.ToString()} ({(int) x})"
+					x => $"{LogLevelExtensions.ToString(x)} ({((int) x).ToString()})"
 				);
 			}
 
 			_configWrapper.LogLevel = (int) logLevelEnum;
 
 			await _configWrapper.SaveAsync(configPath);
-			await _renderer.ShowMessageAsync($"Logging level set to `{logLevelEnum.ToString()}`", MessageType.Info);
+			await _renderer.ShowMessageAsync($"Logging level set to `{LogLevelExtensions.ToString(logLevelEnum)}`", MessageType.Info);
 		}
 
 		/// <inheritdoc />

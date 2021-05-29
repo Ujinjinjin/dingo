@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Dingo.Core.Utils.Db
 {
 	/// <summary> Disposable query execution scope </summary>
-	internal class QueryExecutionScope : IDisposable
+	internal sealed class QueryExecutionScope : IDisposable
 	{
 		private readonly Stopwatch _stopwatch;
 		private readonly ILogger _logger;

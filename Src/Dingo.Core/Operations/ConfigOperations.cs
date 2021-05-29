@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Operations
 {
 	/// <inheritdoc />
-	internal class ConfigOperations : IConfigOperations
+	internal sealed class ConfigOperations : IConfigOperations
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IPrompt _prompt;

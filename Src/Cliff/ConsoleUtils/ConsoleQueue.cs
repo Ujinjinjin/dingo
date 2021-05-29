@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Cliff.ConsoleUtils
 {
 	/// <inheritdoc cref="Cliff.ConsoleUtils.IConsoleQueue" />
-	internal class ConsoleQueue : IConsoleQueue, IDisposable
+	internal sealed class ConsoleQueue : IConsoleQueue, IDisposable
 	{
 		private readonly ConcurrentQueue<string> _outputQueue = new();
 		private readonly Thread _thread;

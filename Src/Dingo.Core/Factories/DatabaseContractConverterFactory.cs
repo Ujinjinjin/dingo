@@ -3,7 +3,7 @@ using Dingo.Core.Repository.DbConverters;
 namespace Dingo.Core.Factories
 {
 	/// <inheritdoc />
-	internal class DatabaseContractConverterFactory : IDatabaseContractConverterFactory
+	internal sealed class DatabaseContractConverterFactory : IDatabaseContractConverterFactory
 	{
 		/// <inheritdoc />
 		public IDatabaseContractConverter CreatePostgresContractConverter()

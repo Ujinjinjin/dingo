@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Cliff.Infrastructure
 {
 	/// <inheritdoc />
-	public class CliService : ICliService
+	public sealed class CliService : ICliService
 	{
 		/// <inheritdoc />
 		public IServiceProvider ServiceProvider { get; }
@@ -27,9 +27,16 @@ namespace Cliff.Infrastructure
 		{
 			try
 			{
-				await ServiceProvider.RegisterControllers()
-					.GetService<RootCommand>()
-					.InvokeAsync(args);
+				var rootCommand = ServiceProvider
+					.RegisterControllers()
+					.GetService<RootCommand>();
+
+				if (rootCommand is null)
+				{
+					throw new Exception($"Couldn't find any registered {nameof(RootCommand)}");
+				}
+
+				await rootCommand.InvokeAsync(args);
 			}
 			catch (Exception ex)
 			{

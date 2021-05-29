@@ -3,7 +3,7 @@ using System.IO;
 namespace Dingo.Core.Adapters
 {
 	/// <inheritdoc />
-	public class DirectoryAdapter : IDirectoryAdapter
+	public sealed class DirectoryAdapter : IDirectoryAdapter
 	{
 		/// <inheritdoc />
 		public bool Exists(string path) => Directory.Exists(path);

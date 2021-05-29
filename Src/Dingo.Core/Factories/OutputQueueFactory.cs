@@ -5,7 +5,7 @@ using System;
 namespace Dingo.Core.Factories
 {
 	/// <inheritdoc />
-	internal class OutputQueueFactory : IOutputQueueFactory
+	internal sealed class OutputQueueFactory : IOutputQueueFactory
 	{
 		private readonly IDirectoryAdapter _directoryAdapter;
 		private readonly IFileAdapter _fileAdapter;

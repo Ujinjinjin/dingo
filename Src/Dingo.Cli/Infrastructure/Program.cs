@@ -23,14 +23,18 @@ namespace Dingo.Cli.Infrastructure
 				.GetServices<IOutputQueue>()
 				.ToArray();
 
+			if (dingo is null)
+			{
+				throw new Exception($"Couldn't find any registered {nameof(ICliService)}");
+			}
+
 			await dingo.ExecuteAsync(args);
 
-			while (!outputQueues.All(x => x.IsEmpty))
+			do
 			{
-				Thread.Sleep(100);
+				await Task.Delay(100);
 				// wait until queues are empty
-			}
-			Thread.Sleep(100);
+			} while (!outputQueues.All(x => x.IsEmpty));
 		}
 	}
 }

@@ -4,7 +4,7 @@ using LinqToDB.Mapping;
 namespace Dingo.Core.Repository.DbClasses
 {
 	[UsedImplicitly]
-	internal class DbMigrationInfoInput
+	internal sealed class DbMigrationInfoInput
 	{
 		[Column("migration_path")]
 		public string MigrationPath { get; set; }

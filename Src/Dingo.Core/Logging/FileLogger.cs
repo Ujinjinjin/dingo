@@ -7,7 +7,7 @@ using System;
 namespace Dingo.Core.Logging
 {
 	/// <summary> Logger with output to file </summary>
-	internal class FileLogger : LoggerBase
+	internal sealed class FileLogger : LoggerBase
 	{
 		private readonly IPathHelper _pathHelper;
 

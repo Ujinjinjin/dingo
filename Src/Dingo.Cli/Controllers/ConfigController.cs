@@ -7,7 +7,7 @@ using System.CommandLine.Invocation;
 namespace Dingo.Cli.Controllers
 {
 	/// <summary> Controller allowing to work with project configs </summary>
-	internal class ConfigController : CliController
+	internal sealed class ConfigController : CliController
 	{
 		private readonly IConfigOperations _configOperations;
 

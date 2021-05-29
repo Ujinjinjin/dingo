@@ -6,7 +6,7 @@ using System;
 namespace Dingo.Core.Factories
 {
 	/// <inheritdoc />
-	public class InternalSerializerFactory : IInternalSerializerFactory
+	public sealed class InternalSerializerFactory : IInternalSerializerFactory
 	{
 		/// <inheritdoc />
 		public IInternalSerializer CreateInternalSerializer(string filename)

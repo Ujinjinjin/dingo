@@ -7,7 +7,7 @@ using System;
 namespace Dingo.Core.Factories
 {
 	/// <inheritdoc />
-	internal class DatabaseContextFactory : IDatabaseContextFactory
+	internal sealed class DatabaseContextFactory : IDatabaseContextFactory
 	{
 		private readonly IConfigWrapper _configWrapper;
 		private readonly IDatabaseContractConverterFactory _databaseContractConverterFactory;

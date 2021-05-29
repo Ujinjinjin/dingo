@@ -7,7 +7,7 @@ using System.CommandLine.Invocation;
 namespace Dingo.Cli.Controllers
 {
 	/// <summary> Controller allowing to work with logs </summary>
-	internal class LogsController : CliController
+	internal sealed class LogsController : CliController
 	{
 		private readonly ILogsOperations _logsOperations;
 

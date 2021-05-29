@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace Dingo.Core.Serializers
 {
 	/// <summary> Wrapper around JSON serializer </summary>
-	internal class JsonInternalSerializer : IInternalSerializer
+	internal sealed class JsonInternalSerializer : IInternalSerializer
 	{
 		public string DefaultFileExtension => FileExtension.Json;
 

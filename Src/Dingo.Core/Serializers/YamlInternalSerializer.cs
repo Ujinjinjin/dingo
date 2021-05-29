@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace Dingo.Core.Serializers
 {
 	/// <summary> Wrapper around YAML serializer </summary>
-	internal class YamlInternalSerializer : IInternalSerializer
+	internal sealed class YamlInternalSerializer : IInternalSerializer
 	{
 		public string DefaultFileExtension => FileExtension.Yml;
 

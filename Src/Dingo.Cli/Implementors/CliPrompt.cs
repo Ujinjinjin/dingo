@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Dingo.Cli.Implementors
 {
 	/// <summary> CLI interactions with user </summary>
-	public class CliPrompt : IPrompt
+	public sealed class CliPrompt : IPrompt
 	{
 		/// <inheritdoc />
 		public T Choose<T>(string message, IList<T> choiceList, Func<T, string> textSelector = null)

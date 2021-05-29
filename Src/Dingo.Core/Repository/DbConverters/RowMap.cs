@@ -4,7 +4,7 @@ namespace Dingo.Core.Repository.DbConverters
 {
 	/// <summary> Provides data structure fields to table columns mapping </summary>
 	/// <typeparam name="T">Type of data structure or a class</typeparam>
-	internal class RowMap<T>
+	internal sealed class RowMap<T>
 	{
 		/// <summary> Database table or type column name </summary>
 		public readonly string Column;

@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Dingo.Core.Repository
 {
-	internal class DatabaseContext : DataConnectionBase, IDatabaseContext
+	internal sealed class DatabaseContext : DataConnectionBase, IDatabaseContext
 	{
 		private readonly IDatabaseContractConverter _databaseContractConverter;
 		
-		protected internal DatabaseContext(
+		public DatabaseContext(
 			string providerName,
 			string connectionString,
 			ILoggerFactory loggerFactory,

@@ -10,7 +10,7 @@ using System.Linq;
 namespace Dingo.Core.Helpers
 {
 	/// <inheritdoc />
-	internal class DirectoryScanner : IDirectoryScanner
+	internal sealed class DirectoryScanner : IDirectoryScanner
 	{
 		private readonly IDirectoryAdapter _directoryAdapter;
 		private readonly IPathHelper _pathHelper;

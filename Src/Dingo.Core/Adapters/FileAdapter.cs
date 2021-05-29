@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Adapters
 {
 	/// <inheritdoc />
-	public class FileAdapter : IFileAdapter
+	public sealed class FileAdapter : IFileAdapter
 	{
 		/// <inheritdoc />
 		public StreamWriter AppendText(string path) => File.AppendText(path);

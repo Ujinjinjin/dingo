@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Dingo.Core.Repository
 {
 	/// <inheritdoc />
-	internal class DatabaseRepository : IDatabaseRepository
+	internal sealed class DatabaseRepository : IDatabaseRepository
 	{
 		private readonly IPathHelper _pathHelper;
 		private readonly IConfigWrapper _configWrapper;

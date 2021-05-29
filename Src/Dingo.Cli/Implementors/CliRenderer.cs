@@ -15,7 +15,7 @@ namespace Dingo.Cli.Implementors
 {
 	/// <summary> CLI renderer </summary>
 	[UsedImplicitly]
-	public class CliRenderer : IRenderer
+	public sealed class CliRenderer : IRenderer
 	{
 		private readonly IConsoleQueue _consoleQueue;
 
@@ -30,7 +30,7 @@ namespace Dingo.Cli.Implementors
 			var stringBuilder = new StringBuilder();
 			for (var i = 0; i < itemList.Count; i++)
 			{
-				stringBuilder.Append($"{i + 1}. {itemList[i]}");
+				stringBuilder.Append($"{(i + 1).ToString()}. {itemList[i]}");
 
 				if (i != itemList.Count - 1)
 				{
@@ -105,7 +105,7 @@ namespace Dingo.Cli.Implementors
 		public async Task ShowMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList, bool silent)
 		{
 			await PrintBreakLineAsync(newLineBefore: false, newLineAfter: false);
-			await PrintTextAsync($"Total migrations count: {migrationInfoList.Count}.\n", textStyle: TextStyle.Info);
+			await PrintTextAsync($"Total migrations count: {migrationInfoList.Count.ToString()}.\n", textStyle: TextStyle.Info);
 
 			var notUpToDateCount = 0;
 			if (silent)
@@ -134,9 +134,9 @@ namespace Dingo.Cli.Implementors
 
 				notUpToDateCount = newCount + outdatedCount;
 
-				await PrintTextAsync($"New: {newCount}", textStyle: TextStyle.Plain);
-				await PrintTextAsync($"Outdated: {outdatedCount}", textStyle: TextStyle.Plain);
-				await PrintTextAsync($"Up to date: {upToDateCount}", textStyle: TextStyle.Plain);
+				await PrintTextAsync($"New: {newCount.ToString()}", textStyle: TextStyle.Plain);
+				await PrintTextAsync($"Outdated: {outdatedCount.ToString()}", textStyle: TextStyle.Plain);
+				await PrintTextAsync($"Up to date: {upToDateCount.ToString()}", textStyle: TextStyle.Plain);
 			}
 			else
 			{
@@ -147,7 +147,7 @@ namespace Dingo.Cli.Implementors
 						notUpToDateCount++;
 					}
 
-					await PrintTextAsync($"{i + 1}) '{migrationInfoList[i].Path.Relative}'", textStyle: TextStyle.Plain);
+					await PrintTextAsync($"{(i + 1).ToString()}) '{migrationInfoList[i].Path.Relative}'", textStyle: TextStyle.Plain);
 					await PrintTextAsync($"Hash: {migrationInfoList[i].NewHash[..10]}", textStyle: TextStyle.Plain);
 					await PrintTextAsync($"Status: {migrationInfoList[i].Status.ToDisplayText()}\n", textStyle: TextStyle.Plain);
 				}

@@ -7,7 +7,7 @@ using System.CommandLine.Invocation;
 namespace Dingo.Cli.Controllers
 {
 	/// <summary> Controller allowing to manage database provider </summary>
-	internal class ProviderController : CliController
+	internal sealed class ProviderController : CliController
 	{
 		private readonly IProviderOperations _providerOperations;
 

@@ -9,7 +9,7 @@ namespace Dingo.Core.Utils.Db
 {
 	/// <summary> Database request containing information for command execution </summary>
 	[UsedImplicitly]
-	internal class DbRequest
+	internal sealed class DbRequest
 	{
 		/// <summary> Command text </summary>
 		public string CommandText { get; }

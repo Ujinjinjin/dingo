@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Dingo.Core.Repository.DbConverters
 {
 	/// <summary> Microsoft Sql Server database contract converter </summary>
-	internal class SqlServerContractConverter : DatabaseContractConverterBase, IDatabaseContractConverter
+	internal sealed class SqlServerContractConverter : DatabaseContractConverterBase, IDatabaseContractConverter
 	{
 		/// <inheritdoc />
 		public DataParameter ToDataParameter(string parameterName, IList<DbMigrationInfoInput> source)
