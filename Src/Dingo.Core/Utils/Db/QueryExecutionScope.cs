@@ -1,6 +1,5 @@
 ﻿using Dingo.Core.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Diagnostics;
 
 namespace Dingo.Core.Utils.Db;

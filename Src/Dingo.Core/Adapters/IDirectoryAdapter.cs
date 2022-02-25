@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Dingo.Core.Adapters;
 
 /// <summary> Adapter for <see cref="System.IO.Directory"/> for unit testing purposes </summary>

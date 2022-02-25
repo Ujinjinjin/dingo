@@ -1,7 +1,5 @@
 ﻿using Dingo.Core.Abstractions;
 using Sharprompt;
-using System;
-using System.Collections.Generic;
 
 namespace Dingo.Cli.Implementors;
 

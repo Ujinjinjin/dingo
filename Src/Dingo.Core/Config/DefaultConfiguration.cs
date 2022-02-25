@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dingo.Core.Config;
+﻿namespace Dingo.Core.Config;
 
 /// <summary> Default project configurations </summary>
 internal sealed class DefaultConfiguration : IConfiguration
@@ -39,7 +37,7 @@ internal sealed class DefaultConfiguration : IConfiguration
 			{
 				LinqToDB.ProviderName.PostgreSQL => "public",
 				LinqToDB.ProviderName.SqlServer2017 => "dbo",
-				_ => null
+				_ => string.Empty,
 			};
 		}
 		set => throw new NotImplementedException();

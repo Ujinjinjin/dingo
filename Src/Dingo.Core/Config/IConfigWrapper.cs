@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace Dingo.Core.Config;
+﻿namespace Dingo.Core.Config;
 
 /// <summary> Wrapper over default and project configurations </summary>
 public interface IConfigWrapper : IConfiguration

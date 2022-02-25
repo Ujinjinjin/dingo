@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Dingo.Core.Abstractions;
+﻿namespace Dingo.Core.Abstractions;
 
 /// <summary> Abstraction over interactions with user </summary>
 public interface IPrompt

@@ -2,7 +2,6 @@ using Dingo.Core.Config;
 using Dingo.Core.Extensions;
 using Dingo.Core.Factories;
 using Dingo.Core.Helpers;
-using System;
 
 namespace Dingo.Core.Logging;
 

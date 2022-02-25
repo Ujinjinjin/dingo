@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using LinqToDB.Mapping;
-using System;
 
 namespace Dingo.Core.Repository.DbClasses;
 

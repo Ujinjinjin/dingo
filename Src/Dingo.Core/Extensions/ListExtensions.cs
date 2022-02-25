@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Dingo.Core.Extensions;
+﻿namespace Dingo.Core.Extensions;
 
 /// <summary> Collection of extensions for <see cref="IList{T}"/> </summary>
 internal static class ListExtensions

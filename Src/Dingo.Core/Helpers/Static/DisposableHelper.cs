@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dingo.Core.Helpers.Static;
+﻿namespace Dingo.Core.Helpers.Static;
 
 /// <summary> Allows to execute code in using scope </summary>
 internal static class DisposableHelper

@@ -1,8 +1,7 @@
 using Cliff;
-using System;
+using Dingo.Core.Services;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using Dingo.Core.Services;
 
 namespace Dingo.Cli.Controllers;
 

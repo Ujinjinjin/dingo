@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Cliff.Infrastructure;
+﻿namespace Cliff.Infrastructure;
 
 /// <summary> Cli service </summary>
 public interface ICliService

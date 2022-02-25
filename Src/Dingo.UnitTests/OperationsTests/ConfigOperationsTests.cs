@@ -2,9 +2,8 @@ using AutoFixture;
 using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Models;
-using Moq;
-using System.Threading;
 using Dingo.Core.Services;
+using Moq;
 using Xunit;
 
 namespace Dingo.UnitTests.OperationsTests;

@@ -1,7 +1,4 @@
 ﻿using Dingo.Core.Repository.DbClasses;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Dingo.Core.Repository;
 

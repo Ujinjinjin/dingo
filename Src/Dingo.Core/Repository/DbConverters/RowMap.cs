@@ -1,5 +1,3 @@
-using System;
-
 namespace Dingo.Core.Repository.DbConverters;
 
 /// <summary> Provides data structure fields to table columns mapping </summary>

@@ -3,7 +3,6 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Helpers.Static;
 using Dingo.Core.IO;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Dingo.Core.Logging;
 

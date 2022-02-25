@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Dingo.Core.Config;
+﻿namespace Dingo.Core.Config;
 
 /// <inheritdoc />
 internal sealed class ConfigWrapper : IConfigWrapper

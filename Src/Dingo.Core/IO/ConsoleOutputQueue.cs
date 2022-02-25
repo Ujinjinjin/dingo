@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace Dingo.Core.IO;
 
 /// <summary> Queue with output to console. Inherited from <see cref="IOutputQueue"/> </summary>

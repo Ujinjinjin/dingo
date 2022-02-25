@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Cliff.ConsoleUtils;
+﻿namespace Cliff.ConsoleUtils;
 
 /// <summary> Console output queue </summary>
 public interface IConsoleQueue

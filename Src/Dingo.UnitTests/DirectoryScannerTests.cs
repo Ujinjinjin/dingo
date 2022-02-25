@@ -2,7 +2,6 @@ using AutoFixture;
 using Dingo.Core.Adapters;
 using Dingo.Core.Helpers;
 using Moq;
-using System.IO;
 using Xunit;
 
 namespace Dingo.UnitTests;

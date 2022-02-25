@@ -1,5 +1,4 @@
 using Dingo.Core.Models;
-using System;
 
 namespace Dingo.Core.Extensions;
 

@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
 using LinqToDB.Data;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace Dingo.Core.Utils.Db;

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Dingo.Core.Services;
+﻿namespace Dingo.Core.Services;
 
 /// <summary> Operations with database provider </summary>
 public interface IProviderService

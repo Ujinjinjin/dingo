@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Dingo.Core.Services;
 
 /// <summary> Logs operations </summary>

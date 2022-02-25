@@ -5,7 +5,6 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Factories;
 using Dingo.Core.Repository;
 using Moq;
-using System;
 using Xunit;
 
 namespace Dingo.UnitTests.FactoryTests;

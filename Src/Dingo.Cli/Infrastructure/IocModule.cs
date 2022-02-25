@@ -6,7 +6,6 @@ using Dingo.Cli.Implementors;
 using Dingo.Core.Abstractions;
 using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.CommandLine;
 
 namespace Dingo.Cli.Infrastructure;

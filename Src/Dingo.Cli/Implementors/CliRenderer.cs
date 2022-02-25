@@ -5,11 +5,8 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using JetBrains.Annotations;
 using Pastel;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Dingo.Cli.Implementors;
 

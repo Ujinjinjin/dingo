@@ -1,7 +1,5 @@
 using AutoFixture;
 using Dingo.Core.Extensions;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace Dingo.UnitTests.ExtensionTests;

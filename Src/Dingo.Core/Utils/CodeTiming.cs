@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using System;
 using System.Runtime.CompilerServices;
 
 namespace Dingo.Core.Utils;

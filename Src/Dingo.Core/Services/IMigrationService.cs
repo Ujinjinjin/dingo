@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Dingo.Core.Services;
+﻿namespace Dingo.Core.Services;
 
 /// <summary> Operations with database migration files </summary>
 public interface IMigrationService

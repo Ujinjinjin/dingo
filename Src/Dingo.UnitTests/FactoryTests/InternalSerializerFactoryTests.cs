@@ -1,7 +1,6 @@
 using Dingo.Core.Constants;
 using Dingo.Core.Factories;
 using Dingo.Core.Serializers;
-using System;
 using Xunit;
 
 namespace Dingo.UnitTests.FactoryTests;

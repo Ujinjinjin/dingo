@@ -2,7 +2,6 @@
 using Dingo.Core.Repository;
 using LinqToDB;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Dingo.Core.Factories;
 

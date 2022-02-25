@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dingo.Core.Abstractions;
+﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Adapters;
 using Dingo.Core.Config;
 using Dingo.Core.Extensions;

@@ -1,9 +1,7 @@
 ﻿using Cliff.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.CommandLine;
-using System.Threading.Tasks;
 
 namespace Cliff.Infrastructure;
 
