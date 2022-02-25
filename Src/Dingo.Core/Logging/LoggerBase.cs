@@ -5,75 +5,74 @@ using Dingo.Core.IO;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Dingo.Core.Logging
+namespace Dingo.Core.Logging;
+
+/// <summary> Base class for dingo loggers </summary>
+internal abstract class LoggerBase : ILogger
 {
-	/// <summary> Base class for dingo loggers </summary>
-	internal abstract class LoggerBase : ILogger
+	private readonly string _categoryName;
+	private readonly IConfigWrapper _configWrapper;
+	private readonly IOutputQueue _outputQueue;
+
+	protected virtual string OutputPath => null;
+
+	protected LoggerBase(
+		string categoryName,
+		IConfigWrapper configWrapper,
+		IOutputQueue outputQueue
+	)
 	{
-		private readonly string _categoryName;
-		private readonly IConfigWrapper _configWrapper;
-		private readonly IOutputQueue _outputQueue;
+		_categoryName = categoryName ?? throw new ArgumentNullException(nameof(categoryName));
+		_outputQueue = outputQueue ?? throw new ArgumentNullException(nameof(outputQueue));
+		_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
+	}
 
-		protected virtual string OutputPath => null;
-
-		protected LoggerBase(
-			string categoryName,
-			IConfigWrapper configWrapper,
-			IOutputQueue outputQueue
-		)
+	/// <inheritdoc />
+	public void Log<TState>(
+		LogLevel logLevel,
+		EventId eventId,
+		TState state,
+		Exception exception,
+		Func<TState, Exception, string> formatter
+	)
+	{
+		if (!IsEnabled(logLevel))
 		{
-			_categoryName = categoryName ?? throw new ArgumentNullException(nameof(categoryName));
-			_outputQueue = outputQueue ?? throw new ArgumentNullException(nameof(outputQueue));
-			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
+			return;
 		}
 
-		/// <inheritdoc />
-		public void Log<TState>(
-			LogLevel logLevel,
-			EventId eventId,
-			TState state,
-			Exception exception,
-			Func<TState, Exception, string> formatter
-		)
+		if (formatter == null)
 		{
-			if (!IsEnabled(logLevel))
-			{
-				return;
-			}
-
-			if (formatter == null)
-			{
-				throw new ArgumentNullException(nameof(formatter));
-			}
-
-			var message = formatter(state, exception);
-			if (exception != null)
-			{
-				message += Environment.NewLine + Environment.NewLine + exception;
-			}
-
-			if (string.IsNullOrEmpty(message))
-			{
-				return;
-			}
-
-			var dateTimeString = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-
-			message = $"{LogLevelExtensions.ToString(logLevel)} | {dateTimeString} | {_categoryName} | {message}";
-
-			_outputQueue.EnqueueOutput(message, OutputPath);
+			throw new ArgumentNullException(nameof(formatter));
 		}
 
-		/// <inheritdoc />
-		public bool IsEnabled(LogLevel logLevel)
+		var message = formatter(state, exception);
+		if (exception != null)
 		{
-			return logLevel >= (LogLevel) (_configWrapper.LogLevel ?? (int) LogLevel.None);
+			message += Environment.NewLine + Environment.NewLine + exception;
 		}
 
-		/// <inheritdoc />
-		public IDisposable BeginScope<TState>(TState state)
+		if (string.IsNullOrEmpty(message))
 		{
-			return DisposableHelper.Empty;
+			return;
 		}
+
+		var dateTimeString = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+
+		message = $"{LogLevelExtensions.ToString(logLevel)} | {dateTimeString} | {_categoryName} | {message}";
+
+		_outputQueue.EnqueueOutput(message, OutputPath);
+	}
+
+	/// <inheritdoc />
+	public bool IsEnabled(LogLevel logLevel)
+	{
+		return logLevel >= (LogLevel) (_configWrapper.LogLevel ?? (int) LogLevel.None);
+	}
+
+	/// <inheritdoc />
+	public IDisposable BeginScope<TState>(TState state)
+	{
+		return DisposableHelper.Empty;
 	}
 }

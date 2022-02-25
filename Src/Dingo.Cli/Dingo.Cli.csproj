@@ -1,27 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>dingo</AssemblyName>
-    <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+            <Nullable>enable</Nullable>
+            <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>dingo</AssemblyName>
+        <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Pastel" Version="2.1.0" />
-    <PackageReference Include="Sharprompt" Version="2.2.1" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Pastel" Version="2.1.0" />
+        <PackageReference Include="Sharprompt" Version="2.2.1" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Cliff\Cliff.csproj" />
-    <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Cliff\Cliff.csproj" />
+        <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
+    </ItemGroup>
 
 </Project>

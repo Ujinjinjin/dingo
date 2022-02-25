@@ -5,44 +5,43 @@ using System;
 using System.CommandLine;
 using System.Threading.Tasks;
 
-namespace Cliff.Infrastructure
+namespace Cliff.Infrastructure;
+
+/// <inheritdoc />
+public sealed class CliService : ICliService
 {
 	/// <inheritdoc />
-	public sealed class CliService : ICliService
+	public IServiceProvider ServiceProvider { get; }
+
+	private readonly ILogger _logger;
+
+	public CliService(IServiceProvider serviceProvider)
 	{
-		/// <inheritdoc />
-		public IServiceProvider ServiceProvider { get; }
+		ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-		private readonly ILogger _logger;
+		_logger = serviceProvider.GetService<ILoggerFactory>()?.CreateLogger<CliService>() ?? throw new ArgumentNullException(nameof(ILoggerFactory));
+	}
 
-		public CliService(IServiceProvider serviceProvider)
+	/// <inheritdoc />
+	public async Task ExecuteAsync(string[] args)
+	{
+		try
 		{
-			ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+			var rootCommand = ServiceProvider
+				.RegisterControllers()
+				.GetService<RootCommand>();
 
-			_logger = serviceProvider.GetService<ILoggerFactory>()?.CreateLogger<CliService>() ?? throw new ArgumentNullException(nameof(ILoggerFactory));
+			if (rootCommand is null)
+			{
+				throw new Exception($"Couldn't find any registered {nameof(RootCommand)}");
+			}
+
+			await rootCommand.InvokeAsync(args);
 		}
-
-		/// <inheritdoc />
-		public async Task ExecuteAsync(string[] args)
+		catch (Exception ex)
 		{
-			try
-			{
-				var rootCommand = ServiceProvider
-					.RegisterControllers()
-					.GetService<RootCommand>();
-
-				if (rootCommand is null)
-				{
-					throw new Exception($"Couldn't find any registered {nameof(RootCommand)}");
-				}
-
-				await rootCommand.InvokeAsync(args);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, $"Error occured during command execution with args: {args}");
-				Console.WriteLine("Error! Please try again or contact the maintainer of this solution");
-			}
+			_logger.LogError(ex, $"Error occured during command execution with args: {args}");
+			Console.WriteLine("Error! Please try again or contact the maintainer of this solution");
 		}
 	}
 }

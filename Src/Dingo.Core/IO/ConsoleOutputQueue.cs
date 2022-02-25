@@ -1,21 +1,20 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.IO
+namespace Dingo.Core.IO;
+
+/// <summary> Queue with output to console. Inherited from <see cref="IOutputQueue"/> </summary>
+internal sealed class ConsoleOutputQueue : OutputQueueBase
 {
-	/// <summary> Queue with output to console. Inherited from <see cref="IOutputQueue"/> </summary>
-	internal sealed class ConsoleOutputQueue : OutputQueueBase
+	protected override Task QueueWorkerAsync()
 	{
-		protected override Task QueueWorkerAsync()
+		while (true)
 		{
-			while (true)
+			if (TryDequeue(out var queueItem))
 			{
-				if (TryDequeue(out var queueItem))
-				{
-					Console.WriteLine(queueItem.OutputValue);
-				}
+				Console.WriteLine(queueItem.OutputValue);
 			}
-			// ReSharper disable once FunctionNeverReturns
 		}
+		// ReSharper disable once FunctionNeverReturns
 	}
 }

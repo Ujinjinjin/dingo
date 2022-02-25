@@ -6,58 +6,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Dingo.Core.Serializers
+namespace Dingo.Core.Serializers;
+
+/// <summary> Wrapper around YAML serializer </summary>
+internal sealed class YamlInternalSerializer : IInternalSerializer
 {
-	/// <summary> Wrapper around YAML serializer </summary>
-	internal sealed class YamlInternalSerializer : IInternalSerializer
+	public string DefaultFileExtension => FileExtension.Yml;
+
+	/// <inheritdoc />
+	public T Deserialize<T>(string contents)
 	{
-		public string DefaultFileExtension => FileExtension.Yml;
+		var serializer = new YamlSerializer();
+		var deserializationResult = serializer.Deserialize(contents, typeof(T));
 
-		/// <inheritdoc />
-		public T Deserialize<T>(string contents)
+		if (deserializationResult.Length != 1)
 		{
-			var serializer = new YamlSerializer();
-			var deserializationResult = serializer.Deserialize(contents, typeof(T));
-
-			if (deserializationResult.Length != 1)
-			{
-				throw new SerializationException();
-			}
-
-			return (T) deserializationResult[0];
+			throw new SerializationException();
 		}
 
-		/// <inheritdoc />
-		public string Serialize<T>(T data)
+		return (T) deserializationResult[0];
+	}
+
+	/// <inheritdoc />
+	public string Serialize<T>(T data)
+	{
+		var config = new YamlConfig
 		{
-			var config = new YamlConfig
-			{
-				DoNotUseVerbatimTag = true,
-				OmitTagForRootNode = true,
-				LineBreakForOutput = "\n"
-			};
-			var serializer = new YamlSerializer(config);
+			DoNotUseVerbatimTag = true,
+			OmitTagForRootNode = true,
+			LineBreakForOutput = "\n"
+		};
+		var serializer = new YamlSerializer(config);
 
-			var dirtySerializedArray = serializer.Serialize(data)
-				.ToUnixEol()
-				.Split("\n");
-			var cleanSerializedList = new List<string>();
+		var dirtySerializedArray = serializer.Serialize(data)
+			.ToUnixEol()
+			.Split("\n");
+		var cleanSerializedList = new List<string>();
 
-			for (var i = 0; i < dirtySerializedArray.Length; i++)
+		for (var i = 0; i < dirtySerializedArray.Length; i++)
+		{
+			if (dirtySerializedArray[i].NotContains(": null"))
 			{
-				if (dirtySerializedArray[i].NotContains(": null"))
-				{
-					cleanSerializedList.Add(dirtySerializedArray[i]);
-				}
+				cleanSerializedList.Add(dirtySerializedArray[i]);
 			}
-
-			cleanSerializedList = cleanSerializedList.Sequence(2, ^2)
-				.OrderBy(x => x)
-				.ToList();
-
-			var serializedObject = string.Join("\n", cleanSerializedList);
-
-			return serializedObject.ToUnixEol();
 		}
+
+		cleanSerializedList = cleanSerializedList.Sequence(2, ^2)
+			.OrderBy(x => x)
+			.ToList();
+
+		var serializedObject = string.Join("\n", cleanSerializedList);
+
+		return serializedObject.ToUnixEol();
 	}
 }

@@ -4,70 +4,69 @@ using Dingo.Core.Serializers;
 using System;
 using Xunit;
 
-namespace Dingo.UnitTests.FactoryTests
+namespace Dingo.UnitTests.FactoryTests;
+
+public class InternalSerializerFactoryTests : UnitTestsBase
 {
-	public class InternalSerializerFactoryTests : UnitTestsBase
+	[Fact]
+	public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenJsonFilenameGiven_ThenJsonInternalSerializerReturned()
 	{
-		[Fact]
-		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenJsonFilenameGiven_ThenJsonInternalSerializerReturned()
-		{
-			// Arrange
-			var internalSerializerFactory = new InternalSerializerFactory();
-			var filename = "dingo.json";
+		// Arrange
+		var internalSerializerFactory = new InternalSerializerFactory();
+		var filename = "dingo.json";
 
-			// Act
-			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
+		// Act
+		var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
-			// Assert
-			Assert.NotNull(internalSerializer);
-			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
-			Assert.Equal(typeof(JsonInternalSerializer), internalSerializer.GetType());
-			Assert.Equal(FileExtension.Json, internalSerializer.DefaultFileExtension);
-		}
+		// Assert
+		Assert.NotNull(internalSerializer);
+		Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
+		Assert.Equal(typeof(JsonInternalSerializer), internalSerializer.GetType());
+		Assert.Equal(FileExtension.Json, internalSerializer.DefaultFileExtension);
+	}
 
-		[Fact]
-		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenYmlFilenameGiven_ThenYamlInternalSerializerReturned()
-		{
-			// Arrange
-			var internalSerializerFactory = new InternalSerializerFactory();
-			var filename = "dingo.yml";
+	[Fact]
+	public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenYmlFilenameGiven_ThenYamlInternalSerializerReturned()
+	{
+		// Arrange
+		var internalSerializerFactory = new InternalSerializerFactory();
+		var filename = "dingo.yml";
 
-			// Act
-			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
+		// Act
+		var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
-			// Assert
-			Assert.NotNull(internalSerializer);
-			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
-			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
-			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
-		}
+		// Assert
+		Assert.NotNull(internalSerializer);
+		Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
+		Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
+		Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
+	}
 
-		[Fact]
-		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenYamlFilenameGiven_ThenYamlInternalSerializerReturned()
-		{
-			// Arrange
-			var internalSerializerFactory = new InternalSerializerFactory();
-			var filename = "dingo.yaml";
+	[Fact]
+	public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenYamlFilenameGiven_ThenYamlInternalSerializerReturned()
+	{
+		// Arrange
+		var internalSerializerFactory = new InternalSerializerFactory();
+		var filename = "dingo.yaml";
 
-			// Act
-			var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
+		// Act
+		var internalSerializer = internalSerializerFactory.CreateInternalSerializer(filename);
 
-			// Assert
-			Assert.NotNull(internalSerializer);
-			Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
-			Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
-			Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
-		}
+		// Assert
+		Assert.NotNull(internalSerializer);
+		Assert.IsAssignableFrom<IInternalSerializer>(internalSerializer);
+		Assert.Equal(typeof(YamlInternalSerializer), internalSerializer.GetType());
+		Assert.Equal(FileExtension.Yml, internalSerializer.DefaultFileExtension);
+	}
 
-		[Fact]
-		public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenInvalidFilenameGiven_ThenExceptionThrown()
-		{
-			// Arrange
-			var internalSerializerFactory = new InternalSerializerFactory();
-			var filename = "dingo.exe";
+	[Fact]
+	public void InternalSerializerFactoryTests__CreateInternalSerializer__WhenInvalidFilenameGiven_ThenExceptionThrown()
+	{
+		// Arrange
+		var internalSerializerFactory = new InternalSerializerFactory();
+		var filename = "dingo.exe";
 
-			// Act & Assert
-			Assert.Throws<ArgumentOutOfRangeException>(() => internalSerializerFactory.CreateInternalSerializer(filename));
-		}
+		// Act & Assert
+		Assert.Throws<ArgumentOutOfRangeException>(() => internalSerializerFactory.CreateInternalSerializer(filename));
 	}
 }

@@ -1,20 +1,19 @@
 using Dingo.Core.Repository.DbConverters;
 
-namespace Dingo.Core.Factories
+namespace Dingo.Core.Factories;
+
+/// <inheritdoc />
+internal sealed class DatabaseContractConverterFactory : IDatabaseContractConverterFactory
 {
 	/// <inheritdoc />
-	internal sealed class DatabaseContractConverterFactory : IDatabaseContractConverterFactory
+	public IDatabaseContractConverter CreatePostgresContractConverter()
 	{
-		/// <inheritdoc />
-		public IDatabaseContractConverter CreatePostgresContractConverter()
-		{
-			return new PostgresContractConverter();
-		}
+		return new PostgresContractConverter();
+	}
 
-		/// <inheritdoc />
-		public IDatabaseContractConverter CreateSqlServerContractConverter()
-		{
-			return new SqlServerContractConverter();
-		}
+	/// <inheritdoc />
+	public IDatabaseContractConverter CreateSqlServerContractConverter()
+	{
+		return new SqlServerContractConverter();
 	}
 }

@@ -3,28 +3,27 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Serializers;
 using System;
 
-namespace Dingo.Core.Factories
+namespace Dingo.Core.Factories;
+
+/// <inheritdoc />
+public sealed class InternalSerializerFactory : IInternalSerializerFactory
 {
 	/// <inheritdoc />
-	public sealed class InternalSerializerFactory : IInternalSerializerFactory
+	public IInternalSerializer CreateInternalSerializer(string filename)
 	{
-		/// <inheritdoc />
-		public IInternalSerializer CreateInternalSerializer(string filename)
-		{
-			var fileExtension = filename
-				.Split('.')
-				.GetItem(^1);
+		var fileExtension = filename
+			.Split('.')
+			.GetItem(^1);
 
-			switch (fileExtension)
-			{
-				case FileExtension.Json:
-					return new JsonInternalSerializer();
-				case FileExtension.Yaml:
-				case FileExtension.Yml:
-					return new YamlInternalSerializer();
-				default:
-					throw new ArgumentOutOfRangeException(filename);
-			}
+		switch (fileExtension)
+		{
+			case FileExtension.Json:
+				return new JsonInternalSerializer();
+			case FileExtension.Yaml:
+			case FileExtension.Yml:
+				return new YamlInternalSerializer();
+			default:
+				throw new ArgumentOutOfRangeException(filename);
 		}
 	}
 }

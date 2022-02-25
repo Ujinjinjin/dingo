@@ -1,32 +1,31 @@
 ﻿using System;
 
-namespace Dingo.Core.Helpers.Static
+namespace Dingo.Core.Helpers.Static;
+
+/// <summary> Allows to execute code in using scope </summary>
+internal static class DisposableHelper
 {
-	/// <summary> Allows to execute code in using scope </summary>
-	internal static class DisposableHelper
+	/// <summary> Empty disposable object </summary>
+	public static readonly IDisposable Empty = Create(() => {});
+
+	private class DisposableAction : IDisposable
 	{
-		/// <summary> Empty disposable object </summary>
-		public static readonly IDisposable Empty = Create(() => {});
+		private readonly Action _action;
 
-		private class DisposableAction : IDisposable
+		public DisposableAction(Action action)
 		{
-			private readonly Action _action;
-
-			public DisposableAction(Action action)
-			{
-				_action = action ?? throw new ArgumentNullException(nameof(action));
-			}
-
-			public void Dispose()
-			{
-				_action();
-			}
+			_action = action ?? throw new ArgumentNullException(nameof(action));
 		}
 
-		/// <summary> Creates IDisposable, executing action </summary>
-		private static IDisposable Create(Action action)
+		public void Dispose()
 		{
-			return new DisposableAction(action);
+			_action();
 		}
+	}
+
+	/// <summary> Creates IDisposable, executing action </summary>
+	private static IDisposable Create(Action action)
+	{
+		return new DisposableAction(action);
 	}
 }

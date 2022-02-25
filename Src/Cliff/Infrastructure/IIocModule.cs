@@ -1,12 +1,11 @@
 ﻿using System;
 
- namespace Cliff.Infrastructure
+namespace Cliff.Infrastructure;
+
+/// <summary> Application's IoC module </summary>
+public interface IIocModule
 {
-	/// <summary> Application's IoC module </summary>
-	public interface IIocModule
-	{
-		/// <summary> Build module </summary>
-		/// <returns>Service provider</returns>
-		IServiceProvider Build();
-	}
+	/// <summary> Build module </summary>
+	/// <returns>Service provider</returns>
+	IServiceProvider Build();
 }

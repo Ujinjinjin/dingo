@@ -11,148 +11,147 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Dingo.Core.Repository
+namespace Dingo.Core.Repository;
+
+/// <inheritdoc />
+internal sealed class DatabaseRepository : IDatabaseRepository
 {
-	/// <inheritdoc />
-	internal sealed class DatabaseRepository : IDatabaseRepository
+	private readonly IPathHelper _pathHelper;
+	private readonly IConfigWrapper _configWrapper;
+	private readonly IFileAdapter _fileAdapter;
+	private readonly IDatabaseContextFactory _databaseContextFactory;
+	private readonly ILogger _logger;
+
+	public DatabaseRepository(
+		IPathHelper pathHelper,
+		IConfigWrapper configWrapper,
+		IFileAdapter fileAdapter,
+		IDatabaseContextFactory databaseContextFactory,
+		ILoggerFactory loggerFactory
+	)
 	{
-		private readonly IPathHelper _pathHelper;
-		private readonly IConfigWrapper _configWrapper;
-		private readonly IFileAdapter _fileAdapter;
-		private readonly IDatabaseContextFactory _databaseContextFactory;
-		private readonly ILogger _logger;
+		_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
+		_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
+		_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
+		_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
+		_logger = loggerFactory?.CreateLogger<DatabaseRepository>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+	}
 
-		public DatabaseRepository(
-			IPathHelper pathHelper,
-			IConfigWrapper configWrapper,
-			IFileAdapter fileAdapter,
-			IDatabaseContextFactory databaseContextFactory,
-			ILoggerFactory loggerFactory
-		)
+	/// <inheritdoc />
+	public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true)
+	{
+		using var _ = new CodeTiming(_logger);
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+
+		try
 		{
-			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
-			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
-			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
-			_logger = loggerFactory?.CreateLogger<DatabaseRepository>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-		}
+			await dbContext.ExecuteRawSqlAsync(sql);
 
-		/// <inheritdoc />
-		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true)
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			try
+			if (registerMigrations)
 			{
-				await dbContext.ExecuteRawSqlAsync(sql);
+				await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, $"Error applying migration: {migrationPath}");
+			throw;
+		}
+	}
 
-				if (registerMigrations)
+	/// <inheritdoc />
+	public async Task<bool> CheckMigrationTableExistenceAsync()
+	{
+		using var _ = new CodeTiming(_logger);
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+
+		var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
+		return result.DingoTableExists;
+	}
+
+	/// <inheritdoc />
+	public async Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList)
+	{
+		using var _ = new CodeTiming(_logger);
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+
+		var input = migrationInfoList
+			.Select(x => new DbMigrationInfoInput
+			{
+				MigrationHash = x.NewHash,
+				MigrationPath = x.Path.Relative
+			})
+			.ToArray();
+		var dbMigrationStatuses = await dbContext.GetMigrationsStatusAsync(input);
+
+		var result = new MigrationInfo[dbMigrationStatuses.Count];
+		for (var i = 0; i < dbMigrationStatuses.Count; i++)
+		{
+			result[i] = new MigrationInfo
+			{
+				Path = migrationInfoList[i].Path,
+				NewHash = dbMigrationStatuses[i].NewHash,
+				OldHash = dbMigrationStatuses[i].OldHash,
+				Status = dbMigrationStatuses[i].IsOutdated switch
 				{
-					await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
-				}
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, $"Error applying migration: {migrationPath}");
-				throw;
-			}
+					null => MigrationStatus.New,
+					true => MigrationStatus.Outdated,
+					false => MigrationStatus.UpToDate,
+				},
+			};
 		}
 
-		/// <inheritdoc />
-		public async Task<bool> CheckMigrationTableExistenceAsync()
+		return result;
+	}
+
+	/// <inheritdoc />
+	public async Task<bool> HandshakeDatabaseConnectionAsync()
+	{
+		using var _ = new CodeTiming(_logger);
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+
+		try
 		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
-			return result.DingoTableExists;
+			await dbContext.HandshakeDatabaseConnectionAsync();
 		}
-
-		/// <inheritdoc />
-		public async Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList)
+		catch (Exception ex)
 		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			var input = migrationInfoList
-				.Select(x => new DbMigrationInfoInput
-				{
-					MigrationHash = x.NewHash,
-					MigrationPath = x.Path.Relative
-				})
-				.ToArray();
-			var dbMigrationStatuses = await dbContext.GetMigrationsStatusAsync(input);
-
-			var result = new MigrationInfo[dbMigrationStatuses.Count];
-			for (var i = 0; i < dbMigrationStatuses.Count; i++)
-			{
-				result[i] = new MigrationInfo
-				{
-					Path = migrationInfoList[i].Path,
-					NewHash = dbMigrationStatuses[i].NewHash,
-					OldHash = dbMigrationStatuses[i].OldHash,
-					Status = dbMigrationStatuses[i].IsOutdated switch
-					{
-						null => MigrationStatus.New,
-						true => MigrationStatus.Outdated,
-						false => MigrationStatus.UpToDate,
-					},
-				};
-			}
-
-			return result;
+			_logger.LogError(ex, "DatabaseRepository:Error:HandshakeDatabaseConnectionAsync;");
+			return false;
 		}
+		return true;
+	}
 
-		/// <inheritdoc />
-		public async Task<bool> HandshakeDatabaseConnectionAsync()
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+	/// <inheritdoc />
+	public async Task InstallCheckTableExistenceProcedureAsync()
+	{
+		using var _ = new CodeTiming(_logger);
 
-			try
-			{
-				await dbContext.HandshakeDatabaseConnectionAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "DatabaseRepository:Error:HandshakeDatabaseConnectionAsync;");
-				return false;
-			}
-			return true;
-		}
+		var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.TableExistsProcedurePath);
+		var sqlScriptText = await _fileAdapter.ReadAllTextAsync(sqlScriptPath);
 
-		/// <inheritdoc />
-		public async Task InstallCheckTableExistenceProcedureAsync()
-		{
-			using var _ = new CodeTiming(_logger);
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
 
-			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.TableExistsProcedurePath);
-			var sqlScriptText = await _fileAdapter.ReadAllTextAsync(sqlScriptPath);
+		await dbContext.ExecuteRawSqlAsync(sqlScriptText);
+	}
 
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+	/// <inheritdoc />
+	public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
+	{
+		using var _ = new CodeTiming(_logger);
 
-			await dbContext.ExecuteRawSqlAsync(sqlScriptText);
-		}
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
 
-		/// <inheritdoc />
-		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
-		{
-			using var _ = new CodeTiming(_logger);
+		await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
+	}
 
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
+	/// <inheritdoc />
+	public async Task ReloadDatabaseTypesAsync()
+	{
+		using var _ = new CodeTiming(_logger);
 
-			await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
-		}
+		using var dbContext = _databaseContextFactory.CreateDatabaseContext();
 
-		/// <inheritdoc />
-		public async Task ReloadDatabaseTypesAsync()
-		{
-			using var _ = new CodeTiming(_logger);
-
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			await dbContext.ReloadDatabaseTypesAsync();
-		}
+		await dbContext.ReloadDatabaseTypesAsync();
 	}
 }
