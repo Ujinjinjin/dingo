@@ -5,7 +5,7 @@ namespace Dingo.Core.Validators;
 /// <summary> Migration filename validator </summary>
 internal sealed class MigrationNameValidator : Validator<string>
 {
-	private readonly Regex _regex = new(@"^[\w\d_]+\.sql$");
+	private readonly Regex _regex = new(@"^[\w\d_]+$");
 
 	public MigrationNameValidator()
 	{
