@@ -5,6 +5,8 @@ trigger:
     - master
     - release/*
     - hotfix/*
+    - feature/*
+    - bug/*
   paths:
     include:
     - pipelines/build/dingo-cli.yml
