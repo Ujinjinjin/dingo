@@ -1,7 +1,7 @@
 ﻿using Cliff;
 using Dingo.Core.Services;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using Cliff.Factories;
 
 namespace Dingo.Cli.Controllers;
 
@@ -12,37 +12,91 @@ internal sealed class ProviderController : CliController
 
 	public ProviderController(
 		RootCommand rootCommand,
+		ICommandFactory commandFactory,
+		IOptionFactory optionFactory,
 		IProviderService providerService
-	) : base(rootCommand)
+	) : base(
+		rootCommand,
+		commandFactory,
+		optionFactory
+	)
 	{
 		_providerService = providerService ?? throw new ArgumentNullException(nameof(providerService));
+	}
+
+	private Command GetChooseCommand()
+	{
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"choose",
+			"Choose database provider from supported list",
+			configPathOption
+		);
+
+		command.SetHandler(
+			async configPath =>
+				await _providerService.ChooseDatabaseProviderAsync(configPath),
+			configPathOption
+		);
+
+		return command;
+	}
+
+	private Command GetListCommand()
+	{
+		var command = CommandFactory.CreateCommand(
+			"list",
+			"Display list of supported database providers"
+		);
+		
+		command.SetHandler(
+			async () => await _providerService.ListSupportedDatabaseProvidersAsync()
+		);
+
+		return command;
+	}
+
+	private Command GetValidateCommand()
+	{
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"validate",
+			"Validate chosen database provider",
+			configPathOption
+		);
+		
+		command.SetHandler(
+			async configPath =>
+				await _providerService.ValidateDatabaseProviderAsync(configPath),
+			configPathOption
+		);
+
+		return command;
 	}
 
 	/// <inheritdoc />
 	public override void Register()
 	{
-		var command = CreateCommand("provider", "Group of commands to manage database provider");
+		var command = CommandFactory.CreateCommand("provider", "Group of commands to manage database provider");
 
-		command.AddCommand(CreateCommand(
-			"choose",
-			"Choose database provider from supported list",
-			CommandHandler.Create<string>(_providerService.ChooseDatabaseProviderAsync),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
-		));
+		var subcommandChoose = GetChooseCommand();
+		var subcommandList = GetListCommand();
+		var subcommandValidate = GetValidateCommand();
 
-		command.AddCommand(CreateCommand(
-			"list",
-			"Display list of supported database providers",
-			CommandHandler.Create(_providerService.ListSupportedDatabaseProvidersAsync)
-		));
-
-		command.AddCommand(CreateCommand(
-			"validate",
-			"Validate chosen database provider",
-			CommandHandler.Create<string>(_providerService.ValidateDatabaseProviderAsync),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
-		));
-
-		RootCommand.AddCommand(command);
+		command.Add(subcommandChoose);
+		command.Add(subcommandList);
+		command.Add(subcommandValidate);
+		
+		Register(command);
 	}
 }

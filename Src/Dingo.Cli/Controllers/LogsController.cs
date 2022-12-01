@@ -1,7 +1,7 @@
 using Cliff;
 using Dingo.Core.Services;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using Cliff.Factories;
 
 namespace Dingo.Cli.Controllers;
 
@@ -10,29 +10,72 @@ internal sealed class LogsController : CliController
 {
 	private readonly ILogsService _logsService;
 
-	public LogsController(RootCommand rootCommand, ILogsService logsService) : base(rootCommand)
+	public LogsController(
+		RootCommand rootCommand,
+		ICommandFactory commandFactory,
+		IOptionFactory optionFactory,
+		ILogsService logsService
+	) : base(
+		rootCommand,
+		commandFactory,
+		optionFactory
+	)
 	{
 		_logsService = logsService ?? throw new ArgumentNullException(nameof(logsService));
 	}
 
-	public override void Register()
+	private Command GetLevelCommand()
 	{
-		var command = CreateCommand("logs", "Group of commands to work with logs");
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+		var logLevelOption = OptionFactory.CreateOption<int?>(
+			new[] { "--log-level", "-l" },
+			"Integer representation of logging level",
+			false
+		);
 
-		command.AddCommand(CreateCommand(
+		var command = CommandFactory.CreateCommand(
 			"level", 
 			"Switch level of logging",
-			CommandHandler.Create<string, int?>(_logsService.SwitchLogLevelAsync),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
-			CreateOption(new[] {"--log-level", "-l"}, "Integer representation of logging level", typeof(int?), false)
-		));
+			configPathOption,
+			logLevelOption
+		);
+		
+		command.SetHandler(
+			async (configPath, logLevel) =>
+				await _logsService.SwitchLogLevelAsync(configPath, logLevel),
+			configPathOption,
+			logLevelOption
+		);
 
-		command.AddCommand(CreateCommand(
+		return command;
+	}
+
+	private Command GetPruneCommand()
+	{
+		var command = CommandFactory.CreateCommand(
 			"prune", 
-			"Prune dingo log files",
-			CommandHandler.Create(_logsService.PruneLogsAsync)
-		));
+			"Prune dingo log files"
+		);
+		
+		command.SetHandler(async () => await _logsService.PruneLogsAsync());
 
-		RootCommand.AddCommand(command);
+		return command;
+	}
+
+	public override void Register()
+	{
+		var command = CommandFactory.CreateCommand("logs", "Group of commands to work with logs");
+
+		var subcommandLevel = GetLevelCommand();
+		var subcommandPrune = GetPruneCommand();
+		
+		command.Add(subcommandLevel);
+		command.Add(subcommandPrune);
+
+		Register(command);
 	}
 }
