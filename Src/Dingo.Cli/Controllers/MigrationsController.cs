@@ -1,7 +1,7 @@
 using Cliff;
 using Dingo.Core.Services;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using Cliff.Factories;
 
 namespace Dingo.Cli.Controllers;
 
@@ -12,57 +12,204 @@ public sealed class MigrationsController : CliController
 
 	public MigrationsController(
 		RootCommand rootCommand,
+		ICommandFactory commandFactory,
+		IOptionFactory optionFactory,
 		IMigrationService migrationService
-	) : base(rootCommand)
+	) : base(
+		rootCommand,
+		commandFactory,
+		optionFactory
+	)
 	{
 		_migrationService = migrationService ?? throw new ArgumentNullException(nameof(migrationService));
+	}
+
+	private Command GetNewCommand()
+	{
+		var nameOption = OptionFactory.CreateOption<string>(
+			new[] { "--name", "-n" },
+			"Migration name",
+			true
+		);
+		var pathOption = OptionFactory.CreateOption<string>(
+			new[] { "--path", "-p" },
+			"Path where migration file will be created",
+			true
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"new",
+			"Create new migration file",
+			nameOption,
+			pathOption
+		);
+
+		command.SetHandler(
+			async (name, path) =>
+				await _migrationService.CreateMigrationFileAsync(name, path),
+			nameOption,
+			pathOption
+		);
+
+		return command;
+	}
+
+	private Command GetHandshakeCommand()
+	{
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"handshake",
+			"Perform handshake connection to database",
+			configPathOption
+		);
+
+		command.SetHandler(
+			async configPath =>
+				await _migrationService.HandshakeDatabaseConnectionAsync(configPath),
+			configPathOption
+		);
+
+		return command;
+	}
+
+	private Command GetRunCommand()
+	{
+		var migrationsDirOption = OptionFactory.CreateOption<string>(
+			new[] { "--migrations-dir", "-m" },
+			"Root path to database migration files",
+			true
+		);
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+		var silentOption = OptionFactory.CreateOption<bool>(
+			new[] { "--silent", "-s" },
+			"Show less info about migration status",
+			false
+		);
+		var connectionStringOption = OptionFactory.CreateOption<string>(
+			new[] { "--connection-string" },
+			"Database connection string",
+			false
+		);
+		var providerNameOption = OptionFactory.CreateOption<string>(
+			new[] { "--provider-name" },
+			"Database provider name",
+			false
+		);
+		var migrationSchemaOption = OptionFactory.CreateOption<string>(
+			new[] { "--migration-schema" },
+			"Database schema for you migrations",
+			false
+		);
+		var migrationTableOption = OptionFactory.CreateOption<string>(
+			new[] { "--migration-table" },
+			"Database table, where all migrations are stored",
+			false
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"run",
+			"Apply migrations",
+			migrationsDirOption,
+			configPathOption,
+			silentOption,
+			connectionStringOption,
+			providerNameOption,
+			migrationSchemaOption,
+			migrationTableOption
+		);
+
+		command.SetHandler(
+			async (
+				migrationsDir,
+				configPath,
+				silent,
+				connectionString,
+				providerName,
+				migrationSchema,
+				migrationTable
+			) => await _migrationService.RunMigrationsAsync(
+				migrationsDir,
+				configPath,
+				silent,
+				connectionString,
+				providerName,
+				migrationSchema,
+				migrationTable
+			),
+			migrationsDirOption,
+			configPathOption,
+			silentOption,
+			connectionStringOption,
+			providerNameOption,
+			migrationSchemaOption,
+			migrationTableOption
+		);
+
+		return command;
+	}
+
+	private Command GetStatusCommand()
+	{
+		var migrationsDirOption = OptionFactory.CreateOption<string>(
+			new[] { "--migrations-dir", "-m" },
+			"Root path to database migration files",
+			true
+		);
+		var configPathOption = OptionFactory.CreateOption<string>(
+			new[] { "--config-path", "-c" },
+			"Custom path to configuration file",
+			false
+		);
+		var silentOption = OptionFactory.CreateOption<bool>(
+			new[] { "--silent", "-s" },
+			"Show less info about migration status",
+			false
+		);
+
+		var command = CommandFactory.CreateCommand(
+			"status",
+			"Show required actions for migration files",
+			migrationsDirOption,
+			configPathOption,
+			silentOption
+		);
+
+		command.SetHandler(
+			async (migrationsDir, configPath, silent) =>
+				await _migrationService.ShowMigrationsStatusAsync(migrationsDir, configPath, silent),
+			migrationsDirOption,
+			configPathOption,
+			silentOption
+		);
+
+		return command;
 	}
 
 	/// <inheritdoc />
 	public override void Register()
 	{
-		var command = CreateCommand("migrations", "Group of commands to work with migrations");
+		var command = CommandFactory.CreateCommand("migrations", "Group of commands to work with migrations");
 
-		var subCommandNew = CreateCommand(
-			"new",
-			"Create new migration file",
-			CommandHandler.Create<string, string>(_migrationService.CreateMigrationFileAsync),
-			CreateOption(new[] {"--name", "-n"}, "Migration name", typeof(string), true),
-			CreateOption(new[] {"--path", "-p"}, "Path where migration file will be created", typeof(string), true)
-		);
+		var subcommandNew = GetNewCommand();
+		var subcommandHandshake = GetHandshakeCommand();
+		var subcommandRun = GetRunCommand();
+		var subcommandStatus = GetStatusCommand();
 
-		command.AddCommand(subCommandNew);
+		command.Add(subcommandNew);
+		command.Add(subcommandHandshake);
+		command.Add(subcommandRun);
+		command.Add(subcommandStatus);
 
-		command.AddCommand(CreateCommand(
-			"handshake",
-			"Perform handshake connection to database",
-			CommandHandler.Create<string>(_migrationService.HandshakeDatabaseConnectionAsync),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false)
-		));
-
-		command.AddCommand(CreateCommand(
-			"run",
-			"Apply migrations",
-			CommandHandler.Create<string, string, bool, string, string, string, string>(_migrationService.RunMigrationsAsync),
-			CreateOption(new[] {"--migrations-dir", "-m"}, "Root path to database migration files", typeof(string), true),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
-			CreateOption(new[] {"--silent", "-s"}, "Show less info about migration status", typeof(bool), false),
-			CreateOption(new[] {"--connection-string"}, "Database connection string", typeof(string), false),
-			CreateOption(new[] {"--provider-name"}, "Database provider name", typeof(string), false),
-			CreateOption(new[] {"--migration-schema"}, "Database schema for you migrations", typeof(string), false),
-			CreateOption(new[] {"--migration-table"}, "Database table, where all migrations are stored", typeof(string), false)
-		));
-
-		command.AddCommand(CreateCommand(
-			"status",
-			"Show required actions for migration files",
-			CommandHandler.Create<string, string, bool>(_migrationService.ShowMigrationsStatusAsync),
-			CreateOption(new[] {"--migrations-dir", "-m"}, "Root path to database migration files", typeof(string), true),
-			CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
-			CreateOption(new[] {"--silent", "-s"}, "Show less info about migration status", typeof(bool), false)
-		));
-
-		RootCommand.AddCommand(subCommandNew);
-		RootCommand.AddCommand(command);
+		Register(subcommandNew);
+		Register(command);
 	}
 }

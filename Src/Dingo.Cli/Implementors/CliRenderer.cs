@@ -1,5 +1,4 @@
-﻿using Cliff.ConsoleUtils;
-using Dingo.Core.Abstractions;
+﻿using Dingo.Core.Abstractions;
 using Dingo.Core.Config;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
@@ -14,13 +13,6 @@ namespace Dingo.Cli.Implementors;
 [UsedImplicitly]
 public sealed class CliRenderer : IRenderer
 {
-	private readonly IConsoleQueue _consoleQueue;
-
-	public CliRenderer(IConsoleQueue consoleQueue)
-	{
-		_consoleQueue = consoleQueue ?? throw new ArgumentNullException(nameof(consoleQueue));
-	}
-
 	/// <inheritdoc />
 	public async Task ListItemsAsync(IList<string> itemList, TextStyle textStyle = TextStyle.Plain)
 	{
@@ -51,7 +43,24 @@ public sealed class CliRenderer : IRenderer
 		{
 			return;
 		}
-		await _consoleQueue.EnqueueBreakLine(length, symbol, newLineBefore, newLineAfter);
+
+		length ??= Console.WindowWidth - 1;
+		var stringBuilder = new StringBuilder();
+
+		if (newLineBefore)
+		{
+			stringBuilder.Append('\n');
+		}
+
+		stringBuilder.Append(new string(symbol, length.Value));
+
+		if (newLineAfter)
+		{
+			stringBuilder.Append('\n');
+		}
+
+		Console.Write(stringBuilder.ToString());
+		await Task.CompletedTask;
 	}
 
 	/// <inheritdoc />
@@ -68,7 +77,8 @@ public sealed class CliRenderer : IRenderer
 			text = text.Pastel(color);
 		}
 			
-		await _consoleQueue.EnqueueOutputAsync(text);
+		Console.WriteLine(text);
+		await Task.CompletedTask;
 	}
 
 	/// <inheritdoc />

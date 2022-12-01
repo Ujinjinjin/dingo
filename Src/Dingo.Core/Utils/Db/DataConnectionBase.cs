@@ -47,7 +47,6 @@ internal class DataConnectionBase : DataConnection
 		{
 			try
 			{
-				Command?.Parameters.Clear();
 				CommandTimeout = request.CommandTimeout;
 
 				await CreateCommand(request).ExecuteAsync();
@@ -90,7 +89,6 @@ internal class DataConnectionBase : DataConnection
 		{
 			try
 			{
-				Command?.Parameters.Clear();
 				CommandTimeout = request.CommandTimeout;
 
 				return await CreateCommand(request).ExecuteReaderAsync();
@@ -139,7 +137,6 @@ internal class DataConnectionBase : DataConnection
 		{
 			try
 			{
-				Command?.Parameters.Clear();
 				CommandTimeout = request.CommandTimeout;
 
 				var command = CreateCommand(request);
