@@ -9,7 +9,7 @@ internal static class Program
 {
 	/// <summary> Program`s entry point method </summary>
 	/// <param name="args">Arguments passed to application</param>
-	private static async Task Main(string[] args)
+	internal static async Task Main(string[] args)
 	{
 		var serviceProvider = new IocModule()
 			.Build();

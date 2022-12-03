@@ -13,6 +13,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core.New", "Dingo.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.UnitTests.New", "Dingo.UnitTests.New\Dingo.UnitTests.New.csproj", "{23CB14BE-40B6-45D8-9BE4-7764157F1D34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.InfrastructureTests", "Dingo.InfrastructureTests\Dingo.InfrastructureTests.csproj", "{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{FED1D811-CB59-4F8B-B867-E67BCEA43F67}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +96,17 @@ Global
 		{23CB14BE-40B6-45D8-9BE4-7764157F1D34}.Release|x64.Build.0 = Release|Any CPU
 		{23CB14BE-40B6-45D8-9BE4-7764157F1D34}.Release|x86.ActiveCfg = Release|Any CPU
 		{23CB14BE-40B6-45D8-9BE4-7764157F1D34}.Release|x86.Build.0 = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|x64.Build.0 = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
