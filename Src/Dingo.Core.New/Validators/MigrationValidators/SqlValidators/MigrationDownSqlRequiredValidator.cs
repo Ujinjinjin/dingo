@@ -1,8 +1,8 @@
-using Dingo.Core.New.Validators.Primitive;
+using Dingo.Core.Validators.Primitive;
 
-namespace Dingo.Core.New.Validators.MigrationValidator;
+namespace Dingo.Core.Validators.MigrationValidators.SqlValidators;
 
-internal class MigrationDownSqlRequiredValidator : IValidator<Migration>
+internal sealed class MigrationDownSqlRequiredValidator : IValidatorGroupMember<Migration, MigrationValidator>
 {
 	private readonly StringRequiredValidator _stringRequiredValidator;
 

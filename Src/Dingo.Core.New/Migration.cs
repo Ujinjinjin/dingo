@@ -1,6 +1,6 @@
-using Dingo.Core.New.Validators.MigrationValidator;
+using Dingo.Core.Validators.MigrationValidators;
 
-namespace Dingo.Core.New;
+namespace Dingo.Core;
 
 public readonly struct Migration
 {
@@ -21,9 +21,9 @@ public readonly struct Migration
 		UpAsync().GetAwaiter().GetResult();
 	}
 
-	public Task UpAsync()
+	public async Task UpAsync()
 	{
-		return Task.CompletedTask;
+		await Task.CompletedTask;
 	}
 
 	public void Down()
@@ -31,9 +31,9 @@ public readonly struct Migration
 		DownAsync().GetAwaiter().GetResult();
 	}
 
-	public Task DownAsync()
+	public async Task DownAsync()
 	{
-		return Task.CompletedTask;
+		await Task.CompletedTask;
 	}
 
 	public bool IsValid()

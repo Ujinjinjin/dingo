@@ -1,4 +1,4 @@
-﻿namespace Dingo.Core.New;
+﻿namespace Dingo.Core;
 
 public class MigrationParser
 {

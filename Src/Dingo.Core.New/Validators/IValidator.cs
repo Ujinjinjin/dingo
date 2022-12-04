@@ -1,4 +1,4 @@
-namespace Dingo.Core.New.Validators;
+namespace Dingo.Core.Validators;
 
 /// <summary> Validator </summary>
 /// <typeparam name="T">Validated entity type</typeparam>

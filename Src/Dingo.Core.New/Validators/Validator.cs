@@ -1,4 +1,4 @@
-namespace Dingo.Core.New.Validators;
+namespace Dingo.Core.Validators;
 
 /// <inheritdoc />
 internal abstract class Validator<T> : IValidator<T>

@@ -1,9 +1,8 @@
-using Dingo.Core.New.Validators.Primitive;
-using FluentAssertions;
+using Dingo.Core.Validators.Primitive;
 
 namespace Dingo.UnitTests.New.Validators.Primitive;
 
-public class StringRequiredValidatorTests
+public class StringRequiredValidatorTests : UnitTestBase
 {
 	[Theory]
 	[InlineData(null)]
@@ -26,7 +25,7 @@ public class StringRequiredValidatorTests
 	{
 		// arrange
 		var validator = new StringRequiredValidator();
-		var value = Guid.NewGuid().ToString();
+		var value = Fixture.Create<string>();
 
 		// act
 		var result = validator.Validate(value);

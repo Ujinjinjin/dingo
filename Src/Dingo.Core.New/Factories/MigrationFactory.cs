@@ -1,8 +1,8 @@
-using Dingo.Core.New.Validators.MigrationValidator;
+using Dingo.Core.Validators.MigrationValidators;
 
-namespace Dingo.Core.New.Factories;
+namespace Dingo.Core.Factories;
 
-internal class MigrationFactory : IMigrationFactory
+internal sealed class MigrationFactory : IMigrationFactory
 {
 	private readonly IMigrationValidator _validator;
 

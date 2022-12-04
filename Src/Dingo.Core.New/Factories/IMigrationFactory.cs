@@ -1,4 +1,4 @@
-namespace Dingo.Core.New.Factories;
+namespace Dingo.Core.Factories;
 
 internal interface IMigrationFactory
 {

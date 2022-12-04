@@ -1,6 +1,6 @@
-namespace Dingo.Core.New.Validators.Primitive;
+namespace Dingo.Core.Validators.Primitive;
 
-internal class StringRequiredValidator : IValidator<string>
+internal sealed class StringRequiredValidator : IValidator<string>
 {
 	public bool Validate(string entity)
 	{

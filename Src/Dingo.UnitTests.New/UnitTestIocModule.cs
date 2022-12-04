@@ -1,4 +1,4 @@
-using Dingo.Core.New.Extensions;
+using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dingo.UnitTests.New;
