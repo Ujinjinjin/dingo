@@ -5,7 +5,7 @@ using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dingo.UnitTests.New.Validators.MigrationValidators.SqlValidators;
+namespace Dingo.UnitTests.Validators.MigrationValidators.SqlValidators;
 
 public class MigrationUpSqlRequiredValidatorTests : UnitTestBase
 {

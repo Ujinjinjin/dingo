@@ -1,6 +1,6 @@
 using Dingo.Core.Validators;
 
-namespace Dingo.UnitTests.New.Validators;
+namespace Dingo.UnitTests.Validators;
 
 public class ValidatorGroupTests : UnitTestBase
 {

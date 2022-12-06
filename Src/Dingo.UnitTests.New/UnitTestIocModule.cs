@@ -1,7 +1,7 @@
 using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dingo.UnitTests.New;
+namespace Dingo.UnitTests;
 
 public class UnitTestIocModule
 {

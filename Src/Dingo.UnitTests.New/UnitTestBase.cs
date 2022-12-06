@@ -1,13 +1,13 @@
 using Dingo.Core;
 using Dingo.Core.Validators.MigrationValidators;
 
-namespace Dingo.UnitTests.New;
+namespace Dingo.UnitTests;
 
 public class UnitTestBase
 {
 	protected readonly Fixture Fixture;
 
-	public UnitTestBase()
+	protected UnitTestBase()
 	{
 		Fixture = new Fixture();
 	}

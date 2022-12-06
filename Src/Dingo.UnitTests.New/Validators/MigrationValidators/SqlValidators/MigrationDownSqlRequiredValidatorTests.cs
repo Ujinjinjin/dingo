@@ -3,7 +3,7 @@ using Dingo.Core.Validators;
 using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
 
-namespace Dingo.UnitTests.New.Validators.MigrationValidators.SqlValidators;
+namespace Dingo.UnitTests.Validators.MigrationValidators.SqlValidators;
 
 public class MigrationDownSqlRequiredValidatorTests : UnitTestBase
 {

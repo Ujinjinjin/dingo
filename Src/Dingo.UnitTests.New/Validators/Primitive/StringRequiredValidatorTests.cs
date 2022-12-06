@@ -1,6 +1,6 @@
 using Dingo.Core.Validators.Primitive;
 
-namespace Dingo.UnitTests.New.Validators.Primitive;
+namespace Dingo.UnitTests.Validators.Primitive;
 
 public class StringRequiredValidatorTests : UnitTestBase
 {
