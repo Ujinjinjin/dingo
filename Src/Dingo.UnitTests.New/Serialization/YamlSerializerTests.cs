@@ -17,7 +17,7 @@ public class YamlSerializerTests : UnitTestBase
 		var serializedData = yamlSerializer.Serialize(data);
 
 		// Assert
-		Assert.Equal(expectedSerializedData, serializedData);
+		serializedData.Should().Be(expectedSerializedData);
 	}
 
 	[Fact]
@@ -36,7 +36,7 @@ public class YamlSerializerTests : UnitTestBase
 		var serializedData = yamlSerializer.Serialize(data);
 
 		// Assert
-		Assert.Equal(expectedSerializedData, serializedData);
+		serializedData.Should().Be(expectedSerializedData);
 	}
 
 	[Fact]
@@ -55,7 +55,7 @@ public class YamlSerializerTests : UnitTestBase
 		var data = yamlSerializer.Deserialize<TestStruct>(serializedData);
 
 		// Assert
-		Assert.Equal(expectedData, data);
+		data.Should().Be(expectedData);
 	}
 
 	[Fact]
@@ -70,7 +70,7 @@ public class YamlSerializerTests : UnitTestBase
 		var data = yamlSerializer.Deserialize<TestStruct>(serializedData);
 
 		// Assert
-		Assert.Equal(expectedData, data);
+		data.Should().Be(expectedData);
 	}
 
 	[Fact]
@@ -79,8 +79,9 @@ public class YamlSerializerTests : UnitTestBase
 		// Arrange
 		var yamlSerializer = new YamlSerializer();
 		var serializedData = string.Empty;
+		var action = () => yamlSerializer.Deserialize<TestStruct>(serializedData);
 
 		// Act & Assert
-		Assert.Throws<SerializationException>(() => yamlSerializer.Deserialize<TestStruct>(serializedData));
+		action.Should().Throw<SerializationException>();
 	}
 }

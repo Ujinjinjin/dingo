@@ -1,5 +1,7 @@
+using AutoFixture;
 using Dingo.Cli.Infrastructure;
 using Dingo.InfrastructureTests.Helpers;
+using FluentAssertions;
 
 namespace Dingo.InfrastructureTests;
 
@@ -9,14 +11,16 @@ public class SmokeTests
 	public async Task Smoke()
 	{
 		// arrange
-		var output = Guid.NewGuid().ToString();
+		var fixture = new Fixture();
+		var output = fixture.Create<string>();
 
 		using var consoleOutput = new ConsoleOutput();
 
 		// act
 		await Program.Main(new[] { "test", "subcommand", "-o", output });
+		var result = consoleOutput.Get();
 
 		// assert
-		Assert.Equal(output, consoleOutput.Get());
+		result.Should().Be(output);
 	}
 }

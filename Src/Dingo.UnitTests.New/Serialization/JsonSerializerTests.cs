@@ -16,7 +16,7 @@ public class JsonSerializerTests : UnitTestBase
 		var serializedData = jsonSerializer.Serialize(data);
 
 		// Assert
-		Assert.Equal(expectedSerializedData, serializedData);
+		serializedData.Should().Be(expectedSerializedData);
 	}
 
 	[Fact]
@@ -35,7 +35,7 @@ public class JsonSerializerTests : UnitTestBase
 		var serializedData = jsonSerializer.Serialize(data);
 
 		// Assert
-		Assert.Equal(expectedSerializedData, serializedData);
+		serializedData.Should().Be(expectedSerializedData);
 	}
 
 	[Fact]
@@ -54,7 +54,7 @@ public class JsonSerializerTests : UnitTestBase
 		var data = jsonSerializer.Deserialize<TestStruct>(serializedData);
 
 		// Assert
-		Assert.Equal(expectedData, data);
+		data.Should().Be(expectedData);
 	}
 
 	[Fact]
@@ -73,6 +73,6 @@ public class JsonSerializerTests : UnitTestBase
 		var data = jsonSerializer.Deserialize<TestStruct>(serializedData);
 
 		// Assert
-		Assert.Equal(expectedData, data);
+		data.Should().Be(expectedData);
 	}
 }

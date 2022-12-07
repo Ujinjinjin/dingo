@@ -16,7 +16,7 @@ public class StringExtensionsTests : UnitTestBase
 		var expectedResult = !initialString.Contains(substring);
 
 		// Assert
-		Assert.Equal(expectedResult, result);
+		result.Should().Be(expectedResult);
 	}
 
 	[Fact]
@@ -24,11 +24,12 @@ public class StringExtensionsTests : UnitTestBase
 	{
 		// Arrange
 		var initialString = "\n\r\n\r";
+		var expected = "\n\n\r";
 
 		// Act
 		var result = initialString.ToUnixEol();
 
 		// Assert
-		Assert.Equal("\n\n\r", result);
+		result.Should().Be(expected);
 	}
 }
