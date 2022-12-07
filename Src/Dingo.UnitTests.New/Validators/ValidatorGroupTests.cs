@@ -80,7 +80,7 @@ public class ValidatorGroupTests : UnitTestBase
 		return groupMembers;
 	}
 
-	internal class DummyValidator : ValidatorGroupHead<int, DummyValidator>
+	internal sealed class DummyValidator : ValidatorGroupHead<int, DummyValidator>
 	{
 		public DummyValidator(
 			IEnumerable<IValidatorGroupMember<int, DummyValidator>> groupMembers

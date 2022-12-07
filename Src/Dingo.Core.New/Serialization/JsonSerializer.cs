@@ -11,7 +11,7 @@ internal sealed class JsonSerializer : ISerializer
 	/// <inheritdoc />
 	public T Deserialize<T>(string contents)
 	{
-		return System.Text.Json.JsonSerializer.Deserialize<T>(contents) ?? throw new SerializationException();;
+		return System.Text.Json.JsonSerializer.Deserialize<T>(contents) ?? throw new SerializationException();
 	}
 
 	/// <inheritdoc />
