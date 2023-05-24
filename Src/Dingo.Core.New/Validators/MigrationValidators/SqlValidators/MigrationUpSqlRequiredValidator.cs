@@ -13,6 +13,6 @@ internal sealed class MigrationUpSqlRequiredValidator : IValidatorGroupMember<Mi
 
 	public bool Validate(Migration entity)
 	{
-		return _stringRequiredValidator.Validate(entity.UpSql);
+		return _stringRequiredValidator.Validate(entity.Up);
 	}
 }

@@ -13,6 +13,6 @@ internal sealed class MigrationDownSqlRequiredValidator : IValidatorGroupMember<
 
 	public bool Validate(Migration entity)
 	{
-		return _stringRequiredValidator.Validate(entity.DownSql);
+		return _stringRequiredValidator.Validate(entity.Down);
 	}
 }

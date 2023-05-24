@@ -3,18 +3,24 @@ using Dingo.Core.Validators.MigrationValidators;
 using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
+using Trico.Extensions;
 
 namespace Dingo.Core.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-	public static void UseDingo(this IServiceCollection serviceCollection)
+	public static void AddDingo(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.UseValidators();
-		serviceCollection.UseFactories();
+		serviceCollection.AddValidators();
+		serviceCollection.AddFactories();
+
+		serviceCollection.AddConfiguration()
+			.AddEnvironmentVariableProvider()
+			.AddFileProvider()
+			.AddInMemoryProvider(Configuration.Keys);
 	}
 
-	private static void UseValidators(this IServiceCollection serviceCollection)
+	private static void AddValidators(this IServiceCollection serviceCollection)
 	{
 		// migration validator
 		serviceCollection.AddSingleton<MigrationValidator>();
@@ -32,13 +38,11 @@ public static class ServiceCollectionExtensions
 			x => x.GetRequiredService<MigrationDownSqlRequiredValidator>()
 		);
 
-
-
 		// primitive
 		serviceCollection.AddSingleton<StringRequiredValidator>();
 	}
 
-	private static void UseFactories(this IServiceCollection serviceCollection)
+	private static void AddFactories(this IServiceCollection serviceCollection)
 	{
 	}
 }

@@ -4,34 +4,16 @@ namespace Dingo.Core;
 
 public readonly struct Migration
 {
-	internal readonly string UpSql;
-	internal readonly string DownSql;
+	internal readonly string? Up;
+	internal readonly string? Down;
 
-	internal Migration(string up, string down)
+	internal Migration(string? up, string? down)
 	{
-		UpSql = up;
-		DownSql = down;
+		Up = up;
+		Down = down;
 	}
 
-	public void Up()
-	{
-		UpAsync().GetAwaiter().GetResult();
-	}
-
-	public async Task UpAsync()
-	{
-		await Task.CompletedTask;
-	}
-
-	public void Down()
-	{
-		DownAsync().GetAwaiter().GetResult();
-	}
-
-	public async Task DownAsync()
-	{
-		await Task.CompletedTask;
-	}
+	public static Migration Empty => new(default, default);
 
 	internal bool IsValid(IMigrationValidator validator)
 	{

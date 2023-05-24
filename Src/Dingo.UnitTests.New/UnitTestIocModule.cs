@@ -9,7 +9,7 @@ public class UnitTestIocModule
 	{
 		ServiceCollection serviceCollection = new ServiceCollection();
 
-		serviceCollection.UseDingo();
+		serviceCollection.AddDingo();
 
 		return serviceCollection.BuildServiceProvider();
 	}
