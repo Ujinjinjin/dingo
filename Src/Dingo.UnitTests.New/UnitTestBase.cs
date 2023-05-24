@@ -14,6 +14,6 @@ public class UnitTestBase
 
 	protected Migration CreateMigration(string up, string down)
 	{
-		return new Migration(up, down, Mock.Of<IMigrationValidator>());
+		return new Migration(up, down);
 	}
 }

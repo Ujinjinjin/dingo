@@ -7,13 +7,10 @@ public readonly struct Migration
 	internal readonly string UpSql;
 	internal readonly string DownSql;
 
-	private readonly IMigrationValidator _validator;
-
-	internal Migration(string up, string down, IMigrationValidator validator)
+	internal Migration(string up, string down)
 	{
 		UpSql = up;
 		DownSql = down;
-		_validator = validator;
 	}
 
 	public void Up()
@@ -36,8 +33,8 @@ public readonly struct Migration
 		await Task.CompletedTask;
 	}
 
-	public bool IsValid()
+	internal bool IsValid(IMigrationValidator validator)
 	{
-		return _validator.Validate(this);
+		return validator.Validate(this);
 	}
 }

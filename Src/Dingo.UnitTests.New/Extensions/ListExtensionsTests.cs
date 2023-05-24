@@ -2,10 +2,10 @@ using Dingo.Core.Extensions;
 
 namespace Dingo.UnitTests.Extensions;
 
-public class EnumerableExtensionsTests : UnitTestBase
+public class ListExtensionsTests : UnitTestBase
 {
 	[Fact]
-	public void EnumerableExtensionsTests_GetItem__WhenInBoundIndexGiven_ThenCorrespondingItemReturned()
+	public void ListExtensionsTests_GetItem__WhenInBoundIndexGiven_ThenCorrespondingItemReturned()
 	{
 		// arrange
 		var collection = Fixture.Create<IList<int>>();
@@ -19,7 +19,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_GetItem__WhenInBoundFromEndIndexGiven_ThenCorrespondingItemReturned()
+	public void ListExtensionsTests_GetItem__WhenInBoundFromEndIndexGiven_ThenCorrespondingItemReturned()
 	{
 		// arrange
 		var collection = Fixture.Create<IList<int>>();
@@ -35,7 +35,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	[Theory]
 	[InlineData(int.MaxValue, 0)]
 	[InlineData(0, int.MaxValue)]
-	public void EnumerableExtensionsTests_Sequence__WhenOutOfRangeIndexGiven_ThenExceptionThrown(int start, int end)
+	public void ListExtensionsTests_Sequence__WhenOutOfRangeIndexGiven_ThenExceptionThrown(int start, int end)
 	{
 		// arrange
 		var collection = Fixture.Create<IList<int>>();
@@ -48,7 +48,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_N_to_M()
+	public void ListExtensionsTests_Sequence__Forward_N_to_M()
 	{
 		// arrange
 		var range = 2..5;
@@ -63,7 +63,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_N_to_rM()
+	public void ListExtensionsTests_Sequence__Forward_N_to_rM()
 	{
 		// arrange
 		var range = 2..^2;
@@ -78,7 +78,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_rN_to_M()
+	public void ListExtensionsTests_Sequence__Forward_rN_to_M()
 	{
 		// arrange
 		var range = ^5..8;
@@ -93,7 +93,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_rN_to_rM()
+	public void ListExtensionsTests_Sequence__Forward_rN_to_rM()
 	{
 		// arrange
 		var range = ^5..^2;
@@ -108,7 +108,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_N_to_END()
+	public void ListExtensionsTests_Sequence__Forward_N_to_END()
 	{
 		// arrange
 		var range = 5..;
@@ -123,7 +123,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_rN_to_END()
+	public void ListExtensionsTests_Sequence__Forward_rN_to_END()
 	{
 		// arrange
 		var range = ^4..;
@@ -138,7 +138,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_START_to_N()
+	public void ListExtensionsTests_Sequence__Forward_START_to_N()
 	{
 		// arrange
 		var range = ..4;
@@ -153,7 +153,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Forward_START_to_END()
+	public void ListExtensionsTests_Sequence__Forward_START_to_END()
 	{
 		// arrange
 		var range = ..;
@@ -168,7 +168,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Reverse_M_to_N()
+	public void ListExtensionsTests_Sequence__Reverse_M_to_N()
 	{
 		// arrange
 		var range = 5..2;
@@ -183,7 +183,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Reverse_rM_to_N()
+	public void ListExtensionsTests_Sequence__Reverse_rM_to_N()
 	{
 		// arrange
 		var range = ^2..2;
@@ -198,7 +198,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Reverse_M_to_rN()
+	public void ListExtensionsTests_Sequence__Reverse_M_to_rN()
 	{
 		// arrange
 		var range = 8..^5;
@@ -213,7 +213,7 @@ public class EnumerableExtensionsTests : UnitTestBase
 	}
 
 	[Fact]
-	public void EnumerableExtensionsTests_Sequence__Reverse_rM_to_rN()
+	public void ListExtensionsTests_Sequence__Reverse_rM_to_rN()
 	{
 		// arrange
 		var range = ^2..^5;

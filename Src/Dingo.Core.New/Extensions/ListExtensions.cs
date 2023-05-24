@@ -1,7 +1,7 @@
 ﻿namespace Dingo.Core.Extensions;
 
 /// <summary> Collection of extensions for <see cref="IList{T}"/> </summary>
-internal static class EnumerableExtensions
+internal static class ListExtensions
 {
 	/// <summary> Get item from source list at specified index </summary>
 	/// <param name="source">Source list of items</param>

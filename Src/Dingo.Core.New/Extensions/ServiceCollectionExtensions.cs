@@ -1,5 +1,4 @@
-﻿using Dingo.Core.Factories;
-using Dingo.Core.Validators;
+﻿using Dingo.Core.Validators;
 using Dingo.Core.Validators.MigrationValidators;
 using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
@@ -41,6 +40,5 @@ public static class ServiceCollectionExtensions
 
 	private static void UseFactories(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.AddSingleton<IMigrationFactory, MigrationFactory>();
 	}
 }
