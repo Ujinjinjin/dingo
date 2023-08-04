@@ -1,4 +1,5 @@
 using Dingo.Core;
+using Dingo.Core.Migrations;
 using Dingo.Core.Validators.MigrationValidators;
 
 namespace Dingo.UnitTests;

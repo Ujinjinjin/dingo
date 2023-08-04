@@ -1,4 +1,5 @@
-﻿using Dingo.Core.Validators;
+﻿using Dingo.Core.Migrations;
+using Dingo.Core.Validators;
 using Dingo.Core.Validators.MigrationValidators;
 using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
@@ -17,7 +18,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddConfiguration()
 			.AddEnvironmentVariableProvider()
 			.AddFileProvider()
-			.AddInMemoryProvider(Configuration.Keys);
+			.AddInMemoryProvider(Configuration.Dict);
 	}
 
 	private static void AddValidators(this IServiceCollection serviceCollection)

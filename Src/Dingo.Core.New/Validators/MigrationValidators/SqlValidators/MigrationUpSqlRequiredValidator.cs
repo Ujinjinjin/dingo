@@ -1,3 +1,4 @@
+using Dingo.Core.Migrations;
 using Dingo.Core.Validators.Primitive;
 
 namespace Dingo.Core.Validators.MigrationValidators.SqlValidators;

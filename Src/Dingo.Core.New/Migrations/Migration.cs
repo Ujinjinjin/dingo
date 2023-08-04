@@ -1,6 +1,6 @@
 using Dingo.Core.Validators.MigrationValidators;
 
-namespace Dingo.Core;
+namespace Dingo.Core.Migrations;
 
 public readonly struct Migration
 {

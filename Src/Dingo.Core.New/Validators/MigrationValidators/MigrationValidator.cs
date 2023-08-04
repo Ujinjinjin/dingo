@@ -1,3 +1,5 @@
+using Dingo.Core.Migrations;
+
 namespace Dingo.Core.Validators.MigrationValidators;
 
 internal sealed class MigrationValidator : ValidatorGroupHead<Migration, MigrationValidator>, IMigrationValidator

@@ -1,17 +1,17 @@
-﻿using Dingo.Core.Exceptions;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
+using Dingo.Core.Exceptions;
 using Trico.Configuration;
 
-namespace Dingo.Core;
+namespace Dingo.Core.Migrations;
 
-internal class MigrationParser
+internal class MigrationParser : IMigrationParser
 {
 	private readonly Regex _delimiter;
 
 	public MigrationParser(IConfiguration configuration)
 	{
-		_delimiter = new Regex(configuration.Get("migration-delimiter"));
+		_delimiter = new Regex(configuration.Get(Configuration.Key.ConnectionString));
 	}
 
 	public Migration Parse(string sql)

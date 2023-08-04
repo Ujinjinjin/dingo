@@ -62,7 +62,7 @@ internal sealed class MigrationService : IMigrationService
 				await _renderer.ShowMessageAsync("Invalid migration name. Filename must contain only latin symbols, numbers and underscore", MessageType.Warning);
 				return;
 			}
-				
+
 			if (!_directoryAdapter.Exists(path))
 			{
 				_directoryAdapter.CreateDirectory(path);
@@ -71,7 +71,7 @@ internal sealed class MigrationService : IMigrationService
 			var dateTimeString = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
 			_fileAdapter
 				.Create(path.ConcatPath($"{dateTimeString}_{name}.sql"))
-				?.Close();
+				.Close();
 		}
 		catch (Exception ex)
 		{
@@ -144,7 +144,7 @@ internal sealed class MigrationService : IMigrationService
 			{
 				return;
 			}
-				
+
 			var migrationInfoList = await _hashMaker.GetMigrationInfoListAsync(filePathList);
 
 			await ReadAndApplyMigrationList(migrationInfoList, silent, true);
@@ -257,7 +257,7 @@ internal sealed class MigrationService : IMigrationService
 		migrationInfoList = await _databaseRepository.GetMigrationsStatusAsync(migrationInfoList);
 		if (isProject)
 		{
-			await _renderer.ShowMigrationsStatusAsync(migrationInfoList, silent);	
+			await _renderer.ShowMigrationsStatusAsync(migrationInfoList, silent);
 		}
 
 		var migrationCount = 0;
@@ -267,7 +267,7 @@ internal sealed class MigrationService : IMigrationService
 			{
 				continue;
 			}
-				
+
 			await _renderer.PrintTextAsync($"{(++migrationCount).ToString()}) Processing '{migrationInfoList[i].Path.Relative}'", silent);
 			await _renderer.PrintTextAsync($"\tStatus: {migrationInfoList[i].Status.ToDisplayText()}", silent);
 
@@ -308,7 +308,7 @@ internal sealed class MigrationService : IMigrationService
 			{
 				continue;
 			}
-				
+
 			invalidMigrationFilenames.Add(filePathList[i].Relative);
 		}
 
@@ -323,7 +323,7 @@ internal sealed class MigrationService : IMigrationService
 		{
 			await _renderer.PrintTextAsync($"Invalid migration filename: {invalidMigrationFilenames[i]}", textStyle: TextStyle.Warning);
 		}
-			
+
 		await _renderer.PrintTextAsync("Filename must contain only latin symbols, numbers and underscore", textStyle: TextStyle.Warning);
 
 		return true;

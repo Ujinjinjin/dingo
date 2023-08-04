@@ -1,9 +1,9 @@
-using Dingo.Core;
-using Dingo.Core.Exceptions;
 using System.Text;
+using Dingo.Core.Exceptions;
+using Dingo.Core.Migrations;
 using Trico.Configuration;
 
-namespace Dingo.UnitTests;
+namespace Dingo.UnitTests.Migrations;
 
 public sealed class MigrationParserTests : UnitTestBase
 {

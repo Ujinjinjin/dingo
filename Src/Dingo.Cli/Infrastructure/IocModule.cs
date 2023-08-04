@@ -20,7 +20,7 @@ public sealed class IocModule : BaseIocModule
 
 	protected override void RegisterServices(IServiceCollection collection)
 	{
-		collection.UseDingo();
+		collection.AddDingo();
 
 		collection.AddSingleton<IRenderer, CliRenderer>();
 		collection.AddSingleton<IPrompt, CliPrompt>();

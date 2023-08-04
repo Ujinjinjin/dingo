@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
 {
 	/// <summary> Add dingo dependencies to service collection </summary>
 	/// <param name="serviceCollection">Target service collection</param>
-	public static void UseDingo(this IServiceCollection serviceCollection)
+	public static void AddDingo(this IServiceCollection serviceCollection)
 	{
 		serviceCollection.AddSingleton<IConfigReader, ConfigReader>();
 		serviceCollection.AddSingleton<IConfigWriter, ConfigWriter>();

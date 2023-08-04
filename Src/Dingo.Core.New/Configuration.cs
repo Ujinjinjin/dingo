@@ -2,9 +2,15 @@ namespace Dingo.Core;
 
 internal static class Configuration
 {
-	public static readonly IDictionary<string, string> Keys = new Dictionary<string, string>
+	internal static class Key
 	{
-		{"connection-string", ""},
-		{"migration-delimiter", @"^--down$"},
+		public const string ConnectionString = "connection-string";
+		public const string MigrationDelimiter = "migration-delimiter";
+	}
+
+	public static readonly IDictionary<string, string> Dict = new Dictionary<string, string>
+	{
+		{Key.ConnectionString, ""},
+		{Key.MigrationDelimiter, @"^--down$"},
 	};
 }
