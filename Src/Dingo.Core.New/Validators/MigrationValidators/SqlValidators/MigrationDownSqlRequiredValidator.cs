@@ -1,4 +1,4 @@
-using Dingo.Core.Migrations;
+using Dingo.Core.Models;
 using Dingo.Core.Validators.Primitive;
 
 namespace Dingo.Core.Validators.MigrationValidators.SqlValidators;
@@ -14,6 +14,6 @@ internal sealed class MigrationDownSqlRequiredValidator : IValidatorGroupMember<
 
 	public bool Validate(Migration entity)
 	{
-		return _stringRequiredValidator.Validate(entity.Down);
+		return _stringRequiredValidator.Validate(entity.Command.Down);
 	}
 }

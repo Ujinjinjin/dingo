@@ -1,11 +1,12 @@
 using System.Text;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Migrations;
+using Dingo.Core.Models;
 using Trico.Configuration;
 
 namespace Dingo.UnitTests.Migrations;
 
-public sealed class MigrationParserTests : UnitTestBase
+public sealed class MigrationCommandParserTests : UnitTestBase
 {
 	private const string Delimiter = "-- down";
 
@@ -13,43 +14,43 @@ public sealed class MigrationParserTests : UnitTestBase
 	[InlineData("")]
 	[InlineData(" ")]
 	[InlineData(null)]
-	public void MigrationParserTests_Parse__WhenEmptySqlGiven_ThenEmptyMigrationReturned(string sql)
+	public void MigrationCommandParserTests_Parse__WhenEmptySqlGiven_ThenEmptyMigrationReturned(string sql)
 	{
 		// arrange
 		var config = SetupConfiguration(Delimiter);
-		var migrationParser = new MigrationParser(config);
+		var commandParser = new MigrationCommandParser(config);
 
 		// act
-		var migration = migrationParser.Parse(sql);
+		var command = commandParser.Parse(sql);
 
 		// assert
-		migration.Should().Be(Migration.Empty);
+		command.Should().Be(MigrationCommand.Empty);
 	}
 
 	[Fact]
-	public void MigrationParserTests_Parse__WhenSqlWithNoDownCommandGiven_ThenMigrationNotContainsDownCommand()
+	public void MigrationCommandParserTests_Parse__WhenSqlWithNoDownCommandGiven_ThenMigrationNotContainsDownCommand()
 	{
 		// arrange
 		var config = SetupConfiguration(Delimiter);
-		var migrationParser = new MigrationParser(config);
+		var commandParser = new MigrationCommandParser(config);
 		var sql = Fixture.Create<string>();
 
 		// act
-		var migration = migrationParser.Parse(sql);
+		var command = commandParser.Parse(sql);
 
 		// assert
-		migration.Should().NotBe(Migration.Empty);
-		migration.Up.Should().NotBeNull();
-		migration.Up.Should().Be(sql);
-		migration.Down.Should().BeNull();
+		command.Should().NotBe(Migration.Empty);
+		command.Up.Should().NotBeNull();
+		command.Up.Should().Be(sql);
+		command.Down.Should().BeNull();
 	}
 
 	[Fact]
-	public void MigrationParserTests_Parse__WhenSqlWithEmptyDownCommandGiven_ThenMigrationNotContainsDownCommand()
+	public void MigrationCommandParserTests_Parse__WhenSqlWithEmptyDownCommandGiven_ThenMigrationNotContainsDownCommand()
 	{
 		// arrange
 		var config = SetupConfiguration(Delimiter);
-		var migrationParser = new MigrationParser(config);
+		var commandParser = new MigrationCommandParser(config);
 		var sb = new StringBuilder();
 		var up = Fixture.Create<string>();
 		var sql = sb
@@ -59,49 +60,21 @@ public sealed class MigrationParserTests : UnitTestBase
 			.ToString();
 
 		// act
-		var migration = migrationParser.Parse(sql);
+		var command = commandParser.Parse(sql);
 
 		// assert
-		migration.Should().NotBe(Migration.Empty);
-		migration.Up.Should().NotBeNull();
-		migration.Up.Should().Be(up);
-		migration.Down.Should().BeNull();
+		command.Should().NotBe(Migration.Empty);
+		command.Up.Should().NotBeNull();
+		command.Up.Should().Be(up);
+		command.Down.Should().BeNull();
 	}
 
 	[Fact]
-	public void MigrationParserTests_Parse__WhenSqlWithDownCommandGiven_ThenMigrationContainsBothCommands()
+	public void MigrationCommandParserTests_Parse__WhenSqlWithDownCommandGiven_ThenMigrationContainsBothCommands()
 	{
 		// arrange
 		var config = SetupConfiguration(Delimiter);
-		var migrationParser = new MigrationParser(config);
-		var sb = new StringBuilder();
-		var up = Fixture.Create<string>();
-		var down = Fixture.Create<string>();
-		var sql = sb
-			.Append(up)
-			.Append(Environment.NewLine)
-			.Append(Delimiter)
-			.Append(Environment.NewLine)
-			.Append(down)
-			.ToString();
-
-		// act
-		var migration = migrationParser.Parse(sql);
-
-		// assert
-		migration.Should().NotBe(Migration.Empty);
-		migration.Up.Should().NotBeNull();
-		migration.Up.Should().Be(up);
-		migration.Down.Should().NotBeNull();
-		migration.Down.Should().Be(down);
-	}
-
-	[Fact]
-	public void MigrationParserTests_Parse__WhenCommandWithMultipleDelimitersGiven_ThenErrorThrown()
-	{
-		// arrange
-		var config = SetupConfiguration(Delimiter);
-		var migrationParser = new MigrationParser(config);
+		var commandParser = new MigrationCommandParser(config);
 		var sb = new StringBuilder();
 		var up = Fixture.Create<string>();
 		var down = Fixture.Create<string>();
@@ -111,11 +84,39 @@ public sealed class MigrationParserTests : UnitTestBase
 			.Append(Delimiter)
 			.Append(Environment.NewLine)
 			.Append(down)
+			.ToString();
+
+		// act
+		var command = commandParser.Parse(sql);
+
+		// assert
+		command.Should().NotBe(Migration.Empty);
+		command.Up.Should().NotBeNull();
+		command.Up.Should().Be(up);
+		command.Down.Should().NotBeNull();
+		command.Down.Should().Be(down);
+	}
+
+	[Fact]
+	public void MigrationCommandParserTests_Parse__WhenCommandWithMultipleDelimitersGiven_ThenErrorThrown()
+	{
+		// arrange
+		var config = SetupConfiguration(Delimiter);
+		var commandParser = new MigrationCommandParser(config);
+		var sb = new StringBuilder();
+		var up = Fixture.Create<string>();
+		var down = Fixture.Create<string>();
+		var sql = sb
+			.Append(up)
+			.Append(Environment.NewLine)
+			.Append(Delimiter)
+			.Append(Environment.NewLine)
+			.Append(down)
 			.Append(Delimiter)
 			.ToString();
 
 		// act
-		var action = () => migrationParser.Parse(sql);
+		var action = () => commandParser.Parse(sql);
 
 		// assert
 		action.Should().Throw<MigrationParsingException>();

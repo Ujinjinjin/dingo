@@ -1,6 +1,4 @@
-using Dingo.Core;
-using Dingo.Core.Migrations;
-using Dingo.Core.Validators.MigrationValidators;
+using Dingo.Core.Models;
 
 namespace Dingo.UnitTests;
 
@@ -13,8 +11,8 @@ public class UnitTestBase
 		Fixture = new Fixture();
 	}
 
-	protected Migration CreateMigration(string up, string down)
+	protected Migration CreateMigration(MigrationPath path, Hash hash, MigrationCommand command)
 	{
-		return new Migration(up, down);
+		return new Migration(path, hash, command);
 	}
 }

@@ -1,5 +1,4 @@
-using Dingo.Core;
-using Dingo.Core.Migrations;
+using Dingo.Core.Models;
 using Dingo.Core.Validators;
 using Dingo.Core.Validators.MigrationValidators.SqlValidators;
 using Dingo.Core.Validators.Primitive;
@@ -16,8 +15,11 @@ public class MigrationUpSqlRequiredValidatorTests : UnitTestBase
 	{
 		// arrange
 		var validator = CreateValidator();
+		var path = Fixture.Create<MigrationPath>();
+		var hash = Fixture.Create<Hash>();
 		var down = Fixture.Create<string>();
-		var migration = CreateMigration(up, down);
+		var command = new MigrationCommand(up, down);
+		var migration = CreateMigration(path, hash, command);
 
 		// act
 		var result = validator.Validate(migration);
@@ -31,9 +33,12 @@ public class MigrationUpSqlRequiredValidatorTests : UnitTestBase
 	{
 		// arrange
 		var validator = CreateValidator();
+		var path = Fixture.Create<MigrationPath>();
+		var hash = Fixture.Create<Hash>();
 		var up = Fixture.Create<string>();
 		var down = Fixture.Create<string>();
-		var migration = CreateMigration(up, down);
+		var command = new MigrationCommand(up, down);
+		var migration = CreateMigration(path, hash, command);
 
 		// act
 		var result = validator.Validate(migration);

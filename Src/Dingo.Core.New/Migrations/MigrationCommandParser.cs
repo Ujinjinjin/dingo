@@ -1,30 +1,31 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using Dingo.Core.Exceptions;
+using Dingo.Core.Models;
 using Trico.Configuration;
 
 namespace Dingo.Core.Migrations;
 
-internal class MigrationParser : IMigrationParser
+internal class MigrationCommandParser : IMigrationCommandParser
 {
 	private readonly Regex _delimiter;
 
-	public MigrationParser(IConfiguration configuration)
+	public MigrationCommandParser(IConfiguration configuration)
 	{
-		_delimiter = new Regex(configuration.Get(Configuration.Key.ConnectionString));
+		_delimiter = new Regex(configuration.Get(Configuration.Key.MigrationDelimiter));
 	}
 
-	public Migration Parse(string sql)
+	public MigrationCommand Parse(string sql)
 	{
 		if (string.IsNullOrWhiteSpace(sql))
 		{
-			return Migration.Empty;
+			return MigrationCommand.Empty;
 		}
 
 		var lines = sql.ReplaceLineEndings().Split(Environment.NewLine);
 		var (up, down) = GetMigrationCommands(lines);
 
-		return new Migration(up, down);
+		return new MigrationCommand(up, down);
 	}
 
 	private (string? up, string? down) GetMigrationCommands(IEnumerable<string> lines)
