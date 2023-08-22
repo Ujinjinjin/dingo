@@ -9,7 +9,7 @@ trim_trailing_whitespace = true
 charset = utf-8
 
 # tab indentation
-[*.cs]
+[{*.cs,*.sql}]
 indent_style = tab
 indent_size = 4
 
