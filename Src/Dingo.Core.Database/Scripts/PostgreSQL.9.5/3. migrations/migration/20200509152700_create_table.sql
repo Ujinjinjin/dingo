@@ -1,3 +1,4 @@
+-- up
 do $$
 begin
 	set search_path to dingo;
@@ -12,4 +13,14 @@ begin
 
 		alter table migration add constraint pk$migration primary key (migration_id);
 	end if;
-end $$
+end $$;
+
+-- down
+do $$
+begin
+	set search_path to dingo;
+
+	if (select dingo.exists_table('migration', 'dingo') is true) then
+		drop table migration;
+	end if;
+end $$;

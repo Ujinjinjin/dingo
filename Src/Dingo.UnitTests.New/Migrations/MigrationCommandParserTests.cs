@@ -1,4 +1,5 @@
 using System.Text;
+using Dingo.Core;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Migrations;
 using Dingo.Core.Models;
@@ -125,7 +126,8 @@ public sealed class MigrationCommandParserTests : UnitTestBase
 	private IConfiguration SetupConfiguration(string delimiter)
 	{
 		var config = new Mock<IConfiguration>();
-		config.Setup(c => c.Get(It.IsAny<string>())).Returns(delimiter);
+		config.Setup(c => c.Get(It.Is<string>(name => name == Configuration.Key.MigrationDelimiter)))
+			.Returns(delimiter);
 
 		return config.Object;
 	}

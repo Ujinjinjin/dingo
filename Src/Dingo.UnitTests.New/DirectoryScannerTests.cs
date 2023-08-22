@@ -6,7 +6,7 @@ namespace Dingo.UnitTests;
 public class DirectoryScannerTests : UnitTestBase
 {
 	[Fact]
-	public void DirectoryScannerTests__GetFilePathList__WhenPathsGiven_ThenResultOrderedByModuleThenByFilename()
+	public void DirectoryScannerTests__GetFilePathList__WhenGivenPathContainsFiles_ThenResultOrderedByModuleThenByFilename()
 	{
 		// arrange
 		var rootPath = "/usr/home/projects/dingo/";
