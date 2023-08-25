@@ -99,7 +99,7 @@ public sealed class MigrationCommandParserTests : UnitTestBase
 	}
 
 	[Fact]
-	public void MigrationCommandParserTests_Parse__WhenCommandWithMultipleDelimitersGiven_ThenErrorThrown()
+	public void MigrationCommandParserTests_Parse__WhenCommandWithMultipleDelimitersGiven_ThenExceptionThrown()
 	{
 		// arrange
 		var config = SetupConfiguration(Delimiter);

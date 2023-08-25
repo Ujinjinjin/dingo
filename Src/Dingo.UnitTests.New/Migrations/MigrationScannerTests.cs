@@ -57,6 +57,30 @@ public class MigrationScannerTests : UnitTestBase
 		migrations.Count.Should().Be(migrationCount);
 	}
 
+	[Fact]
+	public async Task MigrationScannerTests_ScanAsync__WhenMigrationsScanned_ThenAllMigrationsMustHaveUnknownStatus()
+	{
+		// arrange
+		var migrationCount = Fixture.Create<int>();
+		var configuration = SetupConfiguration();
+		var commandParser = SetupCommandParser();
+		var directoryScanner = SetupDirectoryScanner(migrationCount);
+		var fileAdapter = SetupFileAdapter();
+		var migrationScanner = new MigrationScanner(
+			configuration,
+			commandParser,
+			directoryScanner,
+			fileAdapter
+		);
+
+		// act
+		var migrations = await migrationScanner.ScanAsync(Fixture.Create<string>());
+
+		// assert
+		migrations.Should().NotBeNull();
+		migrations.Should().AllSatisfy(migration => migration.Status.Should().Be(MigrationStatus.Unknown));
+	}
+
 	private IConfiguration SetupConfiguration()
 	{
 		var config = new Mock<IConfiguration>();
