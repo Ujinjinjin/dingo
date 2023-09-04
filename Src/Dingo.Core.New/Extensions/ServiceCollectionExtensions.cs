@@ -1,10 +1,10 @@
-﻿using Dingo.Core.Adapters;
+using Dingo.Core.Adapters;
 using Dingo.Core.Helpers;
 using Dingo.Core.Migrations;
 using Dingo.Core.Models;
 using Dingo.Core.Validators;
-using Dingo.Core.Validators.MigrationValidators;
-using Dingo.Core.Validators.MigrationValidators.SqlValidators;
+using Dingo.Core.Validators.Migration;
+using Dingo.Core.Validators.Migration.Sql;
 using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
 using Trico.Extensions;
@@ -44,19 +44,9 @@ public static class ServiceCollectionExtensions
 	{
 		// migration validator
 		serviceCollection.AddSingleton<MigrationValidator>();
-		serviceCollection.AddSingleton<IMigrationValidator>(
-			x => x.GetRequiredService<MigrationValidator>()
-		);
 
-		serviceCollection.AddSingleton<MigrationUpSqlRequiredValidator>();
-		serviceCollection.AddSingleton<IValidatorGroupMember<Migration, MigrationValidator>>(
-			x => x.GetRequiredService<MigrationUpSqlRequiredValidator>()
-		);
-
-		serviceCollection.AddSingleton<MigrationDownSqlRequiredValidator>();
-		serviceCollection.AddSingleton<IValidatorGroupMember<Migration, MigrationValidator>>(
-			x => x.GetRequiredService<MigrationDownSqlRequiredValidator>()
-		);
+		serviceCollection.AddSingleton<ISqlCommandValidator, UpSqlRequiredValidator>();
+		serviceCollection.AddSingleton<ISqlCommandValidator, DownSqlRequiredValidator>();
 
 		// primitive
 		serviceCollection.AddSingleton<StringRequiredValidator>();

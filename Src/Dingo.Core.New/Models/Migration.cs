@@ -1,5 +1,5 @@
 using Dingo.Core.Migrations;
-using Dingo.Core.Validators.MigrationValidators;
+using Dingo.Core.Validators.Migration;
 
 namespace Dingo.Core.Models;
 
