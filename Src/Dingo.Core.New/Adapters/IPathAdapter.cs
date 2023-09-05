@@ -12,6 +12,12 @@ internal interface IPathAdapter
 	/// <inheritdoc cref="Path.GetRelativePath(string, string)"/>
 	string GetRelativePath(string relativeTo, string path);
 
+	/// <summary> Get absolute path from relative. Takes current execution directory as root </summary>
+	string GetAbsolutePath(string relativePath);
+
 	/// <summary> Extract root directory name from path </summary>
 	string GetRootDirectory(string path);
+
+	/// <inheritdoc cref="Path.Join(string?[])"/>
+	public string Join(params string?[] paths);
 }

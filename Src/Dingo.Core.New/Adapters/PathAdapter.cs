@@ -28,6 +28,15 @@ internal sealed class PathAdapter : IPathAdapter
 	}
 
 	/// <inheritdoc />
+	public string GetAbsolutePath(string relativePath)
+	{
+		var root = Directory.GetCurrentDirectory();
+		var absolute = Join(root, relativePath);
+
+		return CleanPath(absolute);
+	}
+
+	/// <inheritdoc />
 	public string GetRootDirectory(string path)
 	{
 		while (true)
@@ -38,5 +47,11 @@ internal sealed class PathAdapter : IPathAdapter
 			path = temp;
 		}
 		return path;
+	}
+
+	/// <inheritdoc />
+	public string Join(params string?[] paths)
+	{
+		return Path.Join(paths);
 	}
 }

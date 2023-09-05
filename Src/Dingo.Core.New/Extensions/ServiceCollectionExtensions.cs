@@ -1,9 +1,12 @@
-using Dingo.Core.Adapters;
+﻿using Dingo.Core.Adapters;
 using Dingo.Core.Helpers;
 using Dingo.Core.Migrations;
 using Dingo.Core.Models;
+using Dingo.Core.Repository;
+using Dingo.Core.Repository.Command;
 using Dingo.Core.Validators;
 using Dingo.Core.Validators.Migration;
+using Dingo.Core.Validators.Migration.Name;
 using Dingo.Core.Validators.Migration.Sql;
 using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +50,7 @@ public static class ServiceCollectionExtensions
 
 		serviceCollection.AddSingleton<ISqlCommandValidator, UpSqlRequiredValidator>();
 		serviceCollection.AddSingleton<ISqlCommandValidator, DownSqlRequiredValidator>();
+		serviceCollection.AddSingleton<IMigrationNameValidator, MigrationNameValidator>();
 
 		// primitive
 		serviceCollection.AddSingleton<StringRequiredValidator>();
@@ -54,10 +58,14 @@ public static class ServiceCollectionExtensions
 
 	private static void AddFactories(this IServiceCollection serviceCollection)
 	{
+		serviceCollection.AddSingleton<IConnectionFactory, ConnectionFactory>();
+		serviceCollection.AddSingleton<ICommandProviderFactory, CommandProviderFactory>();
 	}
 
 	private static void AddServices(this IServiceCollection serviceCollection)
 	{
+		serviceCollection.AddSingleton<IMigrationGenerator, MigrationGenerator>();
 		serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
+		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 	}
 }
