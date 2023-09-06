@@ -16,8 +16,8 @@ internal sealed class DownSqlRequiredValidator : ISqlCommandValidator
 	)
 	{
 		_stringRequiredValidator =
-			stringRequiredValidator ?? throw new ArgumentNullException(nameof(stringRequiredValidator));
-		_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+			stringRequiredValidator.Required(nameof(stringRequiredValidator));
+		_configuration = configuration.Required(nameof(configuration));
 	}
 
 	public bool Validate(MigrationCommand entity)

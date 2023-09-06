@@ -1,3 +1,4 @@
+using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Validators.Primitive;
 
@@ -9,7 +10,7 @@ internal sealed class UpSqlRequiredValidator : ISqlCommandValidator
 
 	public UpSqlRequiredValidator(StringRequiredValidator stringRequiredValidator)
 	{
-		_stringRequiredValidator = stringRequiredValidator ?? throw new ArgumentNullException(nameof(stringRequiredValidator));
+		_stringRequiredValidator = stringRequiredValidator.Required(nameof(stringRequiredValidator));
 	}
 
 	public bool Validate(MigrationCommand entity)

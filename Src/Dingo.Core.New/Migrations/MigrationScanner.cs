@@ -1,4 +1,5 @@
 using Dingo.Core.Adapters;
+using Dingo.Core.Extensions;
 using Dingo.Core.Helpers;
 using Dingo.Core.Models;
 using Trico.Configuration;
@@ -19,10 +20,10 @@ internal class MigrationScanner : IMigrationScanner
 		IFileAdapter fileAdapter
 	)
 	{
-		_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-		_commandParser = commandParser ?? throw new ArgumentNullException(nameof(commandParser));
-		_directoryScanner = directoryScanner ?? throw new ArgumentNullException(nameof(directoryScanner));
-		_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
+		_configuration = configuration.Required(nameof(configuration));
+		_commandParser = commandParser.Required(nameof(commandParser));
+		_directoryScanner = directoryScanner.Required(nameof(directoryScanner));
+		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
 	}
 
 	public async Task<IReadOnlyCollection<Migration>> ScanAsync(

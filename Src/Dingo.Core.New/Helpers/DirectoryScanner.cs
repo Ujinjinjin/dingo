@@ -1,4 +1,5 @@
 ﻿using Dingo.Core.Adapters;
+using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 
 namespace Dingo.Core.Helpers;
@@ -14,8 +15,8 @@ internal sealed class DirectoryScanner : IDirectoryScanner
 		IPathAdapter pathAdapter
 	)
 	{
-		_directoryAdapter = directoryAdapter ?? throw new ArgumentNullException(nameof(directoryAdapter));
-		_pathAdapter = pathAdapter ?? throw new ArgumentNullException(nameof(pathAdapter));
+		_directoryAdapter = directoryAdapter.Required(nameof(directoryAdapter));
+		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
 	}
 
 	/// <inheritdoc />

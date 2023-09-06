@@ -1,3 +1,5 @@
+using Dingo.Core.Extensions;
+
 namespace Dingo.Core.Validators;
 
 internal abstract class ValidatorGroupHead<T, TGroup> : Validator<T>, IValidatorGroupHead<T, TGroup>
@@ -6,7 +8,7 @@ internal abstract class ValidatorGroupHead<T, TGroup> : Validator<T>, IValidator
 
 	protected ValidatorGroupHead(IEnumerable<IValidatorGroupMember<T, TGroup>> groupMembers)
 	{
-		_groupMembers = groupMembers ?? throw new ArgumentNullException(nameof(groupMembers));
+		_groupMembers = groupMembers.Required(nameof(groupMembers));
 	}
 
 	protected override IReadOnlyList<Func<T, bool>> GetValidationRules()

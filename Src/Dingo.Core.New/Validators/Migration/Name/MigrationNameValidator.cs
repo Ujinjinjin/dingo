@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Dingo.Core.Extensions;
 using Dingo.Core.Validators.Primitive;
 
 namespace Dingo.Core.Validators.Migration.Name;
@@ -10,7 +11,7 @@ internal class MigrationNameValidator : IMigrationNameValidator
 
 	public MigrationNameValidator(StringRequiredValidator stringRequiredValidator)
 	{
-		_stringRequiredValidator = stringRequiredValidator ?? throw new ArgumentNullException(nameof(stringRequiredValidator));
+		_stringRequiredValidator = stringRequiredValidator.Required(nameof(stringRequiredValidator));
 	}
 
 	public bool Validate(string? entity)

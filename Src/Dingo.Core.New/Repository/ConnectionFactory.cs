@@ -1,4 +1,5 @@
 using System.Data;
+using Dingo.Core.Extensions;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using Trico.Configuration;
@@ -11,7 +12,7 @@ internal class ConnectionFactory : IConnectionFactory
 
 	public ConnectionFactory(IConfiguration configuration)
 	{
-		_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+		_configuration = configuration.Required(nameof(configuration));
 	}
 
 	public IDbConnection Create()
@@ -26,7 +27,7 @@ internal class ConnectionFactory : IConnectionFactory
 
 		if (string.IsNullOrWhiteSpace(connectionString))
 		{
-			throw new ArgumentNullException(nameof(connectionString), "Connection string was not provided");
+			throw new ArgumentNullException(nameof(connectionString), "Connection string must be provided");
 		}
 
 		return provider switch
