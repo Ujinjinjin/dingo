@@ -1,5 +1,6 @@
 using System.Data;
 using Dingo.Core.Repository;
+using Dingo.Core.Repository.Command;
 using Microsoft.Extensions.Logging;
 
 namespace Dingo.UnitTests.Database;
@@ -11,8 +12,9 @@ public class DatabaseRepositoryTests : UnitTestBase
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Open));
+		var commandProviderFactory = SetupCommandProviderFactory();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, loggerFactory);
+		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
 		var result = repository.TryHandshake();
@@ -26,8 +28,9 @@ public class DatabaseRepositoryTests : UnitTestBase
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed));
+		var commandProviderFactory = SetupCommandProviderFactory();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, loggerFactory);
+		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
 		var result = repository.TryHandshake();
@@ -41,8 +44,9 @@ public class DatabaseRepositoryTests : UnitTestBase
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed, false));
+		var commandProviderFactory = SetupCommandProviderFactory();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, loggerFactory);
+		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
 		var result = repository.TryHandshake();
@@ -74,6 +78,13 @@ public class DatabaseRepositoryTests : UnitTestBase
 		}
 
 		return connection.Object;
+	}
+
+	private ICommandProviderFactory SetupCommandProviderFactory()
+	{
+		var factory = new Mock<ICommandProviderFactory>();
+
+		return factory.Object;
 	}
 
 	private ILoggerFactory SetupLoggerFactory()

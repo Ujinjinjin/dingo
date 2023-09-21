@@ -1,5 +1,7 @@
 using Dingo.Core;
+using Dingo.Core.Adapters;
 using Dingo.Core.Repository;
+using Dingo.Core.Repository.Source;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using Trico.Configuration;
@@ -18,7 +20,8 @@ public class ConnectionFactoryTests : UnitTestBase
 	{
 		// arrange
 		var configuration = SetupConfiguration(providerName, ValidConnectionString);
-		var factory = new ConnectionFactory(configuration);
+		var dataSourceProvider = SetupDataSourceProvider(ValidConnectionString);
+		var factory = new ConnectionFactory(configuration, dataSourceProvider);
 
 		// act
 		var connection = factory.Create();
@@ -42,7 +45,8 @@ public class ConnectionFactoryTests : UnitTestBase
 	{
 		// arrange
 		var configuration = SetupConfiguration(providerName, connectionString);
-		var factory = new ConnectionFactory(configuration);
+		var dataSourceProvider = SetupDataSourceProvider(connectionString);
+		var factory = new ConnectionFactory(configuration, dataSourceProvider);
 
 		// act
 		var func = () => factory.Create();
@@ -58,8 +62,10 @@ public class ConnectionFactoryTests : UnitTestBase
 	public void ConnectionFactoryTests_Create__WhenInvalidConnectionStringGiven_ThenExceptionThrown(string providerName)
 	{
 		// arrange
-		var configuration = SetupConfiguration(providerName, Fixture.Create<string>());
-		var factory = new ConnectionFactory(configuration);
+		var connectionString = Fixture.Create<string>();
+		var configuration = SetupConfiguration(providerName, connectionString);
+		var dataSourceProvider = SetupDataSourceProvider(connectionString);
+		var factory = new ConnectionFactory(configuration, dataSourceProvider);
 
 		// act
 		var func = () => factory.Create();
@@ -76,7 +82,8 @@ public class ConnectionFactoryTests : UnitTestBase
 	{
 		// arrange
 		var configuration = SetupConfiguration(providerName, ValidConnectionString);
-		var factory = new ConnectionFactory(configuration);
+		var dataSourceProvider = SetupDataSourceProvider(ValidConnectionString);
+		var factory = new ConnectionFactory(configuration, dataSourceProvider);
 
 		// act
 		var func = () => factory.Create();
@@ -90,7 +97,8 @@ public class ConnectionFactoryTests : UnitTestBase
 	{
 		// arrange
 		var configuration = SetupConfiguration(Fixture.Create<string>(), ValidConnectionString);
-		var factory = new ConnectionFactory(configuration);
+		var dataSourceProvider = SetupDataSourceProvider(ValidConnectionString);
+		var factory = new ConnectionFactory(configuration, dataSourceProvider);
 
 		// act
 		var func = () => factory.Create();
@@ -108,5 +116,22 @@ public class ConnectionFactoryTests : UnitTestBase
 			.Returns(connectionString);
 
 		return config.Object;
+	}
+
+	private INpgsqlDataSourceProvider SetupDataSourceProvider(string connectionString)
+	{
+		var provider = new Mock<INpgsqlDataSourceProvider>();
+		var dataSource = new Mock<INpgsqlDataSource>();
+
+		if (!string.IsNullOrWhiteSpace(connectionString))
+		{
+			dataSource.Setup(ds => ds.CreateConnection())
+				.Returns(() => new NpgsqlConnection(connectionString));
+		}
+
+		provider.Setup(p => p.Create())
+			.Returns(dataSource.Object);
+
+		return provider.Object;
 	}
 }

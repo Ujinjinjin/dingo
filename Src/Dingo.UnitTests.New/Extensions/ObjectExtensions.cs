@@ -6,7 +6,7 @@ namespace Dingo.UnitTests.Extensions;
 public class ObjectExtensions : UnitTestBase
 {
 	[Fact]
-	public void ObjectExtensions_Required__WhenObjectIsNull_ThenExceptionIsThrown()
+	public void ObjectExtensions_Required__WhenObjectIsNull_ThenExceptionThrown()
 	{
 		// arrange
 		object? obj = null;

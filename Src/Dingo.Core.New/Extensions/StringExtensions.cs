@@ -1,4 +1,6 @@
-﻿namespace Dingo.Core.Extensions;
+﻿using Dingo.Core.Repository;
+
+namespace Dingo.Core.Extensions;
 
 /// <summary> Collection of extensions for <see cref="string"/> </summary>
 internal static class StringExtensions
@@ -16,5 +18,16 @@ internal static class StringExtensions
 	public static string ToUnixEol(this string source)
 	{
 		return source.Replace("\r\n", "\n");
+	}
+
+	public static bool IsPostgres(this string provider)
+	{
+		return provider.Equals(ProviderName.PostgreSql, StringComparison.InvariantCultureIgnoreCase) ||
+			provider.Equals(ProviderName.Postgres, StringComparison.InvariantCultureIgnoreCase);
+	}
+
+	public static bool IsSqlServer(this string provider)
+	{
+		return provider.Equals(ProviderName.SqlServer, StringComparison.InvariantCultureIgnoreCase);
 	}
 }

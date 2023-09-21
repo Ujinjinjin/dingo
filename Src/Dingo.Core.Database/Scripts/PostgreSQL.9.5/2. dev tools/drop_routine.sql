@@ -35,7 +35,14 @@ begin
 				if i > 0 then
 					v_parameter_text = v_parameter_text || ', ';
 				end if;
-				v_parameter_text = v_parameter_text || (select pg_type.typname from pg_type where pg_type.oid = r.proargtypes[i]);
+				v_parameter_text = v_parameter_text || (
+					select pg_namespace.nspname || '.' || pg_type.typname
+					from pg_type
+					inner join pg_namespace
+						on pg_namespace.oid = pg_type.typnamespace
+					where 1 = 1
+						and pg_type.oid = r.proargtypes[i]
+				);
 				i = i + 1;
 			else
 				exit;

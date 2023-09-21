@@ -6,6 +6,7 @@ internal static class Configuration
 	{
 		public const string ConnectionString = "db.connection-string";
 		public const string DatabaseProvider = "db.provider";
+		public const string SchemaName = "db.schema";
 		public const string MigrationDelimiter = "migration.delimiter";
 		public const string MigrationWildcard = "migration.wildcard";
 		public const string MigrationDownRequired = "migration.down-required";
@@ -15,6 +16,7 @@ internal static class Configuration
 	{
 		{Key.ConnectionString, ""},
 		{ Key.DatabaseProvider, "PostgreSQL" },
+		{ Key.SchemaName, "dingo" },
 		{ Key.MigrationDelimiter, @"^--\s*down$" },
 		{ Key.MigrationWildcard, "*.sql" },
 		{ Key.MigrationDownRequired, "false" },

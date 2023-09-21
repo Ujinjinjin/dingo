@@ -8,7 +8,7 @@ namespace Dingo.UnitTests.Migrations;
 public class MigrationGeneratorTests : UnitTestBase
 {
 	[Fact]
-	public async Task MigrationGeneratorTests_CreateAsync__WhenInvalidNameIsGiven_ThenExceptionIsThrown()
+	public async Task MigrationGeneratorTests_CreateAsync__WhenInvalidNameIsGiven_ThenExceptionThrown()
 	{
 		// arrange
 		var validator = SetupValidator(false);
