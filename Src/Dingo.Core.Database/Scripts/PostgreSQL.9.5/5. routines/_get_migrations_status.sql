@@ -6,7 +6,7 @@ create function dingo._get_migrations_status(
 	pti_migration_info_input dingo.t_migration_info_input[]
 )
 returns table (
-	"hash" varchar(256),
+	migration_hash varchar(256),
 	hash_matches bool
 ) as
 $$
@@ -15,28 +15,26 @@ begin
 	drop table if exists tt_input;
 	----------------------------------------------------------------
 	create temp table tt_input as
-	----------------------------------------------------------------
 	select
 		cast(t1_input.migration_path as text) as migration_path,
 		cast(t1_input.migration_hash as varchar(256)) as migration_hash
 	from unnest(pti_migration_info_input) as t1_input;
 	----------------------------------------------------------------
 	return query select
-		outer_table.migration_hash as "hash",
-		outer_table.hash_matches
-	from tt_input as inner_table
-	cross join lateral (
+		t1_input.migration_hash,
+		t1_input.migration_hash = registered_migration.migration_hash as hash_matches
+	from dingo.temp__migration_input as t1_input
+	left outer join (
 		select
-			tt_input.migration_hash,
-			tt_input.migration_hash = dingo.migration.migration_hash as hash_matches
-		from tt_input
-		left outer join dingo.migration
-			on tt_input.migration_path = dingo.migration.migration_path
-		where 1 = 1
-			and tt_input.migration_path = inner_table.migration_path
-		order by dingo.migration.date_updated desc
-		limit 1
-	) as outer_table
+			migration.migration_path,
+			patch_migration.migration_hash
+		from dingo.migration as migration
+		inner join dingo.patch_migration as patch_migration
+			on patch_migration.migration_id = migration.migration_id
+		inner join dingo.patch as patch
+			on patch.patch_number = patch_migration.patch_number
+			and patch.reverted = false
+	) as registered_migration on registered_migration.migration_path = t1_input.migration_path
 	;
 	----------------------------------------------------------------
 end;
