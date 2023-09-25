@@ -23,7 +23,7 @@ begin
 	return query select
 		t1_input.migration_hash,
 		t1_input.migration_hash = registered_migration.migration_hash as hash_matches
-	from dingo.temp__migration_input as t1_input
+	from tt_input as t1_input
 	left outer join (
 		select
 			migration.migration_path,

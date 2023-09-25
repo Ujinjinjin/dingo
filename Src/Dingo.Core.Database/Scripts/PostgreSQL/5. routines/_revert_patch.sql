@@ -5,7 +5,7 @@ select dingo.drop_routine('_revert_patch', 'dingo');
 create function dingo._revert_patch(
 	p_patch_number integer
 )
-returns integer as
+returns void as
 $$
 begin
 	----------------------------------------------------------------
