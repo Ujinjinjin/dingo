@@ -2,6 +2,6 @@ namespace Dingo.Core.Repository.Models;
 
 public record MigrationComparisonOutput
 {
-	public string Hash { get; set; }
+	public string MigrationHash { get; set; }
 	public bool? HashMatches { get; set; }
 }

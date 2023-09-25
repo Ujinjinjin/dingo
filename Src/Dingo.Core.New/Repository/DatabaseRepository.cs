@@ -81,8 +81,52 @@ internal class DatabaseRepository : IRepository
 		return result.ToArray();
 	}
 
+	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
+	{
+		using var connection = _connectionFactory.Create();
+		var command = _commandProvider.GetNextPatch();
+
+		var result = await connection.QueryAsync<int>(command);
+		return result.Single();
+	}
+
+	public async Task<IReadOnlyList<PatchMigration>> GetLastPatchMigrationsAsync(
+		int patchCount,
+		CancellationToken ct = default
+	)
+	{
+		using var connection = _connectionFactory.Create();
+		var command = _commandProvider.GetLastPatchMigrations(patchCount);
+
+		var result = await connection.QueryAsync<PatchMigration>(command);
+		return result.ToArray();
+	}
+
+	public async Task RegisterMigrationAsync(Migration migration, int patchNumber, CancellationToken ct = default)
+	{
+		using var connection = _connectionFactory.Create();
+		var command = _commandProvider.RegisterMigration(migration, patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
+	public async Task RevertPatchAsync(int patchNumber, CancellationToken ct = default)
+	{
+		using var connection = _connectionFactory.Create();
+		var command = _commandProvider.RevertPatch(patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
+	// TODO: extract
 	private MigrationComparisonInput ToMigrationsInfoInput(Migration migration)
 	{
 		return new MigrationComparisonInput(migration.Hash.Value, migration.Path.Relative);
+	}
+
+	public async Task ExecuteAsync(string sql, CancellationToken ct = default)
+	{
+		using var connection = _connectionFactory.Create();
+		await connection.ExecuteAsync(sql, commandType: CommandType.Text);
 	}
 }
