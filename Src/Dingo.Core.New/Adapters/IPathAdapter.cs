@@ -18,6 +18,9 @@ internal interface IPathAdapter
 	/// <summary> Extract root directory name from path </summary>
 	string GetRootDirectory(string path);
 
+	/// <summary> Get application installation directory path </summary>
+	string GetApplicationPath();
+
 	/// <inheritdoc cref="Path.Join(string?[])"/>
 	public string Join(params string?[] paths);
 }

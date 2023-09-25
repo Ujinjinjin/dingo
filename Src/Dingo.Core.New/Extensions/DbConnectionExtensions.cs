@@ -10,4 +10,9 @@ internal static class DbConnectionExtensions
 	{
 		return cnn.QueryAsync<T>(command.Sql, command.Param, commandType: command.CommandType);
 	}
+
+	public static Task<int> ExecuteAsync(this IDbConnection cnn, Command command)
+	{
+		return cnn.ExecuteAsync(command.Sql, command.Param, commandType: command.CommandType);
+	}
 }

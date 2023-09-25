@@ -13,6 +13,8 @@ internal class NpgsqlDataSourceProvider : INpgsqlDataSourceProvider
 	private readonly INpgsqlDataSourceBuilder _dataSourceBuilder;
 	private readonly ILoggerFactory _loggerFactory;
 
+	private INpgsqlDataSource? _npgsqlDataSource;
+
 	public NpgsqlDataSourceProvider(
 		IConfiguration configuration,
 		INpgsqlDataSourceBuilder dataSourceBuilder,
@@ -24,7 +26,12 @@ internal class NpgsqlDataSourceProvider : INpgsqlDataSourceProvider
 		_loggerFactory = loggerFactory.Required(nameof(loggerFactory));
 	}
 
-	public INpgsqlDataSource Create()
+	public INpgsqlDataSource Instance()
+	{
+		return _npgsqlDataSource ??= BuildSource();
+	}
+
+	private INpgsqlDataSource BuildSource()
 	{
 		var provider = _configuration.Get(Configuration.Key.DatabaseProvider);
 

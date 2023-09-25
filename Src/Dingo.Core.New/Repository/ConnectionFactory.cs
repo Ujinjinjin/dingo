@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Dingo.Core.Extensions;
 using Dingo.Core.Repository.Source;
 using Microsoft.Data.SqlClient;
@@ -17,7 +18,7 @@ internal class ConnectionFactory : IConnectionFactory
 		_npgsqlProvider = npgsqlProvider.Required(nameof(npgsqlProvider));
 	}
 
-	public IDbConnection Create()
+	public DbConnection Create()
 	{
 		var provider = _configuration.Get(Configuration.Key.DatabaseProvider);
 		var connectionString = _configuration.Get(Configuration.Key.ConnectionString);
@@ -35,7 +36,7 @@ internal class ConnectionFactory : IConnectionFactory
 		return provider switch
 		{
 			_ when provider.IsSqlServer() => new SqlConnection(connectionString),
-			_ when provider.IsPostgres() => _npgsqlProvider.Create().CreateConnection(),
+			_ when provider.IsPostgres() => _npgsqlProvider.Instance().CreateConnection(),
 			_ => throw new ArgumentOutOfRangeException(
 				nameof(provider),
 				$"Database provider {provider} is not supported"

@@ -15,8 +15,8 @@ public interface IFileAdapter
 	bool Exists(string path);
 
 	/// <inheritdoc cref="File.ReadAllTextAsync(string,System.Threading.CancellationToken)"/>
-	Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default);
+	Task<string> ReadAllTextAsync(string path, CancellationToken ct = default);
 
 	/// <inheritdoc cref="File.ReadAllTextAsync(string,System.Text.Encoding,System.Threading.CancellationToken)"/>
-	Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken = default);
+	Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken ct = default);
 }

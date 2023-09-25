@@ -23,7 +23,7 @@ public class MigrationComparer : IMigrationComparer
 		CancellationToken ct = default
 	)
 	{
-		if (!IsDatabaseAvailable())
+		if (!await IsDatabaseAvailableAsync())
 		{
 			throw new ConnectionNotEstablishedException();
 		}
@@ -33,15 +33,17 @@ public class MigrationComparer : IMigrationComparer
 			return AllMigrationsAreNew(migrations);
 		}
 
-		var migrationsComparison = await _repository.GetMigrationsComparisonAsync(migrations, ct);
+		var migrationsComparison = (await _repository.GetMigrationsComparisonAsync(migrations, ct))
+			.GroupBy(x => x.MigrationHash)
+			.ToDictionary(x => x.Key, x => x.Single());
 		migrations = CalculateMigrationsStatus(migrations, migrationsComparison);
 
 		return migrations;
 	}
 
-	private bool IsDatabaseAvailable()
+	private async Task<bool> IsDatabaseAvailableAsync()
 	{
-		return _repository.TryHandshake();
+		return await _repository.TryHandshakeAsync();
 	}
 
 	private async Task<bool> IsDatabaseEmptyAsync(CancellationToken ct = default)
@@ -62,7 +64,7 @@ public class MigrationComparer : IMigrationComparer
 
 	private IReadOnlyList<Migration> CalculateMigrationsStatus(
 		IReadOnlyList<Migration> migrations,
-		IReadOnlyList<MigrationComparisonOutput> migrationComparison
+		IDictionary<string, MigrationComparisonOutput> migrationComparison
 	)
 	{
 		if (migrations.Count != migrationComparison.Count)
@@ -72,12 +74,12 @@ public class MigrationComparer : IMigrationComparer
 
 		for (var i = 0; i < migrations.Count; i++)
 		{
-			if (!IsSameMigration(migrations[i], migrationComparison[i]))
+			if (!migrationComparison.TryGetValue(migrations[i].Hash.Value, out var comparisonOutput))
 			{
 				throw new MigrationMismatchException("hash", "Can't calculate migration statuses. Migration path mismatch");
 			}
 
-			migrations[i].Status = migrationComparison[i].HashMatches switch
+			migrations[i].Status = comparisonOutput.HashMatches switch
 			{
 				null => MigrationStatus.New,
 				true => MigrationStatus.UpToDate,
@@ -86,10 +88,5 @@ public class MigrationComparer : IMigrationComparer
 		}
 
 		return migrations;
-	}
-
-	private bool IsSameMigration(Migration migration, MigrationComparisonOutput migrationComparison)
-	{
-		return migration.Hash.Value == migrationComparison.Hash;
 	}
 }

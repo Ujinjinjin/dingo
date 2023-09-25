@@ -20,7 +20,7 @@ public class NpgsqlDataSourceProviderTests : UnitTestBase
 		var dsProvider = new NpgsqlDataSourceProvider(configuration, dataSourceBuilder, loggerFactory);
 
 		// act
-		var func = () => dsProvider.Create();
+		var func = () => dsProvider.Instance();
 
 		// assert
 		func.Should().Throw<IncompatibleDatabaseException>();

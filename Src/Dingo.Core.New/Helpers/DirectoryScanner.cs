@@ -20,7 +20,7 @@ internal sealed class DirectoryScanner : IDirectoryScanner
 	}
 
 	/// <inheritdoc />
-	public IReadOnlyCollection<MigrationPath> Scan(string rootPath, string searchPattern)
+	public IReadOnlyList<MigrationPath> Scan(string rootPath, string searchPattern)
 	{
 		var fileList = _directoryAdapter.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories);
 

@@ -1,4 +1,3 @@
-using Dingo.Core.Migrations;
 using Dingo.Core.Validators.Migration;
 
 namespace Dingo.Core.Models;
@@ -20,11 +19,6 @@ public sealed class Migration : IMigrationMeta, IMigrationBody
 	}
 
 	public static Migration Empty => new(default, default, default);
-
-	internal void Apply(IMigrationApplier applier)
-	{
-		applier.Apply(this);
-	}
 
 	internal bool IsValid(IMigrationValidator validator)
 	{

@@ -17,13 +17,13 @@ public sealed class FileAdapter : IFileAdapter
 	/// <inheritdoc />
 	public async Task<string> ReadAllTextAsync(
 		string path,
-		CancellationToken cancellationToken = default
-	) => await File.ReadAllTextAsync(path, cancellationToken);
+		CancellationToken ct = default
+	) => await File.ReadAllTextAsync(path, ct);
 
 	/// <inheritdoc />
 	public async Task<string> ReadAllTextAsync(
 		string path,
 		Encoding encoding,
-		CancellationToken cancellationToken = default
-	) => await File.ReadAllTextAsync(path, encoding, cancellationToken);
+		CancellationToken ct = default
+	) => await File.ReadAllTextAsync(path, encoding, ct);
 }

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Dingo.Core.Extensions;
 using Npgsql;
 
@@ -13,7 +14,7 @@ public class NpgsqlDataSourceAdapter : INpgsqlDataSource
 		_dataSource = dataSource.Required(nameof(dataSource));
 	}
 
-	public IDbConnection CreateConnection()
+	public DbConnection CreateConnection()
 	{
 		return _dataSource.CreateConnection();
 	}

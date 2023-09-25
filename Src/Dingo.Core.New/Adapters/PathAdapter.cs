@@ -50,6 +50,12 @@ internal sealed class PathAdapter : IPathAdapter
 	}
 
 	/// <inheritdoc />
+	public string GetApplicationPath()
+	{
+		return CleanPath(AppDomain.CurrentDomain.BaseDirectory);
+	}
+
+	/// <inheritdoc />
 	public string Join(params string?[] paths)
 	{
 		return Path.Join(paths);

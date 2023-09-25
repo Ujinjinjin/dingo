@@ -49,10 +49,10 @@ public class MigrationComparerTests : UnitTestBase
 		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsCountNotMatchesDbComparisonCount_ThenExceptionThrown()
 	{
 		// arrange
-		var count = Fixture.Create<int>();
-		var migrationPath = Fixture.Create<string>();
-		var initialMigrations = CreateMigrations(migrationPath, count);
-		var migrationComparison = CreateMigrationComparisonOutput(false, migrationPath, count + 1);
+		var count = 1;
+		var migrationHash = Fixture.Create<string>();
+		var initialMigrations = CreateMigrations(migrationHash, count);
+		var migrationComparison = CreateMigrationComparisonOutput(false, null, count + 1);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
 		var configuration = SetupConfiguration();
@@ -70,7 +70,7 @@ public class MigrationComparerTests : UnitTestBase
 		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsHashNotMatchesDbComparisonHash_ThenExceptionThrown()
 	{
 		// arrange
-		var count = Fixture.Create<int>();
+		var count = 1;
 		var initialMigrations = CreateMigrations(Fixture.Create<string>(), count);
 		var migrationComparison = CreateMigrationComparisonOutput(false, Fixture.Create<string>(), count);
 
@@ -162,8 +162,8 @@ public class MigrationComparerTests : UnitTestBase
 	{
 		var repository = new Mock<IRepository>();
 
-		repository.Setup(r => r.TryHandshake())
-			.Returns(databaseAvailable);
+		repository.Setup(r => r.TryHandshakeAsync(default))
+			.ReturnsAsync(databaseAvailable);
 
 		repository.Setup(r => r.SchemaExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(schemaExists);
@@ -204,12 +204,16 @@ public class MigrationComparerTests : UnitTestBase
 
 	private IReadOnlyList<MigrationComparisonOutput> CreateMigrationComparisonOutput(
 		bool? hashMatches,
-		string hash,
+		string? hash,
 		int? count = null
 	)
 	{
 		count ??= 3;
-		Fixture.Register(() => new MigrationComparisonOutput(hash, hashMatches));
+		Fixture.Register(() => new MigrationComparisonOutput
+		{
+			MigrationHash = hash ?? Fixture.Create<string>(),
+			HashMatches = hashMatches,
+		});
 
 		return Fixture.CreateMany<MigrationComparisonOutput>(count.Value).ToArray();
 	}

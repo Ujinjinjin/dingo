@@ -1,4 +1,5 @@
 ﻿using Dingo.Core.Adapters;
+using Dingo.Core.Handlers;
 using Dingo.Core.Helpers;
 using Dingo.Core.Migrations;
 using Dingo.Core.Repository;
@@ -65,9 +66,12 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IMigrationGenerator, MigrationGenerator>();
 		serviceCollection.AddSingleton<IMigrationGenerator, MigrationGenerator>();
 		serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
+		serviceCollection.AddSingleton<IMigrationApplier, MigrationApplier>();
+		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
+		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();
 
 		serviceCollection.AddSingleton<ILoggerProvider>(NullLoggerProvider.Instance);
 		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();

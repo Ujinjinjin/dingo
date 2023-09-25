@@ -20,6 +20,10 @@ public class UnitTestBase
 	protected ILoggerFactory SetupLoggerFactory()
 	{
 		var factory = new Mock<ILoggerFactory>();
+		var logger = new Mock<ILogger>();
+
+		factory.Setup(f => f.CreateLogger(It.IsAny<string>()))
+			.Returns(logger.Object);
 
 		return factory.Object;
 	}

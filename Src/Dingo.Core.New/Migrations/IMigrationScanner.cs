@@ -5,5 +5,5 @@ namespace Dingo.Core.Migrations;
 
 public interface IMigrationScanner
 {
-	Task<IReadOnlyCollection<Migration>> ScanAsync(string path, CancellationToken cancellationToken = default);
+	Task<IReadOnlyList<Migration>> ScanAsync(string path, CancellationToken ct = default);
 }

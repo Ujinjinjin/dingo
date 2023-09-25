@@ -26,9 +26,9 @@ internal class MigrationScanner : IMigrationScanner
 		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
 	}
 
-	public async Task<IReadOnlyCollection<Migration>> ScanAsync(
+	public async Task<IReadOnlyList<Migration>> ScanAsync(
 		string path,
-		CancellationToken cancellationToken = default
+		CancellationToken ct = default
 	)
 	{
 		var migrations = new List<Migration>();
@@ -40,7 +40,7 @@ internal class MigrationScanner : IMigrationScanner
 
 		foreach (var migrationPath in migrationFiles)
 		{
-			var migrationContent = await _fileAdapter.ReadAllTextAsync(migrationPath.Absolute, cancellationToken);
+			var migrationContent = await _fileAdapter.ReadAllTextAsync(migrationPath.Absolute, ct);
 			var command = _commandParser.Parse(migrationContent);
 			var hash = await Hash.ComputeAsync(_fileAdapter, migrationPath);
 

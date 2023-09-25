@@ -4,5 +4,5 @@ namespace Dingo.Core.Repository.Source;
 
 public interface INpgsqlDataSourceProvider
 {
-	INpgsqlDataSource Create();
+	INpgsqlDataSource Instance();
 }

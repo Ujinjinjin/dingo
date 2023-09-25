@@ -129,7 +129,7 @@ public class ConnectionFactoryTests : UnitTestBase
 				.Returns(() => new NpgsqlConnection(connectionString));
 		}
 
-		provider.Setup(p => p.Create())
+		provider.Setup(p => p.Instance())
 			.Returns(dataSource.Object);
 
 		return provider.Object;

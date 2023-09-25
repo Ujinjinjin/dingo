@@ -11,7 +11,7 @@ namespace Dingo.Core.Repository;
 internal sealed class DatabaseContext : DataConnectionBase, IDatabaseContext
 {
 	private readonly IDatabaseContractConverter _databaseContractConverter;
-		
+
 	public DatabaseContext(
 		string providerName,
 		string connectionString,
@@ -60,7 +60,7 @@ internal sealed class DatabaseContext : DataConnectionBase, IDatabaseContext
 		{
 			return Task.CompletedTask;
 		}
-			
+
 		Connection.Open();
 		return Task.CompletedTask;
 	}
@@ -77,13 +77,11 @@ internal sealed class DatabaseContext : DataConnectionBase, IDatabaseContext
 	}
 
 	/// <inheritdoc />
-	public Task ReloadDatabaseTypesAsync()
+	public async Task ReloadDatabaseTypesAsync()
 	{
 		if (Connection is NpgsqlConnection npgsqlConnection)
 		{
-			npgsqlConnection.ReloadTypes();
+			await npgsqlConnection.ReloadTypesAsync();
 		}
-
-		return Task.CompletedTask;
 	}
 }

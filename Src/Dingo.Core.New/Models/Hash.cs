@@ -10,10 +10,10 @@ public record Hash(string Value)
 
 	public static async Task<Hash> ComputeAsync(IFileAdapter fileAdapter, MigrationPath migrationPath)
 	{
-		using var sha512 = SHA512.Create();
+		using var sha = SHA256.Create();
 		var byteContent = Encoding.UTF8.GetBytes(await fileAdapter.ReadAllTextAsync(migrationPath.Absolute));
 
-		var rawHash = sha512.ComputeHash(byteContent);
+		var rawHash = sha.ComputeHash(byteContent);
 
 		var strHash = BitConverter.ToString(rawHash)
 			.Replace("-", "")

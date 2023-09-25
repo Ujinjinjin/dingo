@@ -5,7 +5,7 @@ namespace Dingo.Core.Repository;
 
 public interface IRepository
 {
-	bool TryHandshake();
+	Task<bool> TryHandshakeAsync(CancellationToken ct = default);
 	Task<bool> SchemaExistsAsync(string schema, CancellationToken ct = default);
 
 	Task<IReadOnlyList<MigrationComparisonOutput>> GetMigrationsComparisonAsync(
@@ -19,4 +19,5 @@ public interface IRepository
 	Task RevertPatchAsync(int patchNumber, CancellationToken ct = default);
 
 	Task ExecuteAsync(string sql, CancellationToken ct = default);
+	Task ReloadTypesAsync(CancellationToken ct = default);
 }

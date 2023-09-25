@@ -1,14 +1,14 @@
 using System.Data;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
-using Microsoft.Extensions.Logging;
+using Dingo.UnitTests.Helpers;
 
 namespace Dingo.UnitTests.Database;
 
 public class DatabaseRepositoryTests : UnitTestBase
 {
 	[Fact]
-	public void DatabaseRepositoryTests_TryHandshake__WhenConnectionIsAlreadyOpen_ThenHandshakeSucceeded()
+	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionIsAlreadyOpen_ThenHandshakeSucceeded()
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Open));
@@ -17,14 +17,14 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
-		var result = repository.TryHandshake();
+		var result = await repository.TryHandshakeAsync();
 
 		// assert
 		result.Should().BeTrue();
 	}
 
 	[Fact]
-	public void DatabaseRepositoryTests_TryHandshake__WhenConnectionOpenedSuccessfully_ThenHandshakeSucceeded()
+	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionOpenedSuccessfully_ThenHandshakeSucceeded()
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed));
@@ -33,14 +33,14 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
-		var result = repository.TryHandshake();
+		var result = await repository.TryHandshakeAsync();
 
 		// assert
 		result.Should().BeTrue();
 	}
 
 	[Fact]
-	public void DatabaseRepositoryTests_TryHandshake__WhenConnectionNotOpened_ThenHandshakeFailed()
+	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionNotOpened_ThenHandshakeFailed()
 	{
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed, false));
@@ -49,7 +49,7 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
 
 		// act
-		var result = repository.TryHandshake();
+		var result = await repository.TryHandshakeAsync();
 
 		// assert
 		result.Should().BeFalse();
@@ -58,8 +58,8 @@ public class DatabaseRepositoryTests : UnitTestBase
 	private IConnectionFactory SetupConnectionFactory(IDbConnection connection)
 	{
 		var factory = new Mock<IConnectionFactory>();
-		factory.Setup((f) => f.Create())
-			.Returns(connection);
+		factory.Setup(f => f.Create())
+			.Returns(() => new DummyConnection(connection));
 
 		return factory.Object;
 	}
@@ -83,18 +83,6 @@ public class DatabaseRepositoryTests : UnitTestBase
 	private ICommandProviderFactory SetupCommandProviderFactory()
 	{
 		var factory = new Mock<ICommandProviderFactory>();
-
-		return factory.Object;
-	}
-
-	private ILoggerFactory SetupLoggerFactory()
-	{
-		var factory = new Mock<ILoggerFactory>();
-		var logger = new Mock<ILogger>();
-
-		factory.Setup(f => f.CreateLogger(It.IsAny<string>()))
-			.Returns(logger.Object);
-
 
 		return factory.Object;
 	}

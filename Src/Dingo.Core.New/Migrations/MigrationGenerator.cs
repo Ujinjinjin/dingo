@@ -25,7 +25,7 @@ internal class MigrationGenerator : IMigrationGenerator
 		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
 	}
 
-	public async Task GenerateAsync(string name, string path)
+	public async Task GenerateAsync(string name, string path, CancellationToken ct = default)
 	{
 		if (!_migrationNameValidator.Validate(name))
 		{
