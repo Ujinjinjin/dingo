@@ -39,4 +39,9 @@ public class SqlServerCommandProvider : ICommandProvider
 	{
 		throw new NotImplementedException();
 	}
+
+	public Command CompletePatch(int patchNumber)
+	{
+		throw new NotImplementedException();
+	}
 }

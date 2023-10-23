@@ -124,6 +124,14 @@ internal class DatabaseRepository : IRepository
 		await connection.ExecuteAsync(command);
 	}
 
+	public async Task CompletePatchAsync(int patchNumber, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProvider.CompletePatch(patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
 	public async Task ExecuteAsync(string sql, CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();

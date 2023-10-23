@@ -68,4 +68,13 @@ public class PostgreSqlCommandProvider : ICommandProvider
 			CommandType.Text
 		);
 	}
+
+	public Command CompletePatch(int patchNumber)
+	{
+		return new Command(
+			"select * from dingo._complete_patch(@PatchNumber)",
+			new { PatchNumber = patchNumber },
+			CommandType.Text
+		);
+	}
 }

@@ -17,6 +17,7 @@ public interface IRepository
 	Task<IReadOnlyList<PatchMigration>> GetLastPatchMigrationsAsync(int patchCount, CancellationToken ct = default);
 	Task RegisterMigrationAsync(Migration migration, int patchNumber, CancellationToken ct = default);
 	Task RevertPatchAsync(int patchNumber, CancellationToken ct = default);
+	Task CompletePatchAsync(int patchNumber, CancellationToken ct = default);
 
 	Task ExecuteAsync(string sql, CancellationToken ct = default);
 	Task ReloadTypesAsync(CancellationToken ct = default);

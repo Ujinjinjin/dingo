@@ -111,6 +111,8 @@ internal class MigrationHandler : IMigrationHandler
 		{
 			await _migrationApplier.RegisterAsync(migration, patch, ct);
 		}
+
+		await _repository.CompletePatchAsync(patch, ct);
 	}
 
 	private async Task ApplyMigrationsAsync(
@@ -129,16 +131,18 @@ internal class MigrationHandler : IMigrationHandler
 			return;
 		}
 
-		var patchNumber = await _repository.GetNextPatchAsync(ct);
+		var patch = await _repository.GetNextPatchAsync(ct);
 		var total = migrationsToApply.Length;
 		var current = 1;
-		_output.Write($"Patch {patchNumber}; Migrations to apply: {total}", LogLevel.Information);
+		_output.Write($"Patch {patch}; Migrations to apply: {total}", LogLevel.Information);
 
 		foreach (var migration in migrationsToApply)
 		{
 			_output.Write($"{current++}/{total} Applying '{migration.Path.Relative}'", LogLevel.Information);
-			await _migrationApplier.ApplyAndRegisterAsync(migration, patchNumber, ct);
+			await _migrationApplier.ApplyAndRegisterAsync(migration, patch, ct);
 		}
+
+		await _repository.CompletePatchAsync(patch, ct);
 
 		_output.Write($"Finished applying {migrationType} migrations.", LogLevel.Information);
 	}

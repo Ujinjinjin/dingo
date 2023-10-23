@@ -11,4 +11,5 @@ public interface ICommandProvider
 	Command GetLastPatchMigrations(int patchCount);
 	Command RegisterMigration(Migration migration, int patchNumber);
 	Command RevertPatch(int patchNumber);
+	Command CompletePatch(int patchNumber);
 }
