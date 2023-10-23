@@ -6,6 +6,7 @@ using Dingo.Core.Repository.Command;
 using Dingo.Core.Repository.Models;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Trico.Configuration;
 
 namespace Dingo.Core.Repository;
 
@@ -13,17 +14,19 @@ internal class DatabaseRepository : IRepository
 {
 	private readonly IConnectionFactory _connectionFactory;
 	private readonly ICommandProvider _commandProvider;
+	private readonly IConfiguration _configuration;
 	private readonly ILogger _logger;
 
 	public DatabaseRepository(
 		IConnectionFactory connectionFactory,
 		ICommandProviderFactory commandProviderFactory,
+		IConfiguration configuration,
 		ILoggerFactory loggerFactory
 	)
 	{
 		_connectionFactory = connectionFactory.Required(nameof(connectionFactory));
-		_commandProvider = commandProviderFactory.Required(nameof(commandProviderFactory))
-			.Create();
+		_commandProvider = commandProviderFactory.Required(nameof(commandProviderFactory)).Create();
+		_configuration = configuration.Required(nameof(configuration));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
 			.CreateLogger<DatabaseRepository>()
 			.Required(nameof(loggerFactory));
@@ -65,6 +68,12 @@ internal class DatabaseRepository : IRepository
 		var result = await connection.QueryAsync<string>(command);
 
 		return result.FirstOrDefault() != null;
+	}
+
+	public async Task<bool> IsDatabaseEmptyAsync(CancellationToken ct = default)
+	{
+		var dingoSchemaName = _configuration.Get(Configuration.Key.SchemaName);
+		return !await SchemaExistsAsync(dingoSchemaName, ct);
 	}
 
 	public async Task<IReadOnlyList<MigrationComparisonOutput>> GetMigrationsComparisonAsync(

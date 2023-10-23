@@ -10,4 +10,7 @@ public interface IMigrationHandler
 
 	/// <summary> Apply database migrations </summary>
 	Task MigrateAsync(string path, CancellationToken ct = default);
+
+	/// <summary> Rollback last N patches </summary>
+	Task RollbackAsync(string path, int patchCount, bool force, CancellationToken ct = default);
 }

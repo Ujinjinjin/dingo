@@ -32,7 +32,7 @@ public class MigrationComparerTests : UnitTestBase
 	{
 		// arrange
 		var initialMigrations = CreateMigrations(Fixture.Create<string>());
-		var repository = SetupRepository(schemaExists: false);
+		var repository = SetupRepository(databaseIsEmpty: true);
 		var configuration = SetupConfiguration();
 		var comparer = new MigrationComparer(repository, configuration);
 
@@ -156,7 +156,7 @@ public class MigrationComparerTests : UnitTestBase
 
 	private IRepository SetupRepository(
 		bool databaseAvailable = true,
-		bool schemaExists = true,
+		bool databaseIsEmpty = false,
 		IReadOnlyList<MigrationComparisonOutput>? migrationComparison = null
 	)
 	{
@@ -165,8 +165,8 @@ public class MigrationComparerTests : UnitTestBase
 		repository.Setup(r => r.TryHandshakeAsync(default))
 			.ReturnsAsync(databaseAvailable);
 
-		repository.Setup(r => r.SchemaExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-			.ReturnsAsync(schemaExists);
+		repository.Setup(r => r.IsDatabaseEmptyAsync(It.IsAny<CancellationToken>()))
+			.ReturnsAsync(databaseIsEmpty);
 
 		migrationComparison ??= Fixture.CreateMany<MigrationComparisonOutput>().ToArray();
 		repository.Setup(

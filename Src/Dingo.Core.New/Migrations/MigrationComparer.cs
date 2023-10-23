@@ -28,7 +28,7 @@ public class MigrationComparer : IMigrationComparer
 			throw new ConnectionNotEstablishedException();
 		}
 
-		if (await IsDatabaseEmptyAsync(ct))
+		if (await _repository.IsDatabaseEmptyAsync(ct))
 		{
 			return AllMigrationsAreNew(migrations);
 		}
@@ -44,12 +44,6 @@ public class MigrationComparer : IMigrationComparer
 	private async Task<bool> IsDatabaseAvailableAsync()
 	{
 		return await _repository.TryHandshakeAsync();
-	}
-
-	private async Task<bool> IsDatabaseEmptyAsync(CancellationToken ct = default)
-	{
-		var dingoSchemaName = _configuration.Get(Configuration.Key.SchemaName);
-		return !await _repository.SchemaExistsAsync(dingoSchemaName, ct);
 	}
 
 	private IReadOnlyList<Migration> AllMigrationsAreNew(IReadOnlyList<Migration> migrations)

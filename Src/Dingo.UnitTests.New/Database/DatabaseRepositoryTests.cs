@@ -1,7 +1,9 @@
 using System.Data;
+using Dingo.Core;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
 using Dingo.UnitTests.Helpers;
+using Trico.Configuration;
 
 namespace Dingo.UnitTests.Database;
 
@@ -13,8 +15,14 @@ public class DatabaseRepositoryTests : UnitTestBase
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Open));
 		var commandProviderFactory = SetupCommandProviderFactory();
+		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
+		var repository = new DatabaseRepository(
+			connectionFactory,
+			commandProviderFactory,
+			configuration,
+			loggerFactory
+		);
 
 		// act
 		var result = await repository.TryHandshakeAsync();
@@ -29,8 +37,14 @@ public class DatabaseRepositoryTests : UnitTestBase
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed));
 		var commandProviderFactory = SetupCommandProviderFactory();
+		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
+		var repository = new DatabaseRepository(
+			connectionFactory,
+			commandProviderFactory,
+			configuration,
+			loggerFactory
+		);
 
 		// act
 		var result = await repository.TryHandshakeAsync();
@@ -45,8 +59,14 @@ public class DatabaseRepositoryTests : UnitTestBase
 		// arrange
 		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed, false));
 		var commandProviderFactory = SetupCommandProviderFactory();
+		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
-		var repository = new DatabaseRepository(connectionFactory, commandProviderFactory, loggerFactory);
+		var repository = new DatabaseRepository(
+			connectionFactory,
+			commandProviderFactory,
+			configuration,
+			loggerFactory
+		);
 
 		// act
 		var result = await repository.TryHandshakeAsync();
@@ -85,5 +105,12 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var factory = new Mock<ICommandProviderFactory>();
 
 		return factory.Object;
+	}
+
+	private IConfiguration SetupConfiguration()
+	{
+		var config = new Mock<IConfiguration>();
+
+		return config.Object;
 	}
 }

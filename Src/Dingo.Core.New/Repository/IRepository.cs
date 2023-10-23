@@ -7,6 +7,7 @@ public interface IRepository
 {
 	Task<bool> TryHandshakeAsync(CancellationToken ct = default);
 	Task<bool> SchemaExistsAsync(string schema, CancellationToken ct = default);
+	Task<bool> IsDatabaseEmptyAsync(CancellationToken ct = default);
 
 	Task<IReadOnlyList<MigrationComparisonOutput>> GetMigrationsComparisonAsync(
 		IReadOnlyList<Migration> migrations,

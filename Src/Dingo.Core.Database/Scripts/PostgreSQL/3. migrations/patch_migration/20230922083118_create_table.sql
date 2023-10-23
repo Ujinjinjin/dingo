@@ -10,7 +10,7 @@ begin
 			patch_number integer not null
 		);
 
-		alter table patch_migration add constraint pk$patch_migration primary key (migration_hash);
+		alter table patch_migration add constraint pk$patch_migration primary key (patch_number, migration_id);
 	end if;
 end $$;
 

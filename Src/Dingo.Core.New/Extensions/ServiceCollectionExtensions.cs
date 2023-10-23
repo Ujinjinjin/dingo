@@ -68,6 +68,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
 		serviceCollection.AddSingleton<IMigrationApplier, MigrationApplier>();
 		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
+		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();

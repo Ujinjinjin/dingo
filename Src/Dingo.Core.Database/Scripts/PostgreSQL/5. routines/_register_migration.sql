@@ -20,7 +20,7 @@ begin
 	if (v_migration_exists is false) then
 		insert into dingo.migration (migration_path) values (p_migration_path) returning migration_id into v_migration_id;
 	else
-		select into v_migration_id migration_path from dingo.migration where migration_path = p_migration_path limit 1;
+		select into v_migration_id migration_id from dingo.migration where migration_path = p_migration_path limit 1;
 	end if;
 	----------------------------------------------------------------
 	insert into dingo.patch_migration (migration_hash, migration_id, patch_number) values
