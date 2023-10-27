@@ -73,6 +73,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
 		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();
+		serviceCollection.AddSingleton<IConnectionHandler, ConnectionHandler>();
 
 		serviceCollection.AddSingleton<ILoggerProvider>(NullLoggerProvider.Instance);
 		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();

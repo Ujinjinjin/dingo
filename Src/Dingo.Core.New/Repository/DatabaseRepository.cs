@@ -41,9 +41,9 @@ internal class DatabaseRepository : IRepository
 			await HandshakeAsync(ct);
 			return true;
 		}
-		catch (Exception e)
+		catch (Exception ex)
 		{
-			_logger.LogError(e, "Can't establish database connection");
+			_logger.LogError(ex, "Can't establish database connection");
 			return false;
 		}
 	}

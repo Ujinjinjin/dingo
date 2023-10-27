@@ -45,11 +45,12 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationService:CreateAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:CreateAsync:Error;");
 			_output.Write("Error occured while creating migration file", LogLevel.Error);
 		}
 	}
 
+	/// <inheritdoc />
 	public async Task MigrateAsync(string path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
@@ -60,11 +61,12 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationService:MigrateAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:MigrateAsync:Error;");
 			_output.Write($"Error occured while applying migrations: {ex.Message}", LogLevel.Error);
 		}
 	}
 
+	/// <inheritdoc />
 	public async Task RollbackAsync(string path, int patchCount, bool force, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
@@ -75,11 +77,12 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationService:RollbackAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:RollbackAsync:Error;");
 			_output.Write($"Error occured while rolling back migrations: {ex.Message}", LogLevel.Error);
 		}
 	}
 
+	/// <inheritdoc />
 	public async Task ShowStatusAsync(string path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
@@ -90,7 +93,7 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationService:ShowStatusAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:ShowStatusAsync:Error;");
 			_output.Write("Error occured while retrieving migrations status", LogLevel.Error);
 		}
 	}
