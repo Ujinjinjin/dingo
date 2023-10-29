@@ -5,7 +5,7 @@ using Dingo.Core.Repository.Models;
 
 namespace Dingo.Core.Repository.Command;
 
-public class PostgreSqlCommandProvider : ICommandProvider
+internal class PostgreSqlCommandProvider : ICommandProvider
 {
 	public Command SelectSchema(string schema)
 	{

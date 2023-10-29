@@ -1,7 +1,7 @@
 using Dingo.Core;
-using Dingo.Core.Adapters;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Source;
+using Dingo.Core.Services.Adapters;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using Trico.Configuration;

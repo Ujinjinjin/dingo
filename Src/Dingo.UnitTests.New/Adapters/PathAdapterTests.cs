@@ -1,4 +1,4 @@
-using Dingo.Core.Adapters;
+using Dingo.Core.Services.Adapters;
 
 namespace Dingo.UnitTests.Adapters;
 

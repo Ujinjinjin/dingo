@@ -1,7 +1,7 @@
 using Dingo.Core;
-using Dingo.Core.Adapters;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Repository.Source;
+using Dingo.Core.Services.Adapters;
 using Trico.Configuration;
 
 namespace Dingo.UnitTests.Database;

@@ -3,7 +3,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Repository.Command;
 
-public class CommandProviderFactory : ICommandProviderFactory
+internal class CommandProviderFactory : ICommandProviderFactory
 {
 	private readonly IConfiguration _configuration;
 

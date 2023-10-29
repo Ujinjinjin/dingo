@@ -1,10 +1,11 @@
-﻿using Dingo.Core.Adapters;
-using Dingo.Core.Handlers;
-using Dingo.Core.Helpers;
-using Dingo.Core.Migrations;
-using Dingo.Core.Repository;
+﻿using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
 using Dingo.Core.Repository.Source;
+using Dingo.Core.Services.Adapters;
+using Dingo.Core.Services.Config;
+using Dingo.Core.Services.Handlers;
+using Dingo.Core.Services.Helpers;
+using Dingo.Core.Services.Migrations;
 using Dingo.Core.Validators.Migration;
 using Dingo.Core.Validators.Migration.Name;
 using Dingo.Core.Validators.Migration.Sql;
@@ -69,11 +70,13 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IMigrationApplier, MigrationApplier>();
 		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
 		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
+		serviceCollection.AddSingleton<IConfigGenerator, ConfigGenerator>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
 		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();
 		serviceCollection.AddSingleton<IConnectionHandler, ConnectionHandler>();
+		serviceCollection.AddSingleton<IConfigHandler, ConfigHandler>();
 
 		serviceCollection.AddSingleton<ILoggerProvider>(NullLoggerProvider.Instance);
 		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();

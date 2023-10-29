@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using Dingo.Core.Adapters;
+using Dingo.Core.Services.Adapters;
 
 namespace Dingo.Core.Models;
 

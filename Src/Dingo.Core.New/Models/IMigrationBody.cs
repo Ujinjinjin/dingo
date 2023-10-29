@@ -1,5 +1,3 @@
-using Dingo.Core.Migrations;
-
 namespace Dingo.Core.Models;
 
 internal interface IMigrationBody

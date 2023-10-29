@@ -1,5 +1,5 @@
 using AutoFixture;
-using Dingo.Core.Migrations;
+using Dingo.Core.Services.Migrations;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 

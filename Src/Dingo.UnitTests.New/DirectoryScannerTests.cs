@@ -1,5 +1,5 @@
-using Dingo.Core.Adapters;
-using Dingo.Core.Helpers;
+using Dingo.Core.Services.Adapters;
+using Dingo.Core.Services.Helpers;
 
 namespace Dingo.UnitTests;
 

@@ -1,7 +1,7 @@
-using Dingo.Core.Adapters;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Extensions;
 using Dingo.Core.Repository.Models;
+using Dingo.Core.Services.Adapters;
 using Microsoft.Extensions.Logging;
 using Trico.Configuration;
 

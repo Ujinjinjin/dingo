@@ -4,7 +4,7 @@ using Dingo.Core.Repository.Models;
 
 namespace Dingo.Core.Repository.Command;
 
-public class SqlServerCommandProvider : ICommandProvider
+internal class SqlServerCommandProvider : ICommandProvider
 {
 	public Command SelectSchema(string schema)
 	{
