@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="Dingo.UnitTests.New" />
+        <InternalsVisibleTo Include="Dingo.IntegrationTests" />
         <InternalsVisibleTo Include="Dingo.Playground" />
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     </ItemGroup>

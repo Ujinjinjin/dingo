@@ -1,4 +1,5 @@
-﻿using Dingo.Core.Repository;
+﻿using Dingo.Core.IO;
+using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
 using Dingo.Core.Repository.Source;
 using Dingo.Core.Services.Adapters;
@@ -12,7 +13,6 @@ using Dingo.Core.Validators.Migration.Sql;
 using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Trico.Extensions;
 
 namespace Dingo.Core.Extensions;
@@ -78,7 +78,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IConnectionHandler, ConnectionHandler>();
 		serviceCollection.AddSingleton<IConfigHandler, ConfigHandler>();
 
-		serviceCollection.AddSingleton<ILoggerProvider>(NullLoggerProvider.Instance);
+		serviceCollection.AddSingleton<ILoggerProvider, FileLoggerProvider>();
 		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
 	}
 }

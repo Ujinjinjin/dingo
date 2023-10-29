@@ -21,6 +21,9 @@ internal interface IPathAdapter
 	/// <summary> Get application installation directory path </summary>
 	string GetApplicationPath();
 
+	/// <summary> Get directory path where logs are stored </summary>
+	string GetLogsPath();
+
 	/// <inheritdoc cref="Path.Join(string?[])"/>
 	public string Join(params string?[] paths);
 }

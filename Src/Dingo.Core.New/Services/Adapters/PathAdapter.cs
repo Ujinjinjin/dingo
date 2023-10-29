@@ -56,6 +56,12 @@ internal sealed class PathAdapter : IPathAdapter
 	}
 
 	/// <inheritdoc />
+	public string GetLogsPath()
+	{
+		return Join(GetApplicationPath(), Constants.LogsDir);
+	}
+
+	/// <inheritdoc />
 	public string Join(params string?[] paths)
 	{
 		return Path.Join(paths);
