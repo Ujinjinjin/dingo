@@ -6,6 +6,7 @@ using Dingo.Core.Services.Adapters;
 using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Handlers;
 using Dingo.Core.Services.Helpers;
+using Dingo.Core.Services.Logs;
 using Dingo.Core.Services.Migrations;
 using Dingo.Core.Validators.Migration;
 using Dingo.Core.Validators.Migration.Name;
@@ -34,9 +35,9 @@ public static class ServiceCollectionExtensions
 
 	private static void AddAdapters(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.AddSingleton<IDirectoryAdapter, DirectoryAdapter>();
-		serviceCollection.AddSingleton<IFileAdapter, FileAdapter>();
-		serviceCollection.AddSingleton<IPathAdapter, PathAdapter>();
+		serviceCollection.AddSingleton<IDirectory, DirectoryAdapter>();
+		serviceCollection.AddSingleton<IFile, FileAdapter>();
+		serviceCollection.AddSingleton<IPath, PathAdapter>();
 	}
 
 	private static void AddValidators(this IServiceCollection serviceCollection)
@@ -71,12 +72,14 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
 		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
 		serviceCollection.AddSingleton<IConfigGenerator, ConfigGenerator>();
+		serviceCollection.AddSingleton<ILogsPruner, LogsPruner>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
 		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();
 		serviceCollection.AddSingleton<IConnectionHandler, ConnectionHandler>();
 		serviceCollection.AddSingleton<IConfigHandler, ConfigHandler>();
+		serviceCollection.AddSingleton<ILogsHandler, LogsHandler>();
 
 		serviceCollection.AddSingleton<ILoggerProvider, FileLoggerProvider>();
 		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();

@@ -3,13 +3,16 @@ using System.Text;
 namespace Dingo.Core.Services.Adapters;
 
 /// <summary> Adapter for <see cref="System.IO.File"/> for unit testing purposes </summary>
-public interface IFileAdapter
+public interface IFile
 {
 	/// <inheritdoc cref="File.AppendText"/>
 	StreamWriter AppendText(string path);
 
 	/// <inheritdoc cref="File.Create(string)"/>
 	FileStream Create(string path);
+
+	/// <inheritdoc cref="File.Delete(string)"/>
+	void Delete(string path);
 
 	/// <inheritdoc cref="File.Exists"/>
 	bool Exists(string path);

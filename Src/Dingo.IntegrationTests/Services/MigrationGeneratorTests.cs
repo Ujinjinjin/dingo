@@ -3,7 +3,7 @@ using Dingo.Core.Services.Migrations;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dingo.IntegrationTests;
+namespace Dingo.IntegrationTests.Services;
 
 public class MigrationGeneratorTests : IntegrationTestBase
 {

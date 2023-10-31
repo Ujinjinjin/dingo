@@ -8,10 +8,10 @@ public record Hash(string Value)
 {
 	public string Value { get; private set; } = Value;
 
-	public static async Task<Hash> ComputeAsync(IFileAdapter fileAdapter, MigrationPath migrationPath)
+	public static async Task<Hash> ComputeAsync(IFile file, MigrationPath migrationPath)
 	{
 		using var sha = SHA256.Create();
-		var byteContent = Encoding.UTF8.GetBytes(await fileAdapter.ReadAllTextAsync(migrationPath.Absolute));
+		var byteContent = Encoding.UTF8.GetBytes(await file.ReadAllTextAsync(migrationPath.Absolute));
 
 		var rawHash = sha.ComputeHash(byteContent);
 

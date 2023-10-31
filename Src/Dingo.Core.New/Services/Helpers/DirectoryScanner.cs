@@ -7,35 +7,35 @@ namespace Dingo.Core.Services.Helpers;
 /// <inheritdoc />
 internal sealed class DirectoryScanner : IDirectoryScanner
 {
-	private readonly IDirectoryAdapter _directoryAdapter;
-	private readonly IPathAdapter _pathAdapter;
+	private readonly IDirectory _directory;
+	private readonly IPath _path;
 
 	public DirectoryScanner(
-		IDirectoryAdapter directoryAdapter,
-		IPathAdapter pathAdapter
+		IDirectory directory,
+		IPath path
 	)
 	{
-		_directoryAdapter = directoryAdapter.Required(nameof(directoryAdapter));
-		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
+		_directory = directory.Required(nameof(directory));
+		_path = path.Required(nameof(path));
 	}
 
 	/// <inheritdoc />
 	public IReadOnlyList<MigrationPath> Scan(string rootPath, string searchPattern)
 	{
-		var fileList = _directoryAdapter.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories);
+		var fileList = _directory.GetFiles(rootPath, searchPattern, SearchOption.AllDirectories);
 
 		var migrationPaths = new MigrationPath[fileList.Length];
 
 		for (var i = 0; i < fileList.Length; i++)
 		{
 			var absolutePath = fileList[i];
-			var relativePath = _pathAdapter.GetRelativePath(rootPath, absolutePath);
-			var filename = _pathAdapter.GetFileName(absolutePath);
+			var relativePath = _path.GetRelativePath(rootPath, absolutePath);
+			var filename = _path.GetFileName(absolutePath);
 
 			migrationPaths[i] = new MigrationPath(
 				absolutePath,
 				relativePath,
-				_pathAdapter.GetRootDirectory(relativePath),
+				_path.GetRootDirectory(relativePath),
 				filename
 			);
 		}

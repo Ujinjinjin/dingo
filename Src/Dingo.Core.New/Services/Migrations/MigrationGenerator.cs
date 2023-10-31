@@ -8,21 +8,21 @@ namespace Dingo.Core.Services.Migrations;
 internal class MigrationGenerator : IMigrationGenerator
 {
 	private readonly IMigrationNameValidator _migrationNameValidator;
-	private readonly IDirectoryAdapter _directoryAdapter;
-	private readonly IPathAdapter _pathAdapter;
-	private readonly IFileAdapter _fileAdapter;
+	private readonly IDirectory _directory;
+	private readonly IPath _path;
+	private readonly IFile _file;
 
 	public MigrationGenerator(
 		IMigrationNameValidator migrationNameValidator,
-		IDirectoryAdapter directoryAdapter,
-		IPathAdapter pathAdapter,
-		IFileAdapter fileAdapter
+		IDirectory directory,
+		IPath path,
+		IFile file
 	)
 	{
 		_migrationNameValidator = migrationNameValidator.Required(nameof(migrationNameValidator));
-		_directoryAdapter = directoryAdapter.Required(nameof(directoryAdapter));
-		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
-		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
+		_directory = directory.Required(nameof(directory));
+		_path = path.Required(nameof(path));
+		_file = file.Required(nameof(file));
 	}
 
 	public async Task GenerateAsync(string name, string path, CancellationToken ct = default)
@@ -32,22 +32,22 @@ internal class MigrationGenerator : IMigrationGenerator
 			throw new InvalidMigrationNameException();
 		}
 
-		if (!_directoryAdapter.Exists(path))
+		if (!_directory.Exists(path))
 		{
-			_directoryAdapter.CreateDirectory(path);
+			_directory.CreateDirectory(path);
 		}
 
 		var filepath = BuildMigrationFileName(path, name);
 
 		// TODO: Extract into EmptyMigrationTemplate
-		_fileAdapter.Create(filepath).Close();
+		_file.Create(filepath).Close();
 		await Task.CompletedTask;
 	}
 
 	private string BuildMigrationFileName(string path, string name)
 	{
-		return _pathAdapter.Join(
-			_pathAdapter.GetAbsolutePath(path),
+		return _path.Join(
+			_path.GetAbsolutePath(path),
 			$"{DateTime.UtcNow:yyyyMMddHHmmss}_{name}.sql"
 		);
 	}

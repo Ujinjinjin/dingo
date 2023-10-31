@@ -1,12 +1,8 @@
 using AutoFixture;
-using Dingo.Core;
-using Dingo.Core.Services.Adapters;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Trico.Configuration;
 
-namespace Dingo.IntegrationTests;
+namespace Dingo.IntegrationTests.IO;
 
 public class FileLoggerTests : IntegrationTestBase
 {
@@ -91,28 +87,5 @@ public class FileLoggerTests : IntegrationTestBase
 			var logContents = await File.ReadAllTextAsync(logFilePath);
 			logContents.Should().NotContain(message);
 		}
-	}
-
-	private ILogger CreateLogger(LogLevel logLevel)
-	{
-		var path = ServiceProvider.GetService<IPathAdapter>();
-		var loggerFactory = ServiceProvider.GetService<ILoggerFactory>();
-
-		Directory.CreateDirectory(path.GetLogsPath());
-		SetLogLevel(logLevel);
-
-		return loggerFactory.CreateLogger<FileLoggerTests>();
-	}
-
-	private void SetLogLevel(LogLevel logLevel)
-	{
-		var configuration = ServiceProvider.GetService<IConfiguration>();
-		configuration[Configuration.Key.LogLevel] = logLevel.ToString();
-	}
-
-	private string[] GetLogFiles()
-	{
-		var path = ServiceProvider.GetService<IPathAdapter>();
-		return Directory.GetFiles(path.GetLogsPath());
 	}
 }

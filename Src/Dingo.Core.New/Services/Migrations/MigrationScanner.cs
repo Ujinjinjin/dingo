@@ -11,19 +11,19 @@ internal class MigrationScanner : IMigrationScanner
 	private readonly IConfiguration _configuration;
 	private readonly IMigrationCommandParser _commandParser;
 	private readonly IDirectoryScanner _directoryScanner;
-	private readonly IFileAdapter _fileAdapter;
+	private readonly IFile _file;
 
 	public MigrationScanner(
 		IConfiguration configuration,
 		IMigrationCommandParser commandParser,
 		IDirectoryScanner directoryScanner,
-		IFileAdapter fileAdapter
+		IFile file
 	)
 	{
 		_configuration = configuration.Required(nameof(configuration));
 		_commandParser = commandParser.Required(nameof(commandParser));
 		_directoryScanner = directoryScanner.Required(nameof(directoryScanner));
-		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
+		_file = file.Required(nameof(file));
 	}
 
 	public async Task<IReadOnlyList<Migration>> ScanAsync(
@@ -40,9 +40,9 @@ internal class MigrationScanner : IMigrationScanner
 
 		foreach (var migrationPath in migrationFiles)
 		{
-			var migrationContent = await _fileAdapter.ReadAllTextAsync(migrationPath.Absolute, ct);
+			var migrationContent = await _file.ReadAllTextAsync(migrationPath.Absolute, ct);
 			var command = _commandParser.Parse(migrationContent);
-			var hash = await Hash.ComputeAsync(_fileAdapter, migrationPath);
+			var hash = await Hash.ComputeAsync(_file, migrationPath);
 
 			var migration = new Migration(migrationPath, hash, command);
 			migrations.Add(migration);

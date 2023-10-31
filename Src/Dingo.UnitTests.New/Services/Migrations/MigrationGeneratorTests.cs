@@ -34,21 +34,21 @@ public class MigrationGeneratorTests : UnitTestBase
 		return validator.Object;
 	}
 
-	private IDirectoryAdapter SetupDirectoryAdapter()
+	private IDirectory SetupDirectoryAdapter()
 	{
-		var adapter = new Mock<IDirectoryAdapter>();
+		var adapter = new Mock<IDirectory>();
 		return adapter.Object;
 	}
 
-	private IPathAdapter SetupPathAdapter()
+	private IPath SetupPathAdapter()
 	{
-		var adapter = new Mock<IPathAdapter>();
+		var adapter = new Mock<IPath>();
 		return adapter.Object;
 	}
 
-	private IFileAdapter SetupFileAdapter()
+	private IFile SetupFileAdapter()
 	{
-		var adapter = new Mock<IFileAdapter>();
+		var adapter = new Mock<IFile>();
 		return adapter.Object;
 	}
 }

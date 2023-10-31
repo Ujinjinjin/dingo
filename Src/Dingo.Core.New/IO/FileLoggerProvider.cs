@@ -8,21 +8,21 @@ namespace Dingo.Core.IO;
 internal class FileLoggerProvider : ILoggerProvider
 {
 	private readonly IConfiguration _configuration;
-	private readonly IFileAdapter _fileAdapter;
-	private readonly IDirectoryAdapter _directoryAdapter;
-	private readonly IPathAdapter _pathAdapter;
+	private readonly IFile _file;
+	private readonly IDirectory _directory;
+	private readonly IPath _path;
 
 	public FileLoggerProvider(
 		IConfiguration configuration,
-		IFileAdapter fileAdapter,
-		IDirectoryAdapter directoryAdapter,
-		IPathAdapter pathAdapter
+		IFile file,
+		IDirectory directory,
+		IPath path
 	)
 	{
 		_configuration = configuration.Required(nameof(configuration));
-		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
-		_directoryAdapter = directoryAdapter.Required(nameof(directoryAdapter));
-		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
+		_file = file.Required(nameof(file));
+		_directory = directory.Required(nameof(directory));
+		_path = path.Required(nameof(path));
 	}
 
 	public void Dispose()
@@ -31,6 +31,6 @@ internal class FileLoggerProvider : ILoggerProvider
 
 	public ILogger CreateLogger(string categoryName)
 	{
-		return new FileLogger(categoryName, _configuration, _fileAdapter, _directoryAdapter, _pathAdapter);
+		return new FileLogger(categoryName, _configuration, _file, _directory, _path);
 	}
 }

@@ -8,15 +8,15 @@ namespace Dingo.Core.Services.Migrations;
 
 internal class MigrationPathBuilder : IMigrationPathBuilder
 {
-	private readonly IPathAdapter _pathAdapter;
+	private readonly IPath _path;
 	private readonly IConfiguration _configuration;
 
 	public MigrationPathBuilder(
-		IPathAdapter pathAdapter,
+		IPath path,
 		IConfiguration configuration
 	)
 	{
-		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
+		_path = path.Required(nameof(path));
 		_configuration = configuration.Required(nameof(configuration));
 	}
 
@@ -31,8 +31,8 @@ internal class MigrationPathBuilder : IMigrationPathBuilder
 			_ => throw new DatabaseProviderNotSupportedException(providerName),
 		};
 
-		return _pathAdapter.Join(
-			_pathAdapter.GetApplicationPath(),
+		return _path.Join(
+			_path.GetApplicationPath(),
 			"Scripts",
 			providerDir
 		);

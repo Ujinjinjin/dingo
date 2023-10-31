@@ -22,10 +22,10 @@ public class DirectoryScannerTests : UnitTestBase
 		filenames.Should().BeInAscendingOrder();
 	}
 
-	private IPathAdapter SetupPathAdapter()
+	private IPath SetupPathAdapter()
 	{
 		var pathHelper = new PathAdapter();
-		var adapter = new Mock<IPathAdapter>();
+		var adapter = new Mock<IPath>();
 		adapter
 			.Setup(x => x.GetRootDirectory(It.IsAny<string>()))
 			.Returns<string>(x => pathHelper.GetRootDirectory(x));
@@ -33,9 +33,9 @@ public class DirectoryScannerTests : UnitTestBase
 		return adapter.Object;
 	}
 
-	private IDirectoryAdapter SetupDirectoryAdapter(string rootPath)
+	private IDirectory SetupDirectoryAdapter(string rootPath)
 	{
-		var adapter = new Mock<IDirectoryAdapter>();
+		var adapter = new Mock<IDirectory>();
 
 		adapter
 			.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))

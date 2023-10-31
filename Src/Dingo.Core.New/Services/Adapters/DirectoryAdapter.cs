@@ -1,7 +1,7 @@
 namespace Dingo.Core.Services.Adapters;
 
 /// <inheritdoc />
-public sealed class DirectoryAdapter : IDirectoryAdapter
+public sealed class DirectoryAdapter : IDirectory
 {
 	/// <inheritdoc />
 	public bool Exists(string path) => Directory.Exists(path);

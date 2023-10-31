@@ -21,7 +21,7 @@ internal class ConfigHandler : IConfigHandler
 		_configGenerator = configGenerator.Required(nameof(configGenerator));
 		_output = output.Required(nameof(output));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
-			.CreateLogger<MigrationHandler>()
+			.CreateLogger<ConfigHandler>()
 			.Required(nameof(loggerFactory));
 	}
 

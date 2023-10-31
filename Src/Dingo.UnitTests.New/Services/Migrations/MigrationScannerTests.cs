@@ -124,9 +124,9 @@ public class MigrationScannerTests : UnitTestBase
 		return scanner.Object;
 	}
 
-	private IFileAdapter SetupFileAdapter()
+	private IFile SetupFileAdapter()
 	{
-		var adapter = new Mock<IFileAdapter>();
+		var adapter = new Mock<IFile>();
 
 		adapter.Setup(a => a.ReadAllTextAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(Fixture.Create<string>());

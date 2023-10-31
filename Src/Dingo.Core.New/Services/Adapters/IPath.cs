@@ -1,7 +1,7 @@
 ﻿namespace Dingo.Core.Services.Adapters;
 
 /// <summary> Path adapter </summary>
-internal interface IPathAdapter
+internal interface IPath
 {
 	/// <summary> Clean path and unify all slashes </summary>
 	string CleanPath(string path);

@@ -20,7 +20,7 @@ internal class ConnectionHandler : IConnectionHandler
 		_repository = repository.Required(nameof(repository));
 		_output = output.Required(nameof(output));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
-			.CreateLogger<MigrationHandler>()
+			.CreateLogger<ConnectionHandler>()
 			.Required(nameof(loggerFactory));
 	}
 

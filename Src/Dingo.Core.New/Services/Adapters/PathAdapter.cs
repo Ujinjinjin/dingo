@@ -1,7 +1,7 @@
 ﻿namespace Dingo.Core.Services.Adapters;
 
 /// <inheritdoc />
-internal sealed class PathAdapter : IPathAdapter
+internal sealed class PathAdapter : IPath
 {
 	private const char DirectorySeparatorChar = '/';
 

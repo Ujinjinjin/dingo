@@ -4,7 +4,7 @@ using Dingo.Core.Services.Config;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dingo.IntegrationTests;
+namespace Dingo.IntegrationTests.Services;
 
 public class ConfigGeneratorTests : IntegrationTestBase
 {

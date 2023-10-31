@@ -10,25 +10,25 @@ internal class FileLogger : ILogger
 {
 	private readonly string _categoryName;
 	private readonly IConfiguration _configuration;
-	private readonly IFileAdapter _fileAdapter;
-	private readonly IDirectoryAdapter _directoryAdapter;
-	private readonly IPathAdapter _pathAdapter;
+	private readonly IFile _file;
+	private readonly IDirectory _directory;
+	private readonly IPath _path;
 
 	private readonly StringBuilder _logMessageBuilder;
 
 	public FileLogger(
 		string categoryName,
 		IConfiguration configuration,
-		IFileAdapter fileAdapter,
-		IDirectoryAdapter directoryAdapter,
-		IPathAdapter pathAdapter
+		IFile file,
+		IDirectory directory,
+		IPath path
 	)
 	{
 		_categoryName = categoryName.Required(nameof(categoryName));
 		_configuration = configuration.Required(nameof(configuration));
-		_fileAdapter = fileAdapter.Required(nameof(fileAdapter));
-		_directoryAdapter = directoryAdapter.Required(nameof(directoryAdapter));
-		_pathAdapter = pathAdapter.Required(nameof(pathAdapter));
+		_file = file.Required(nameof(file));
+		_directory = directory.Required(nameof(directory));
+		_path = path.Required(nameof(path));
 
 		_logMessageBuilder = new StringBuilder();
 	}
@@ -49,23 +49,23 @@ internal class FileLogger : ILogger
 		var logFilePath = GetLogFilePath();
 		var logMessage = BuildLogMessage(logLevel, eventId, state, exception, formatter);
 
-		using var writer = _fileAdapter.AppendText(logFilePath);
+		using var writer = _file.AppendText(logFilePath);
 		writer.WriteLine(logMessage);
 	}
 
 	private string GetLogFilePath()
 	{
-		var logsDir = _pathAdapter.GetLogsPath();
-		if (!_directoryAdapter.Exists(logsDir))
+		var logsDir = _path.GetLogsPath();
+		if (!_directory.Exists(logsDir))
 		{
-			_ = _directoryAdapter.CreateDirectory(logsDir);
+			_ = _directory.CreateDirectory(logsDir);
 		}
 
 		var logDate = DateTime.UtcNow.ToString("yyyyMMdd");
-		var logFilePath = _pathAdapter.Join(logsDir, $"{logDate}.log");
-		if (!_fileAdapter.Exists(logFilePath))
+		var logFilePath = _path.Join(logsDir, $"{logDate}.log");
+		if (!_file.Exists(logFilePath))
 		{
-			_fileAdapter.Create(logFilePath).Close();
+			_file.Create(logFilePath).Close();
 		}
 
 		return logFilePath;
