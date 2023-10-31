@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{FED1D811-C
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core.Database", "Dingo.Core.Database\Dingo.Core.Database.csproj", "{41F5ED8F-18B1-41BA-BCA2-D91D1C2B1453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Playground", "Dingo.Playground\Dingo.Playground.csproj", "{89878507-5CDF-4507-886E-D233EC66E2C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.IntegrationTests", "Dingo.IntegrationTests\Dingo.IntegrationTests.csproj", "{74485721-50E6-4407-B952-17DD21B5EBA1}"
 EndProject
@@ -96,6 +98,18 @@ Global
 		{41F5ED8F-18B1-41BA-BCA2-D91D1C2B1453}.Release|x64.Build.0 = Release|Any CPU
 		{41F5ED8F-18B1-41BA-BCA2-D91D1C2B1453}.Release|x86.ActiveCfg = Release|Any CPU
 		{41F5ED8F-18B1-41BA-BCA2-D91D1C2B1453}.Release|x86.Build.0 = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|x64.Build.0 = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Debug|x86.Build.0 = Debug|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|x64.ActiveCfg = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|x64.Build.0 = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{89878507-5CDF-4507-886E-D233EC66E2C9}.Release|x86.Build.0 = Release|Any CPU
 		{74485721-50E6-4407-B952-17DD21B5EBA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74485721-50E6-4407-B952-17DD21B5EBA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74485721-50E6-4407-B952-17DD21B5EBA1}.Debug|x64.ActiveCfg = Debug|Any CPU
