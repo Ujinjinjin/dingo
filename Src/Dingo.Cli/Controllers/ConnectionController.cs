@@ -33,12 +33,22 @@ internal sealed class ConnectionController : CliController
 
 	private Command GetPingCommand()
 	{
-		var command = CommandFactory.CreateCommand(
-			"ping",
-			"Ping database to check its availability"
+		var profileOption = OptionFactory.CreateOption<string>(
+			new[] { "--configuration", "-c" },
+			"Configuration profile name",
+			false
 		);
 
-		command.SetHandler(async () => await _connectionHandler.HandshakeAsync());
+		var command = CommandFactory.CreateCommand(
+			"ping",
+			"Ping database to check its availability",
+			profileOption
+		);
+
+		command.SetHandler(
+			async profile => await _connectionHandler.HandshakeAsync(profile),
+			profileOption
+		);
 
 		return command;
 	}

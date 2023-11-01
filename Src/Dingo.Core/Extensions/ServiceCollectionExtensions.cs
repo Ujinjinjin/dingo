@@ -72,6 +72,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
 		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
 		serviceCollection.AddSingleton<IConfigGenerator, ConfigGenerator>();
+		serviceCollection.AddSingleton<IConfigProfileLoader, ConfigProfileLoader>();
 		serviceCollection.AddSingleton<ILogsPruner, LogsPruner>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();

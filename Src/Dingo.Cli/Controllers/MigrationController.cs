@@ -64,6 +64,11 @@ public class MigrationController : CliController
 
 	private Command GetUpCommand()
 	{
+		var profileOption = OptionFactory.CreateOption<string>(
+			new[] { "--configuration", "-c" },
+			"Configuration profile name",
+			false
+		);
 		var pathOption = OptionFactory.CreateOption<string>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
@@ -73,11 +78,13 @@ public class MigrationController : CliController
 		var command = CommandFactory.CreateCommand(
 			"up",
 			"Apply all outdated migrations up",
+			profileOption,
 			pathOption
 		);
 
 		command.SetHandler(
-			async path => await _migrationHandler.MigrateAsync(path),
+			async (profile, path) => await _migrationHandler.MigrateAsync(profile, path),
+			profileOption,
 			pathOption
 		);
 
@@ -86,6 +93,11 @@ public class MigrationController : CliController
 
 	private Command GetDownCommand()
 	{
+		var profileOption = OptionFactory.CreateOption<string>(
+			new[] { "--configuration", "-c" },
+			"Configuration profile name",
+			false
+		);
 		var pathOption = OptionFactory.CreateOption<string>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
@@ -105,13 +117,15 @@ public class MigrationController : CliController
 		var command = CommandFactory.CreateCommand(
 			"down",
 			"Rollback N last patches",
+			profileOption,
 			pathOption,
 			countOption,
 			forceOption
 		);
 
 		command.SetHandler(
-			async (path, count, force) => await _migrationHandler.RollbackAsync(path, count, force),
+			async (profile, path, count, force) => await _migrationHandler.RollbackAsync(profile, path, count, force),
+			profileOption,
 			pathOption,
 			countOption,
 			forceOption
@@ -122,6 +136,11 @@ public class MigrationController : CliController
 
 	private Command GetStatusCommand()
 	{
+		var profileOption = OptionFactory.CreateOption<string>(
+			new[] { "--configuration", "-c" },
+			"Configuration profile name",
+			false
+		);
 		var pathOption = OptionFactory.CreateOption<string>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
@@ -131,11 +150,13 @@ public class MigrationController : CliController
 		var command = CommandFactory.CreateCommand(
 			"status",
 			"Show status of migrations in working directory",
+			profileOption,
 			pathOption
 		);
 
 		command.SetHandler(
-			async path => await _migrationHandler.ShowStatusAsync(path),
+			async (profile, path) => await _migrationHandler.ShowStatusAsync(profile, path),
+			profileOption,
 			pathOption
 		);
 

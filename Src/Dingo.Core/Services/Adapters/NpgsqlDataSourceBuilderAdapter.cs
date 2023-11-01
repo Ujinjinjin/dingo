@@ -1,3 +1,4 @@
+using Dingo.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Npgsql.TypeMapping;
@@ -7,27 +8,40 @@ namespace Dingo.Core.Services.Adapters;
 
 public class NpgsqlDataSourceBuilderAdapter : INpgsqlDataSourceBuilder
 {
-	private readonly NpgsqlDataSourceBuilder _builder;
+	private readonly IConfiguration _configuration;
+
+	private NpgsqlDataSourceBuilder? _builder;
+	private NpgsqlDataSourceBuilder Builder
+	{
+		get
+		{
+			if (_builder is not null) return _builder;
+
+			var connectionString = _configuration.Get(Configuration.Key.ConnectionString);
+			_builder = new NpgsqlDataSourceBuilder(connectionString);
+
+			return _builder;
+		}
+	}
 
 	public NpgsqlDataSourceBuilderAdapter(IConfiguration configuration)
 	{
-		var connectionString = configuration.Get(Configuration.Key.ConnectionString);
-		_builder = new NpgsqlDataSourceBuilder(connectionString);
+		_configuration = configuration.Required(nameof(configuration));
 	}
 
 	public INpgsqlDataSourceBuilder UseLoggerFactory(ILoggerFactory? loggerFactory)
 	{
-		_builder.UseLoggerFactory(loggerFactory);
+		Builder.UseLoggerFactory(loggerFactory);
 		return this;
 	}
 
 	public INpgsqlTypeMapper MapComposite<T>(string? pgName = null, INpgsqlNameTranslator? nameTranslator = null)
 	{
-		return _builder.MapComposite<T>(pgName, nameTranslator);
+		return Builder.MapComposite<T>(pgName, nameTranslator);
 	}
 
 	public INpgsqlDataSource Build()
 	{
-		return new NpgsqlDataSourceAdapter(_builder.Build());
+		return new NpgsqlDataSourceAdapter(Builder.Build());
 	}
 }

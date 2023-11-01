@@ -1,5 +1,6 @@
 using Dingo.Core.Extensions;
 using Dingo.Core.Services.Adapters;
+using Dingo.Core.Utils;
 using Trico.Configuration;
 
 namespace Dingo.Core.Services.Config;
@@ -31,10 +32,7 @@ internal class ConfigGenerator : IConfigGenerator
 			_directory.CreateDirectory(fullPath);
 		}
 
-		var configFilename = string.IsNullOrEmpty(profile)
-			? $"{Constants.ConfigFilename}.{Constants.ConfigExtension}"
-			: $"{Constants.ConfigFilename}.{profile}.{Constants.ConfigExtension}";
-
+		var configFilename = ConfigFilename.Build(profile);
 		var configPath = _path.Join(fullPath, configFilename);
 		if (!_file.Exists(configPath))
 		{

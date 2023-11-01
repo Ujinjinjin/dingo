@@ -1,5 +1,6 @@
 using Dingo.Core.Extensions;
 using Dingo.Core.IO;
+using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Migrations;
 using Dingo.Core.Utils;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ internal class MigrationHandler : IMigrationHandler
 	private readonly IMigrationComparer _migrationComparer;
 	private readonly IMigrationScanner _migrationScanner;
 	private readonly IMigrationRunner _migrationRunner;
+	private readonly IConfigProfileLoader _profileLoader;
 	private readonly IOutput _output;
 	private readonly ILogger _logger;
 
@@ -20,6 +22,7 @@ internal class MigrationHandler : IMigrationHandler
 		IMigrationComparer migrationComparer,
 		IMigrationScanner migrationScanner,
 		IMigrationRunner migrationRunner,
+		IConfigProfileLoader profileLoader,
 		IOutput output,
 		ILoggerFactory loggerFactory
 	)
@@ -28,6 +31,7 @@ internal class MigrationHandler : IMigrationHandler
 		_migrationComparer = migrationComparer.Required(nameof(migrationComparer));
 		_migrationScanner = migrationScanner.Required(nameof(migrationScanner));
 		_migrationRunner = migrationRunner.Required(nameof(migrationRunner));
+		_profileLoader = profileLoader.Required(nameof(profileLoader));
 		_output = output.Required(nameof(output));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
 			.CreateLogger<MigrationHandler>()
@@ -51,12 +55,13 @@ internal class MigrationHandler : IMigrationHandler
 	}
 
 	/// <inheritdoc />
-	public async Task MigrateAsync(string path, CancellationToken ct = default)
+	public async Task MigrateAsync(string? profile, string path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
 
 		try
 		{
+			await _profileLoader.LoadAsync(profile, ct);
 			await _migrationRunner.MigrateAsync(path, ct);
 		}
 		catch (Exception ex)
@@ -67,12 +72,19 @@ internal class MigrationHandler : IMigrationHandler
 	}
 
 	/// <inheritdoc />
-	public async Task RollbackAsync(string path, int patchCount, bool force, CancellationToken ct = default)
+	public async Task RollbackAsync(
+		string? profile,
+		string path,
+		int patchCount,
+		bool force,
+		CancellationToken ct = default
+	)
 	{
 		using var _ = new CodeTiming(_logger);
 
 		try
 		{
+			await _profileLoader.LoadAsync(profile, ct);
 			await _migrationRunner.RollbackAsync(path, patchCount, force, ct);
 		}
 		catch (Exception ex)
@@ -83,12 +95,13 @@ internal class MigrationHandler : IMigrationHandler
 	}
 
 	/// <inheritdoc />
-	public async Task ShowStatusAsync(string path, CancellationToken ct = default)
+	public async Task ShowStatusAsync(string? profile, string path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
 
 		try
 		{
+			await _profileLoader.LoadAsync(profile, ct);
 			await _ShowStatusAsync(path, ct);
 		}
 		catch (Exception ex)

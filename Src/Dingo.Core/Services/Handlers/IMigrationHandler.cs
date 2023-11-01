@@ -6,11 +6,11 @@ public interface IMigrationHandler
 	Task CreateAsync(string name, string path, CancellationToken ct = default);
 
 	/// <summary> Show migrations status </summary>
-	Task ShowStatusAsync(string path, CancellationToken ct = default);
+	Task ShowStatusAsync(string? profile, string path, CancellationToken ct = default);
 
 	/// <summary> Apply database migrations </summary>
-	Task MigrateAsync(string path, CancellationToken ct = default);
+	Task MigrateAsync(string? profile, string path, CancellationToken ct = default);
 
 	/// <summary> Rollback last N patches </summary>
-	Task RollbackAsync(string path, int patchCount, bool force, CancellationToken ct = default);
+	Task RollbackAsync(string? profile, string path, int patchCount, bool force, CancellationToken ct = default);
 }
