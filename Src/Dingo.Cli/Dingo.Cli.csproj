@@ -6,7 +6,8 @@
             <Nullable>enable</Nullable>
             <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>dingo</AssemblyName>
-        <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
+        <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
