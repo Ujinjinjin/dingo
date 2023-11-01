@@ -1,5 +1,5 @@
 ﻿using Cliff.Infrastructure;
-using Dingo.Core.IO;
+using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dingo.Cli.Infrastructure;
@@ -13,11 +13,9 @@ internal static class Program
 	{
 		var serviceProvider = new IocModule()
 			.Build();
+		serviceProvider.UseDingo();
 
 		var dingo = serviceProvider.GetService<ICliService>();
-		var outputQueues = serviceProvider
-			.GetServices<IOutputQueue>()
-			.ToArray();
 
 		if (dingo is null)
 		{
@@ -25,11 +23,5 @@ internal static class Program
 		}
 
 		await dingo.ExecuteAsync(args);
-
-		do
-		{
-			await Task.Delay(100);
-			// wait until queues are empty
-		} while (!outputQueues.All(x => x.IsEmpty));
 	}
 }

@@ -5,11 +5,9 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Cli", "Dingo.Cli\Dingo.Cli.csproj", "{0A84DD7B-B125-41A8-BD71-0DFEC9448676}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core", "Dingo.Core\Dingo.Core.csproj", "{205BA0BA-7D5D-446F-9267-67920C02AF41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core", "Dingo.Core\Dingo.Core.csproj", "{D6313990-94BA-4577-AE0F-3A7DFC90FE8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.Core.New", "Dingo.Core.New\Dingo.Core.New.csproj", "{D6313990-94BA-4577-AE0F-3A7DFC90FE8D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.UnitTests.New", "Dingo.UnitTests.New\Dingo.UnitTests.New.csproj", "{23CB14BE-40B6-45D8-9BE4-7764157F1D34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.UnitTests", "Dingo.UnitTests\Dingo.UnitTests.csproj", "{23CB14BE-40B6-45D8-9BE4-7764157F1D34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dingo.InfrastructureTests", "Dingo.InfrastructureTests\Dingo.InfrastructureTests.csproj", "{0C7403D7-E9B2-4D6D-B69E-5C6154187EDE}"
 EndProject
@@ -50,18 +48,6 @@ Global
 		{0A84DD7B-B125-41A8-BD71-0DFEC9448676}.Release|x64.Build.0 = Release|Any CPU
 		{0A84DD7B-B125-41A8-BD71-0DFEC9448676}.Release|x86.ActiveCfg = Release|Any CPU
 		{0A84DD7B-B125-41A8-BD71-0DFEC9448676}.Release|x86.Build.0 = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|x64.Build.0 = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Debug|x86.Build.0 = Debug|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|x64.ActiveCfg = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|x64.Build.0 = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|x86.ActiveCfg = Release|Any CPU
-		{205BA0BA-7D5D-446F-9267-67920C02AF41}.Release|x86.Build.0 = Release|Any CPU
 		{D6313990-94BA-4577-AE0F-3A7DFC90FE8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6313990-94BA-4577-AE0F-3A7DFC90FE8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6313990-94BA-4577-AE0F-3A7DFC90FE8D}.Debug|x64.ActiveCfg = Debug|Any CPU

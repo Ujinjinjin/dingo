@@ -13,56 +13,53 @@ internal static class ListExtensions
 		return source[index];
 	}
 
-	/// <summary> Get random item from source list </summary>
-	/// <param name="source">Source list of items</param>
-	/// <typeparam name="T">The type of items in the list</typeparam>
-	/// <returns>Random item from list</returns>
-	public static T GetRandom<T>(this IList<T> source)
-	{
-		return source[new Random().Next(0, source.Count)];
-	}
-
 	/// <summary> Select sequence from list of item beginning at startIndex and ending at endIndex </summary>
 	/// <param name="source">Source list of items</param>
-	/// <param name="startIndex">Start index</param>
-	/// <param name="endIndex">End index</param>
+	/// <param name="range">Range of item indices</param>
 	/// <typeparam name="T">The type of items in the list</typeparam>
 	/// <returns>Sequence of items</returns>
-	public static IList<T> Sequence<T>(this IList<T> source, Index startIndex, Index endIndex)
+	public static IList<T> Sequence<T>(this IList<T> source, Range range)
 	{
-		if (endIndex.IsFromEnd)
+		if (range.Start.Value >= source.Count || range.End.Value >= source.Count)
 		{
-			endIndex = source.Count - endIndex.Value;
+			throw new IndexOutOfRangeException();
 		}
 
-		var targetLength = endIndex.Value - startIndex.Value;
-		var target = new T[targetLength];
+		var start = range.Start.IsFromEnd
+			? source.Count - range.Start.Value
+			: range.Start.Value;
+		var end = range.End.IsFromEnd
+			? source.Count - range.End.Value
+			: range.End.Value;
 
-		for (var i = 0; i < targetLength; i++)
+		return start < end
+			? source.ForwardSequence(start, end)
+			: source.ReverseSequence(start, end);
+	}
+
+	private static IList<T> ForwardSequence<T>(this IList<T> source, int start, int end)
+	{
+		var length = end - start;
+		var target = new T[length];
+
+		for (var i = 0; i < length; i++)
 		{
-			target[i] = source[startIndex.Value + i];
+			target[i] = source[i + start];
 		}
 
 		return target;
 	}
 
-	/// <summary> Select sequence from list of item beginning at startIndex and ending with last item </summary>
-	/// <param name="source">Source list of items</param>
-	/// <param name="startIndex">Start index</param>
-	/// <typeparam name="T">The type of items in the list</typeparam>
-	/// <returns>Sequence of items</returns>
-	public static IList<T> SequenceFrom<T>(this IList<T> source, Index startIndex)
+	private static IList<T> ReverseSequence<T>(this IList<T> source, int start, int end)
 	{
-		return Sequence(source, startIndex, ^1);
-	}
+		var length = start - end;
+		var target = new T[length];
 
-	/// <summary> Select sequence from list of item beginning with first item and ending at endIndex </summary>
-	/// <param name="source">Source list of items</param>
-	/// <param name="endIndex">End index</param>
-	/// <typeparam name="T">The type of items in the list</typeparam>
-	/// <returns>Sequence of items</returns>
-	public static IList<T> SequenceTo<T>(this IList<T> source, Index endIndex)
-	{
-		return Sequence(source, 0, endIndex);
+		for (var i = 0; i < length; i++)
+		{
+			target[i] = source[start - 1 - i];
+		}
+
+		return target;
 	}
 }

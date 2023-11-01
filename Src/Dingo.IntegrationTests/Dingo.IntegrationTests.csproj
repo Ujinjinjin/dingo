@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dingo.Core.New\Dingo.Core.New.csproj" />
+      <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
     </ItemGroup>
 
 </Project>

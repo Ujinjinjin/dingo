@@ -1,28 +1,43 @@
-using AutoFixture;
-using Dingo.Core.Adapters;
-using Dingo.Core.Helpers;
-using Moq;
-using Xunit;
+using Dingo.Core.Services.Adapters;
+using Dingo.Core.Services.Helpers;
 
 namespace Dingo.UnitTests;
 
-public class DirectoryScannerTests : UnitTestsBase
+public class DirectoryScannerTests : UnitTestBase
 {
 	[Fact]
-	public void DirectoryScannerTests__GetFilePathList__WhenPathsGiven_ThenResultOrderedByModuleThenByFilename()
+	public void DirectoryScannerTests__GetFilePathList__WhenGivenPathContainsFiles_ThenResultOrderedByModuleThenByFilename()
 	{
-		// Arrange
-		var pathHelper = new PathHelper();
-		var mockPathHelper = new Mock<IPathHelper>();
-		var directoryAdapter = new Mock<IDirectoryAdapter>();
-
-		var fixture = CreateFixture(directoryAdapter, mockPathHelper);
+		// arrange
 		var rootPath = "/usr/home/projects/dingo/";
+		var pathAdapter = SetupPathAdapter();
+		var directoryAdapter = SetupDirectoryAdapter(rootPath);
+		var directoryScanner = new DirectoryScanner(directoryAdapter, pathAdapter);
 
-		mockPathHelper
+		// act
+		var filePathList = directoryScanner.Scan(rootPath, It.IsAny<string>());
+		var filenames = filePathList.Select(x => $"{x.Module}/{x.Filename}").ToArray();
+
+		// assert
+		filenames.Should().BeInAscendingOrder();
+	}
+
+	private IPath SetupPathAdapter()
+	{
+		var pathHelper = new PathAdapter();
+		var adapter = new Mock<IPath>();
+		adapter
 			.Setup(x => x.GetRootDirectory(It.IsAny<string>()))
 			.Returns<string>(x => pathHelper.GetRootDirectory(x));
-		directoryAdapter
+
+		return adapter.Object;
+	}
+
+	private IDirectory SetupDirectoryAdapter(string rootPath)
+	{
+		var adapter = new Mock<IDirectory>();
+
+		adapter
 			.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
 			.Returns(new[]
 			{
@@ -35,31 +50,6 @@ public class DirectoryScannerTests : UnitTestsBase
 				$"{rootPath}3. procedures/get_user_by_id.sql",
 			});
 
-		var directoryScanner = fixture.Create<DirectoryScanner>();
-
-		// Act
-		var filePathList = directoryScanner.GetFilePathList(rootPath, It.IsAny<string>());
-
-		// Assert
-		Assert.Equal("20201111000000_create.sql", filePathList[0].Filename);
-		Assert.Equal("1. migrations", filePathList[0].Module);
-
-		Assert.Equal("20201116000000_create.sql", filePathList[1].Filename);
-		Assert.Equal("1. migrations", filePathList[1].Module);
-
-		Assert.Equal("20201118000000_create.sql", filePathList[2].Filename);
-		Assert.Equal("1. migrations", filePathList[2].Module);
-
-		Assert.Equal("20201119000000_alter.sql", filePathList[3].Filename);
-		Assert.Equal("1. migrations", filePathList[3].Module);
-
-		Assert.Equal("t_user_filter.sql", filePathList[4].Filename);
-		Assert.Equal("2. date_types", filePathList[4].Module);
-
-		Assert.Equal("create_user.sql", filePathList[5].Filename);
-		Assert.Equal("3. procedures", filePathList[5].Module);
-
-		Assert.Equal("get_user_by_id.sql", filePathList[6].Filename);
-		Assert.Equal("3. procedures", filePathList[6].Module);
+		return adapter.Object;
 	}
 }

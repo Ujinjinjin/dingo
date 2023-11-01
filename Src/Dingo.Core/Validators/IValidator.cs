@@ -5,6 +5,7 @@ namespace Dingo.Core.Validators;
 internal interface IValidator<in T>
 {
 	/// <summary> Validate entity </summary>
+	/// <param name="entity"></param>
 	/// <returns>True if object is valid; False otherwise</returns>
 	bool Validate(T entity);
 }

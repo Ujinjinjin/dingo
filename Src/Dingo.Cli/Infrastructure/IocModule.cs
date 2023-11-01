@@ -2,8 +2,8 @@
 using Cliff.Infrastructure;
 using Dingo.Cli.Controllers;
 using Dingo.Cli.Implementors;
-using Dingo.Core.Abstractions;
 using Dingo.Core.Extensions;
+using Dingo.Core.IO;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dingo.Cli.Infrastructure;
@@ -22,13 +22,12 @@ public sealed class IocModule : BaseIocModule
 	{
 		collection.AddDingo();
 
-		collection.AddSingleton<IRenderer, CliRenderer>();
-		collection.AddSingleton<IPrompt, CliPrompt>();
+		collection.AddSingleton<IOutput, CliOutput>();
 
+		collection.AddSingleton<IController, MigrationController>();
 		collection.AddSingleton<IController, ConfigController>();
+		collection.AddSingleton<IController, ConnectionController>();
 		collection.AddSingleton<IController, LogsController>();
-		collection.AddSingleton<IController, MigrationsController>();
-		collection.AddSingleton<IController, ProviderController>();
 		collection.AddSingleton<IController, TestController>();
 	}
 }
