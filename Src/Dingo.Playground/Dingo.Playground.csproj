@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
+        <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
     </ItemGroup>
 
 </Project>
