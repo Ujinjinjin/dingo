@@ -8,16 +8,16 @@
         <AssemblyName>dingo</AssemblyName>
         <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Cliff" Version="1.1.2" />
-        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+        <PackageReference Include="Cliff" Version="1.1.14" />
+        <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-        <PackageReference Include="Pastel" Version="3.0.1" />
+        <PackageReference Include="Pastel" Version="4.2.0" />
         <PackageReference Include="Sharprompt" Version="2.4.5" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>

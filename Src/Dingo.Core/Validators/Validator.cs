@@ -4,23 +4,29 @@ namespace Dingo.Core.Validators;
 internal abstract class Validator<T> : IValidator<T>
 {
 	/// <summary> List of validation rules </summary>
-	protected IList<Func<T, bool>> ValidationRules;
+	private IReadOnlyList<Func<T, bool>>? _validationRules;
+
+	protected abstract IReadOnlyList<Func<T, bool>> GetValidationRules();
 
 	/// <inheritdoc />
 	public bool Validate(T entity)
 	{
-		if (ValidationRules == null || ValidationRules.Count == 0)
+		_validationRules = GetValidationRules();
+
+		if (_validationRules == null || _validationRules.Count == 0)
 		{
 			return true;
 		}
 
-		var result = true;
-
-		for (var i = 0; i < ValidationRules.Count; i++)
+		for (var i = 0; i < _validationRules.Count; i++)
 		{
-			result = result && ValidationRules[i](entity);
+			var result = _validationRules[i](entity);
+			if (!result)
+			{
+				return false;
+			}
 		}
 
-		return result;
+		return true;
 	}
 }

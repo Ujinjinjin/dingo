@@ -1,17 +1,18 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
+using Dingo.Core.Extensions;
 
 namespace Dingo.Core.Utils;
 
-public readonly struct CodeTiming : IDisposable
+internal readonly struct CodeTiming : IDisposable
 {
 	private readonly ILogger _logger;
 	private readonly long _startTicks;
-	private readonly string _callerName;
+	private readonly string? _callerName;
 
-	public CodeTiming(ILogger logger, [CallerMemberName] string callerName = null)
+	public CodeTiming(ILogger logger, [CallerMemberName] string? callerName = default)
 	{
-		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_logger = logger.Required(nameof(logger));
 		_startTicks = DateTime.UtcNow.Ticks;
 		_callerName = callerName;
 	}
