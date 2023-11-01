@@ -15,13 +15,6 @@ trigger:
     - Src/Dingo.Core/*
     - Src/Dingo.Database/*
 
-pr:
-  branches:
-    include:
-    - master
-    - release/*
-    - hotfix/*
-
 variables:
   - name: 'pipeline_name'
     value: 'Dingo CLI'
