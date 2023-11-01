@@ -1,37 +1,33 @@
 ﻿using Cliff;
-using Cliff.Extensions;
 using Cliff.Infrastructure;
 using Dingo.Cli.Controllers;
 using Dingo.Cli.Implementors;
-using Dingo.Core.Abstractions;
 using Dingo.Core.Extensions;
+using Dingo.Core.IO;
 using Microsoft.Extensions.DependencyInjection;
-using System.CommandLine;
 
 namespace Dingo.Cli.Infrastructure;
 
 /// <inheritdoc />
-public sealed class IocModule : IIocModule
+public sealed class IocModule : BaseIocModule
 {
-	/// <inheritdoc />
-	public IServiceProvider Build()
+	public IocModule() : base(
+		"dingo",
+		"dingo is framework-agnostic and lightweight database migration tool"
+	)
 	{
-		var collection = new ServiceCollection();
+	}
 
-		var rootCommand = new RootCommand("dingo is framework-agnostic and lightweight database migration tool") {Name = "dingo"};
-		collection.AddSingleton(rootCommand);
+	protected override void RegisterServices(IServiceCollection collection)
+	{
+		collection.AddDingo();
 
-		collection.UseDingo();
-		collection.UseCliff();
+		collection.AddSingleton<IOutput, CliOutput>();
 
-		collection.AddSingleton<IRenderer, CliRenderer>();
-		collection.AddSingleton<IPrompt, CliPrompt>();
-
+		collection.AddSingleton<IController, MigrationController>();
 		collection.AddSingleton<IController, ConfigController>();
+		collection.AddSingleton<IController, ConnectionController>();
 		collection.AddSingleton<IController, LogsController>();
-		collection.AddSingleton<IController, MigrationsController>();
-		collection.AddSingleton<IController, ProviderController>();
-
-		return collection.BuildServiceProvider();
+		collection.AddSingleton<IController, TestController>();
 	}
 }
