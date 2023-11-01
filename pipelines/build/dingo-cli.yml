@@ -13,7 +13,7 @@ trigger:
     - pipelines/templates/build-template.yml
     - Src/Dingo.Cli/*
     - Src/Dingo.Core/*
-    - Src/Cliff/*
+    - Src/Dingo.Database/*
 
 pr:
   branches:
@@ -36,9 +36,9 @@ variables:
   - name: 'buildConfiguration'
     value: 'Release'
   - name: 'major'
-    value: 1
-  - name: 'minor'
     value: 2
+  - name: 'minor'
+    value: 0
   - name: 'patch'
     value: $[counter('dingo_cli', 1)]
 
@@ -50,28 +50,28 @@ jobs:
       vmImage: 'Ubuntu-20.04'
     variables:
       buildPlatform: 'x64'
-    
+
     steps:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: '3.8.*'
         addToPath: true
         architecture: 'x64'
-    
+
     - template: ../templates/build-template.yml
       parameters:
         solution: $(solution)
         buildPlatform: $(buildPlatform)
         buildConfiguration: $(buildConfiguration)
         collectCodeCoverage: false
-    
+
     - task: PythonScript@0
       displayName: 'set version to env'
       inputs:
         scriptSource: 'filePath'
         scriptPath: 'tools/version.py'
         arguments: '--major $(major) --minor $(minor) --patch $(patch) --branch $(Build.SourceBranchName)'
-    
+
     - task: DotNetCoreCLI@2
       displayName: 'publish app executable'
       inputs:
@@ -81,68 +81,68 @@ jobs:
         arguments: '-c $(buildConfiguration) --self-contained --runtime linux-$(buildPlatform) -o bin/linux /property:Version=$(pkg_version)'
         zipAfterPublish: false
         modifyOutputPath: false
-    
+
     - task: CmdLine@2
       displayName: 'create deb packaging directories'
       inputs:
         script: mkdir temp temp/dingo temp/dingo/DEBIAN temp/dingo/usr temp/dingo/usr/share temp/dingo/usr/share/dingo
-    
+
     - task: PythonScript@0
       displayName: 'create DEBIAN control file'
       inputs:
         scriptSource: 'filePath'
         scriptPath: 'tools/control.py'
         arguments: '-p $(pkg_name) -v $(pkg_version) -s 1024 -d "$(pkg_description)" --dest temp/dingo/DEBIAN'
-    
+
     - task: CmdLine@2
       displayName: 'copy build artifacts to deb packaging directory'
       inputs:
         script: cp -r bin/linux/* temp/dingo/usr/share/dingo
-    
+
     - task: CmdLine@2
       displayName: 'create deb package'
       inputs:
         script: dpkg-deb --build temp/dingo
-    
+
     - task: CmdLine@2
       displayName: 'rename deb package'
       inputs:
         script: mv temp/dingo.deb "dingo-$(pkg_version)_$(buildPlatform).deb"
-    
+
     - task: DeleteFiles@1
       displayName: 'clear artifact staging directory'
       inputs:
         SourceFolder: '$(Build.ArtifactStagingDirectory)'
         Contents: '$(Build.ArtifactStagingDirectory)/cli/*'
-    
+
     - task: CopyFiles@2
       displayName: 'copy tools to artifact staging deirectory'
       inputs:
         Contents: 'tools/*'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
-    
+
     - task: CopyFiles@2
       displayName: 'copy release notes to artifact staging deirectory'
       inputs:
         Contents: 'Src/Dingo.Cli/README.md'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
-    
+
     - task: CopyFiles@2
       displayName: 'copy files to artifact staging deirectory'
       inputs:
         Contents: 'dingo-$(pkg_version)_$(buildPlatform).deb'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
-    
+
     - task: PythonScript@0
       displayName: 'store environment variables'
       inputs:
         scriptSource: 'filePath'
         scriptPath: 'tools/store_variables.py'
         arguments: '--dest "$(Build.ArtifactStagingDirectory)/cli/variables.json" -v $(pkg_version)'
-    
+
     - task: PublishBuildArtifacts@1
       displayName: 'publish build artifacts'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/cli'
+        PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
         ArtifactName: 'drop'
         publishLocation: 'Container'

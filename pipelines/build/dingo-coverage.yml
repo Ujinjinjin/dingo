@@ -1,0 +1,41 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+
+pr:
+  branches:
+    include:
+      - master
+
+variables:
+  - name: 'pipeline_name'
+    value: 'Dingo. Tests Coverage'
+  - name: 'solution'
+    value: 'src/dingo.sln'
+  - name: 'buildPlatform'
+    value: 'Any CPU'
+  - name: 'buildConfiguration'
+    value: 'Release'
+
+name: '${{ variables.pipeline_name }} - $(Rev:r)'
+
+jobs:
+  - job: Windows
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+      - template: ../templates/build-template.yml
+        parameters:
+          solution: $(solution)
+          buildPlatform: $(buildPlatform)
+          buildConfiguration: $(buildConfiguration)
+          collectCodeCoverage: true
+
+      - task: PublishCodeCoverageResults@1
+        displayName: 'publish code coverage result'
+        inputs:
+          codeCoverageTool: 'JaCoCo'
+          summaryFileLocation: '$(Agent.TempDirectory)/*.coverage'
