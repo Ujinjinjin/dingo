@@ -56,7 +56,6 @@ jobs:
         solution: $(solution)
         buildPlatform: $(buildPlatform)
         buildConfiguration: $(buildConfiguration)
-        collectCodeCoverage: false
 
     - task: PythonScript@0
       displayName: 'set version to env'
@@ -109,19 +108,19 @@ jobs:
         Contents: '$(Build.ArtifactStagingDirectory)/cli/*'
 
     - task: CopyFiles@2
-      displayName: 'copy tools to artifact staging deirectory'
+      displayName: 'copy tools to artifact staging directory'
       inputs:
         Contents: 'tools/*'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
 
     - task: CopyFiles@2
-      displayName: 'copy release notes to artifact staging deirectory'
+      displayName: 'copy release notes to artifact staging directory'
       inputs:
         Contents: 'Src/Dingo.Cli/README.md'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
 
     - task: CopyFiles@2
-      displayName: 'copy files to artifact staging deirectory'
+      displayName: 'copy files to artifact staging directory'
       inputs:
         Contents: 'dingo-$(pkg_version)_$(buildPlatform).deb'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
@@ -137,5 +136,102 @@ jobs:
       displayName: 'publish build artifacts'
       inputs:
         PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
-        ArtifactName: 'drop'
+        ArtifactName: 'drop-linux'
         publishLocation: 'Container'
+
+  - job: macOS
+    pool:
+      vmImage: 'macOS-12'
+    variables:
+      buildPlatform: 'x64'
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.8.*'
+          addToPath: true
+          architecture: 'x64'
+
+      - template: ../templates/build-template.yml
+        parameters:
+          solution: $(solution)
+          buildPlatform: $(buildPlatform)
+          buildConfiguration: $(buildConfiguration)
+
+      - task: PythonScript@0
+        displayName: 'set version to env'
+        inputs:
+          scriptSource: 'filePath'
+          scriptPath: 'tools/version.py'
+          arguments: '--major $(major) --minor $(minor) --patch $(patch) --branch $(Build.SourceBranchName)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'publish app executable'
+        inputs:
+          command: 'publish'
+          publishWebProjects: false
+          projects: $(project)
+          arguments: '-c $(buildConfiguration) --self-contained --runtime osx-$(buildPlatform) -o bin/osx /property:Version=$(pkg_version)'
+          zipAfterPublish: false
+          modifyOutputPath: false
+
+      - task: CmdLine@2
+        displayName: 'create packaging directories'
+        inputs:
+          script: mkdir temp temp/dist temp/dingo temp/scripts temp/bin temp/bin/resources
+
+      - task: CmdLine@2
+        displayName: 'copy application files to dist'
+        inputs:
+          script: cp -r bin/osx/* temp/dist
+
+      - task: CmdLine@2
+        displayName: 'copy install scripts'
+        inputs:
+          script: cp tools/osx-postinstall temp/scripts/postinstall; cp tools/osx-preinstall temp/scripts/preinstall
+
+      - task: CmdLine@2
+        displayName: 'copy install scripts to resources'
+        inputs:
+          script: cp -r temp/scripts/* temp/bin/resources/
+
+      - task: CmdLine@2
+        displayName: 'build macOS package'
+        inputs:
+          script: pkgbuild --root temp/dist --version $(pkg_version) --identifier com.ujinjinjin.dingo --install-location /usr/local/Cellar/dingo --scripts temp/scripts temp/bin/dist.pkg
+
+      - task: CmdLine@2
+        displayName: 'wrap macOS package into distributive'
+        inputs:
+          script: productbuild --package temp/bin/dist.pkg --resources temp/bin/resources temp/dingo.pkg
+
+      - task: CmdLine@2
+        displayName: 'rename macOS package'
+        inputs:
+          script: mv temp/dingo.pkg "dingo-$(pkg_version)_$(buildPlatform).pkg"
+
+      - task: CopyFiles@2
+        displayName: 'copy release notes to artifact staging directory'
+        inputs:
+          Contents: 'Src/Dingo.Cli/README.md'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
+
+      - task: CopyFiles@2
+        displayName: 'copy files to artifact staging directory'
+        inputs:
+          Contents: 'dingo-$(pkg_version)_$(buildPlatform).pkg'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
+
+      - task: PythonScript@0
+        displayName: 'store environment variables'
+        inputs:
+          scriptSource: 'filePath'
+          scriptPath: 'tools/store_variables.py'
+          arguments: '--dest "$(Build.ArtifactStagingDirectory)/cli/variables.json" -v $(pkg_version)'
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'publish build artifacts'
+        inputs:
+          PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
+          ArtifactName: 'drop-macOS'
+          publishLocation: 'Container'
