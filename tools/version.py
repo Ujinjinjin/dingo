@@ -17,4 +17,5 @@ if __name__ == '__main__':
 
     # 1.0.1_amd64-dev
     pkg_version = f'{args.major}.{args.minor}.{args.patch}{version_suffix}'
-    print(f'##vso[task.setvariable variable=pkg_version;isOutput=true]{pkg_version}')
+    print(f'##vso[task.setvariable variable=pkg_version]{pkg_version}') # used in this Job
+    print(f'##vso[task.setvariable variable=pkgVersion;isOutput=true]{pkg_version}') # passed into further stages
