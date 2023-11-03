@@ -29,13 +29,13 @@ steps:
     projects: '**/*.csproj'
     arguments: '-c ${{ parameters.buildConfiguration }}'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'run unit tests'
-#   inputs:
-#     command: 'test'
-#     projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
-#     testRunTitle: 'Unit tests'
-#     ${{ if eq(parameters.collectCodeCoverage, true) }}:
-#       arguments: '-c ${{ parameters.buildConfiguration }} --collect "Code coverage"'
-#     ${{ if eq(parameters.collectCodeCoverage, false) }}:
-#       arguments: '-c ${{ parameters.buildConfiguration }}'
+- task: DotNetCoreCLI@2
+  displayName: 'run unit tests'
+  inputs:
+    command: 'test'
+    projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
+    testRunTitle: 'Unit tests'
+    ${{ if eq(parameters.collectCodeCoverage, true) }}:
+      arguments: '-c ${{ parameters.buildConfiguration }} --collect "Code coverage"'
+    ${{ if eq(parameters.collectCodeCoverage, false) }}:
+      arguments: '-c ${{ parameters.buildConfiguration }}'
