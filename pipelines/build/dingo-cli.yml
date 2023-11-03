@@ -181,6 +181,13 @@ stages:
             Contents: 'dingo-$(pkg_version)_$(buildPlatform).deb'
             TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
 
+        - task: PublishBuildArtifacts@1
+          displayName: 'publish build artifacts'
+          inputs:
+            PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
+            ArtifactName: 'drop-linux'
+            publishLocation: 'Container'
+
       - job: macOS_x64
         pool:
           vmImage: 'macOS-12'
