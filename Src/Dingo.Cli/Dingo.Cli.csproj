@@ -3,27 +3,26 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-            <Nullable>enable</Nullable>
-            <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>dingo</AssemblyName>
-        <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>linux-x64;osx-x64</RuntimeIdentifiers>
+        <PublishTrimmed>true</PublishTrimmed>
+        <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+        <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Cliff" Version="1.1.14" />
-        <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-        <PackageReference Include="Pastel" Version="4.2.0" />
-        <PackageReference Include="Sharprompt" Version="2.4.5" />
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="Cliff" Version="1.1.14"/>
+        <PackageReference Include="Pastel" Version="4.2.0"/>
+        <PackageReference Include="Sharprompt" Version="2.4.5"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj" />
+        <ProjectReference Include="..\Dingo.Core\Dingo.Core.csproj"/>
     </ItemGroup>
 
 </Project>
