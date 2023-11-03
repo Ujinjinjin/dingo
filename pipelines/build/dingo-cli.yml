@@ -83,8 +83,9 @@ stages:
           - task: CopyFiles@2
             displayName: 'copy release notes to artifact staging directory'
             inputs:
-              Contents: 'Src/Dingo.Cli/README.md'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)/cli/README.md'
+              SourceFolder: 'Src/Dingo.Cli'
+              Contents: 'README.md'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/cli/'
 
           - task: CopyFiles@2
             displayName: 'copy tools to artifact staging directory'
@@ -116,6 +117,7 @@ stages:
           vmImage: 'Ubuntu-20.04'
         variables:
           buildPlatform: 'x64'
+          pkg_version: $[ stageDependencies.Version.Version.outputs['pkg_version'] ]
 
         steps:
         - task: UsePythonVersion@0
