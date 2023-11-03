@@ -75,6 +75,7 @@ stages:
 
           - task: PythonScript@0
             displayName: 'set version to env'
+            name: CalculateVersion
             inputs:
               scriptSource: 'filePath'
               scriptPath: 'tools/version.py'
@@ -117,7 +118,7 @@ stages:
           vmImage: 'Ubuntu-20.04'
         variables:
           buildPlatform: 'x64'
-          pkg_version: $[ stageDependencies.Version.Version.outputs['pkgVersion'] ]
+          pkg_version: $[ stageDependencies.Version.Version.outputs['CalculateVersion.pkgVersion'] ]
 
         steps:
         - task: CmdLine@2
