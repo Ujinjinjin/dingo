@@ -44,7 +44,7 @@ name: '${{ variables.pipeline_name }} - $(Rev:r)'
 
 stages:
   - stage: 'Clear'
-    displayName: 'Clear artifact staging dir'
+    displayName: 'Clear staging dir'
     jobs:
       - job: Clear
         pool:
@@ -58,7 +58,7 @@ stages:
               Contents: '$(Build.ArtifactStagingDirectory)/cli/*'
 
   - stage: 'Version'
-    displayName: 'Calculate package version'
+    displayName: 'Calculate version'
     dependsOn: Clear
     condition: succeeded()
     jobs:
@@ -186,6 +186,7 @@ stages:
           vmImage: 'macOS-12'
         variables:
           buildPlatform: 'x64'
+          pkg_version: $[ stageDependencies.Version.Version.outputs['CalculateVersion.pkgVersion'] ]
 
         steps:
           - template: ../templates/build-template.yml
