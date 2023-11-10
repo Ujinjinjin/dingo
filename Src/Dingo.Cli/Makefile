@@ -19,7 +19,7 @@ mac_exe:
 	cp ../../tools/osx-preinstall temp/scripts/preinstall
 	cp -r temp/scripts/* temp/bin/resources/
 
-	pkgbuild --root temp/dist --version 1.0 --identifier com.ujinjinjin.dingo --install-location /usr/local/Cellar/dingo --scripts temp/scripts temp/bin/dist.pkg
+	pkgbuild --root temp/dist --version 1.0 --identifier com.ujinjinjin.dingo --install-location /.dingo --scripts temp/scripts temp/bin/dist.pkg
 	productbuild --package temp/bin/dist.pkg --resources temp/bin/resources dingo.pkg
 
 	make clean_up
@@ -41,10 +41,10 @@ linux_install:
 	make full_clean_up -s
 
 mac_install:
-	sudo rm -rfd /usr/local/Cellar/dingo
-	sudo rm -rfd /usr/local/bin/dingo
+	rm -rfd ~/.dingo
+	rm -rfd /usr/local/bin/dingo
 	make mac_exe -s
-	sudo installer -pkg dingo.pkg -target /
+	installer -pkg dingo.pkg -target CurrentUserHomeDirectory
 	make full_clean_up -s
 
 full_clean_up:
