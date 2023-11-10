@@ -40,6 +40,13 @@ linux_install:
 	sudo dpkg --install dingo.deb
 	make full_clean_up -s
 
+mac_install:
+	sudo rm -rfd /usr/local/Cellar/dingo
+	sudo rm -rfd /usr/local/bin/dingo
+	make mac_exe -s
+	sudo installer -pkg dingo.pkg -target /
+	make full_clean_up -s
+
 full_clean_up:
 	rm -rf bin obj ./temp dingo.deb dingo.pkg
 
