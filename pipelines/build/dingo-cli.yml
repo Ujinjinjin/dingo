@@ -235,7 +235,7 @@ stages:
           - task: CmdLine@2
             displayName: 'build macOS package'
             inputs:
-              script: pkgbuild --root temp/dist --version $(pkg_version) --identifier com.ujinjinjin.dingo --install-location /usr/local/Cellar/dingo --scripts temp/scripts temp/bin/dist.pkg
+              script: pkgbuild --root temp/dist --version $(pkg_version) --identifier com.ujinjinjin.dingo --install-location /.dingo --scripts temp/scripts temp/bin/dist.pkg
 
           - task: CmdLine@2
             displayName: 'wrap macOS package into distributive'
