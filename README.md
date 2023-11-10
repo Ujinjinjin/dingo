@@ -1,33 +1,36 @@
 # dingo
 
-Dingo is platform agnostic database migration tool, helping to automate database schema updates.
+`dingo` is a framework-agnostic lightweight cross-platform database migration tool that will keep your database schema in sync across multiple developers and deployment environments.
 
-Because it uses plain `.sql` scripts for writing database migrations, it can be used alongside with applications written in any known programming language.
+It's a command line tool that can be used on any project regardless of the programming language used to create it, be it Python, Go, C#, Java, Ruby, PHP or something else. This tool fits especially well with microservice architecture and services written in different languages, allowing you to have consistent and unified database migration process.
 
 ## Key features
 
-- Supports PostgreSQL and SQL Server
+- Supports Postgres and SQL Server
 - Migrations are timestamp-versioned
 - Migrations are written using plain `.sql`
-- Project configs can be stored both in `.yml` and `.json`
-- Config file can be specified as command line argument
+- Project configs can be stored as `.yml`, `.json` or environment variables
+- Use different configuration profiles for different environments
+- Provides tools for rapid database development
+- Apply and revert database migrations
 
 ## Summary
 
-|   |   |
-|---|---|
-| Build Status | [![Build Status](https://dev.azure.com/ujinjinjin/Dingo/_apis/build/status/Ujinjinjin.dingo?branchName=master)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master) |
-| Unit Tests | [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/ujinjinjin/Dingo/12?label=Unit%20tests)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master) |
-| Test Coverage | [![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/ujinjinjin/dingo/12?label=Code%20coverage)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master) |
-| Version | ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/ujinjinjin/dingo) |
-| Downloads | ![GitHub all releases](https://img.shields.io/github/downloads/ujinjinjin/dingo/total) |
-| License | [![GitHub](https://img.shields.io/github/license/ujinjinjin/dingo)](https://github.com/Ujinjinjin/dingo/blob/master/LICENSE) |
+|               |                                                                                                                                                                                                         |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build Status  | [![Build Status](https://dev.azure.com/ujinjinjin/Dingo/_apis/build/status/Ujinjinjin.dingo?branchName=master)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master) |
+| Unit Tests    | [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/ujinjinjin/Dingo/12?label=Unit%20tests)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master)       |
+| Test Coverage | ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/ujinjinjin/dingo/20)                                                                                                              |
+| Version       | ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/ujinjinjin/dingo)                                                                                                             |
+| Downloads     | ![GitHub all releases](https://img.shields.io/github/downloads/ujinjinjin/dingo/total)                                                                                                                  |
+| License       | [![GitHub](https://img.shields.io/github/license/ujinjinjin/dingo)](https://github.com/Ujinjinjin/dingo/blob/master/LICENSE)                                                                            |
+| Docs          | [![Static Badge](https://img.shields.io/badge/docs-wiki-blue)](https://ujinjinjin.github.io/dingo/dingo.html)                                                                                           |
 
 ## Installation
 
-### Ubuntu 20.04
+### Linux
 
-To install `dingo` on Ubuntu-20.04 run following commands:
+To install `dingo` on Linux run following commands:
 
 ```shell
 curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
@@ -48,36 +51,74 @@ To uninstall `dingo` use:
 sudo dpkg --remove dingo
 ```
 
-## Usage
+### macOS
 
-To collect and apply database migrations you should use following command:
-
-```shell
-dingo migrations run -m SQL_MIGRATIONS_PATH -c CONFIG_PATH
-```
-
-specifying:
-- SQL_MIGRATIONS_PATH - root path to SQL migrations;
-- CONFIG_PATH - path to dingo configuration file;
-  
-or
+To install `dingo` on macOS run following commands:
 
 ```shell
-dingo migrations run -m SQL_MIGRATIONS_PATH \
-                       --connectionString CONNECTION_STRING \
-                       --providerName PROVIDER_NAME \
-                       --migrationSchema MIGRATIONS_SCHEMA \
-                       --migrationTable MIGRATIONS_TABLE
+curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
+    | grep "browser_download_url.*pkg" \
+    | cut -d '"' -f 4 \
+    | wget -O dingo.pkg -qi -
+sudo installer -pkg dingo.pkg -target /
 ```
 
-specifying:
-- SQL_MIGRATIONS_PATH - root path to SQL migrations;
-- CONNECTION_STRING - database connection string;
-- PROVIDER_NAME - database provider name;
-- MIGRATIONS_SCHEMA - database schema for you migrations;
-- MIGRATIONS_TABLE - database table, where all migrations are stored;
+## Getting started
 
-For additional information on usage refer to [wiki](https://github.com/Ujinjinjin/dingo/wiki) or run:
+Let's apply our first migrations on a PostgreSQL database. Firstly, create project folder:
+
+```shell
+mkdir user-service
+cd user-service
+```
+
+Then initialize `dingo` configuration profile using command below:
+
+```shell
+dingo init
+```
+
+The command above will create `user-service/.dingo/config.yml` file. Open it and add content from the snippet below and replace `HOST`, `DB_NAME`, `USERNAME` and `PWD` with relevant values:
+
+```yaml
+db:
+  connection-string: Server=HOST;Database=DB_NAME;User Id=USERNAME;Password=PWD;
+  provider: PostgreSQL
+```
+
+Now let's create our first migration at `user-service/migrations/tables/users`:
+
+```shell
+dingo new -n create_table -p user-service/migrations/tables/users
+```
+
+The command will create a file `user-service/migrations/tables/users/YYYYMMDDmmHHss_create_table.sql`, where `YYYYMMDDmmHHss` is a timestamp. Let's open it and fill out with migration logic:
+
+```postgresql
+-- up
+create table user (
+  user_id serial not null,
+  username text not null
+);
+
+-- down
+drop table user;
+```
+
+Now let's apply migration using following command:
+
+```shell
+dingo up -p user-service/migrations
+```
+
+Done! You can check your DB, migration is applied and everything should be up-to-date.
+
+If you wish to rollback last applied patch (execute down part of migrations), you can do that using:
+```shell
+dingo down -p user-service/migrations
+```
+
+For additional information on usage refer to [wiki](https://ujinjinjin.github.io/dingo/dingo.html) or run:
 
 ```shell
 dingo --help
