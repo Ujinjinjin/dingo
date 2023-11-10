@@ -41,7 +41,7 @@ Currently, `dingo` can only be installed as a binary using default package manag
             | grep "browser_download_url.*pkg" \
             | cut -d '"' -f 4 \
             | wget -O dingo.pkg -qi -
-        sudo installer -pkg dingo.pkg -target /
+        installer -pkg dingo.pkg -target CurrentUserHomeDirectory
     </code-block>
 </tab>
 </tabs>
@@ -56,7 +56,7 @@ Currently, `dingo` can only be installed as a binary using default package manag
 <tab title="macOS" group-key="platform-macOS">
     <p>To uninstall <code>dingo</code> use:</p>
     <code-block lang="shell">
-        sudo rm -rfd /usr/local/Cellar/dingo /usr/local/bin/dingo
+        rm -rfd ~/.dingo /usr/local/bin/dingo
     </code-block>
 </tab>
 </tabs>
