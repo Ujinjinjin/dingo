@@ -11,8 +11,7 @@ begin
 	----------------------------------------------------------------
 	update dingo.patch set
 		applied_at = timezone('utc', now())
-	where 1 = 1
-		and patch_number = p_patch_number;
+	where patch_number = p_patch_number;
 	----------------------------------------------------------------
 end;
 $$

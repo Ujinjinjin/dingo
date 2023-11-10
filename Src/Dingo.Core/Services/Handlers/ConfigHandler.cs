@@ -35,7 +35,7 @@ internal class ConfigHandler : IConfigHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "ConfigHandler:InitAsync:Error;");
+			_logger.LogError(ex, "ConfigHandler:InitAsync:Error");
 			_output.Write("Error occured while initializing configuration profile", LogLevel.Error);
 		}
 	}

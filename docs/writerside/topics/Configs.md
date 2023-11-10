@@ -8,7 +8,6 @@ Use this section as a reference `dingo` configurations.
 |---------------------------|----------|---------------|
 | `db.connection-string`    | ✓        | `null`        |
 | `db.provider`             | ✕        | `PostgreSQL`  |
-| `db.schema`               | ✕        | `dingo`       |
 | `migration.delimiter`     | ✕        | `^--\s*down$` |
 | `migration.wildcard`      | ✕        | `*.sql`       |
 | `migration.down-required` | ✕        | `false`       |
@@ -71,33 +70,6 @@ Database provider of the target DB where migrations will be applied
 
 > **Allowed values**: `PostgreSQL` | `Postgres` | `SqlServer`
 {style="info"}
-
-## db.schema
-
-Schema name where `dingo` will save [database tools](DB-tools.md) and meta information about applied migrations and patches
-
-<tabs group="config-type">
-    <tab title="yaml" group-key="config-yaml">
-        <code-block lang="yaml">
-            db:
-              schema: dingo
-        </code-block>
-    </tab>
-    <tab title="json" group-key="config-json">
-        <code-block lang="json">
-            {
-                "db": {
-                    "schema": "dingo"
-                }
-            }
-        </code-block>
-    </tab>
-    <tab title="env" group-key="config-env">
-        <code-block lang="shell">
-            export DINGO_DB__SCHEMA=dingo
-        </code-block>
-    </tab>
-</tabs>
 
 ## migration.delimiter
 

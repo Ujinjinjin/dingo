@@ -3,19 +3,16 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
-using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
 internal class MigrationComparer : IMigrationComparer
 {
 	private readonly IRepository _repository;
-	private readonly IConfiguration _configuration;
 
-	public MigrationComparer(IRepository repository, IConfiguration configuration)
+	public MigrationComparer(IRepository repository)
 	{
 		_repository = repository.Required(nameof(repository));
-		_configuration = configuration.Required(nameof(configuration));
 	}
 
 	public async Task<IReadOnlyList<Migration>> CalculateMigrationsStatusAsync(

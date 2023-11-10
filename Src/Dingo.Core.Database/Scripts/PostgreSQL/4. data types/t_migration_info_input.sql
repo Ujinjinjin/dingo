@@ -4,7 +4,7 @@ select dingo.drop_type('t_migration_info_input', 'dingo');
 -- Create type
 create type dingo.t_migration_info_input as (
 	migration_hash varchar(256),
-	migration_path text
+	migration_path varchar(512)
 );
 
 -- Set comments

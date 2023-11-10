@@ -91,4 +91,3 @@ begin
 	print 'dropped ' + cast(@v_dropped_count as varchar(10)) + ' types';
 	----------------------------------------------------------------
 end;
-go

@@ -3,9 +3,8 @@ using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
 using Dingo.Core.Services.Migrations;
-using Trico.Configuration;
 
-namespace Dingo.UnitTests.Migrations;
+namespace Dingo.UnitTests.Services.Migrations;
 
 public class MigrationComparerTests : UnitTestBase
 {
@@ -16,8 +15,7 @@ public class MigrationComparerTests : UnitTestBase
 		// arrange
 		var initialMigrations = CreateMigrations(Fixture.Create<string>());
 		var repository = SetupRepository(databaseAvailable: false);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -33,8 +31,7 @@ public class MigrationComparerTests : UnitTestBase
 		// arrange
 		var initialMigrations = CreateMigrations(Fixture.Create<string>());
 		var repository = SetupRepository(databaseIsEmpty: true);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -55,8 +52,7 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, null, count + 1);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -75,8 +71,7 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, Fixture.Create<string>(), count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -96,8 +91,7 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(null, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -119,8 +113,7 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(true, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -142,8 +135,7 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var configuration = SetupConfiguration();
-		var comparer = new MigrationComparer(repository, configuration);
+		var comparer = new MigrationComparer(repository);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -175,13 +167,6 @@ public class MigrationComparerTests : UnitTestBase
 			.ReturnsAsync(migrationComparison);
 
 		return repository.Object;
-	}
-
-	private IConfiguration SetupConfiguration()
-	{
-		var config = new Mock<IConfiguration>();
-
-		return config.Object;
 	}
 
 	private IReadOnlyList<Migration> CreateMigrations(

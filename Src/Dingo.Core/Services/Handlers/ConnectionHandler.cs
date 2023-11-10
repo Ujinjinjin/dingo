@@ -37,7 +37,7 @@ internal class ConnectionHandler : IConnectionHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "ConnectionHandler:HandshakeAsync:Error;");
+			_logger.LogError(ex, "ConnectionHandler:HandshakeAsync:Error");
 			_output.Write($"Error occured while applying migrations: {ex.Message}", LogLevel.Error);
 		}
 	}

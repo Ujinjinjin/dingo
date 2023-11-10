@@ -16,16 +16,19 @@ sc.AddSingleton<IOutput, ConsoleOutput>();
 var sp = sc.BuildServiceProvider();
 sp.UseDingo();
 
-// var handler = sp.GetService<IMigrationHandler>();
-// await handler.ShowStatusAsync("/Users/camillegalladjov/DataGripProjects/dingo/migrations");
-// await handler.MigrateAsync("/Users/camillegalladjov/DataGripProjects/dingo/migrations");
+var handler = sp.GetService<IMigrationHandler>();
+// await handler.ShowStatusAsync("sqlserver", "/Users/camillegalladjov/DataGripProjects/dingo/sql-serve-migrations");
+// await handler.MigrateAsync("sqlserver", "/Users/camillegalladjov/DataGripProjects/dingo/sql-serve-migrations");
+await handler.RollbackAsync("sqlserver", "/Users/camillegalladjov/DataGripProjects/dingo/sql-serve-migrations", 1, false);
+
+// await handler.MigrateAsync(default, "/Users/camillegalladjov/DataGripProjects/dingo/migrations");
 // await handler.RollbackAsync("/Users/camillegalladjov/DataGripProjects/dingo/migrations", 1, false);
 
 // var handler = sp.GetService<IConnectionHandler>();
-// await handler.HandshakeAsync();
+// await handler.HandshakeAsync("sqlserver");
 
-// var handler = sp.GetService<IConfigGenerator>();
-// handler.Generate(".");
+// var handler = sp.GetService<IConfigHandler>();
+// handler.Init(default, "sqlserver");
 
 // var loggerFactory = sp.GetService<ILoggerFactory>();
 // var logger = loggerFactory.CreateLogger<Program>();

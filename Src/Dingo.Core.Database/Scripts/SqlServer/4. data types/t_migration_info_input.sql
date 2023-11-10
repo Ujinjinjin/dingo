@@ -3,8 +3,8 @@ exec dingo.drop_type 't_migration_info_input', 'dingo';
 
 -- Create type
 create type dingo.t_migration_info_input as table (
-	migration_path nvarchar(max),
-	migration_hash nvarchar(256)
+	migration_hash nvarchar(256),
+	migration_path nvarchar(512)
 );
 
 -- Set comments

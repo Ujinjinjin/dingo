@@ -1,3 +1,4 @@
+using Dingo.Core.Repository;
 using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core;
@@ -18,7 +19,7 @@ internal static class Configuration
 	public static readonly IDictionary<string, string> Dict = new Dictionary<string, string>
 	{
 		{ Key.ConnectionString, string.Empty },
-		{ Key.DatabaseProvider, "PostgreSQL" },
+		{ Key.DatabaseProvider, ProviderName.PostgreSql },
 		{ Key.SchemaName, "dingo" },
 		{ Key.MigrationDelimiter, @"^--\s*down$" },
 		{ Key.MigrationWildcard, "*.sql" },
