@@ -21,11 +21,13 @@ internal class ConfigProfileLoader : IConfigProfileLoader
 		var configFilename = ConfigFilename.Build(profile);
 		var configFilepath = _path.Join(Constants.CurrentDir, Constants.ConfigDir, configFilename);
 
-		var options = new Dictionary<string, string>()
+		var options = new Dictionary<string, string>();
+		foreach (var (key, value) in Configuration.Dict)
 		{
-			{ "config-filepath", configFilepath },
-			{ "prefix", Constants.ConfigEnvPrefix },
-		};
+			options.Add(key, value);
+		}
+		options.Add("config-filepath", configFilepath);
+		options.Add("prefix", Constants.ConfigEnvPrefix);
 
 		await _configuration.LoadAsync(options, ct);
 	}

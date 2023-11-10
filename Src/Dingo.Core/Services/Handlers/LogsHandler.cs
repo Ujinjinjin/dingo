@@ -35,7 +35,7 @@ public class LogsHandler : ILogsHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "LogsHandler:Prune:Error;");
+			_logger.LogError(ex, "LogsHandler:Prune:Error");
 			_output.Write("Error occured while pruning logs", LogLevel.Error);
 		}
 	}

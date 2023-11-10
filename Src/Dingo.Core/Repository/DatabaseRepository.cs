@@ -13,7 +13,7 @@ namespace Dingo.Core.Repository;
 internal class DatabaseRepository : IRepository
 {
 	private readonly IConnectionFactory _connectionFactory;
-	private readonly ICommandProvider _commandProvider;
+	private readonly ICommandProviderFactory _commandProviderFactory;
 	private readonly IConfiguration _configuration;
 	private readonly ILogger _logger;
 
@@ -25,7 +25,7 @@ internal class DatabaseRepository : IRepository
 	)
 	{
 		_connectionFactory = connectionFactory.Required(nameof(connectionFactory));
-		_commandProvider = commandProviderFactory.Required(nameof(commandProviderFactory)).Create();
+		_commandProviderFactory = commandProviderFactory.Required(nameof(commandProviderFactory));
 		_configuration = configuration.Required(nameof(configuration));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
 			.CreateLogger<DatabaseRepository>()
@@ -63,7 +63,8 @@ internal class DatabaseRepository : IRepository
 	public async Task<bool> SchemaExistsAsync(string schema, CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.SelectSchema(schema);
+		var command = _commandProviderFactory.Create()
+			.SelectSchema(schema);
 
 		var result = await connection.QueryAsync<string>(command);
 
@@ -84,7 +85,8 @@ internal class DatabaseRepository : IRepository
 		var migrationInfoInputs = migrations.Select(ToMigrationsInfoInput).ToArray();
 
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.GetMigrationsStatus(migrationInfoInputs);
+		var command = _commandProviderFactory.Create()
+			.GetMigrationsStatus(migrationInfoInputs);
 
 		var result = await connection.QueryAsync<MigrationComparisonOutput>(command);
 		return result.ToArray();
@@ -99,7 +101,8 @@ internal class DatabaseRepository : IRepository
 	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.GetNextPatch();
+		var command = _commandProviderFactory.Create()
+			.GetNextPatch();
 
 		var result = await connection.QueryAsync<int>(command);
 		return result.Single();
@@ -111,7 +114,8 @@ internal class DatabaseRepository : IRepository
 	)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.GetLastPatchMigrations(patchCount);
+		var command = _commandProviderFactory.Create()
+			.GetLastPatchMigrations(patchCount);
 
 		var result = await connection.QueryAsync<PatchMigration>(command);
 		return result.ToArray();
@@ -120,7 +124,8 @@ internal class DatabaseRepository : IRepository
 	public async Task RegisterMigrationAsync(Migration migration, int patchNumber, CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.RegisterMigration(migration, patchNumber);
+		var command = _commandProviderFactory.Create()
+			.RegisterMigration(migration, patchNumber);
 
 		await connection.ExecuteAsync(command);
 	}
@@ -128,7 +133,8 @@ internal class DatabaseRepository : IRepository
 	public async Task RevertPatchAsync(int patchNumber, CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.RevertPatch(patchNumber);
+		var command = _commandProviderFactory.Create()
+			.RevertPatch(patchNumber);
 
 		await connection.ExecuteAsync(command);
 	}
@@ -136,7 +142,8 @@ internal class DatabaseRepository : IRepository
 	public async Task CompletePatchAsync(int patchNumber, CancellationToken ct = default)
 	{
 		await using var connection = _connectionFactory.Create();
-		var command = _commandProvider.CompletePatch(patchNumber);
+		var command = _commandProviderFactory.Create()
+			.CompletePatch(patchNumber);
 
 		await connection.ExecuteAsync(command);
 	}

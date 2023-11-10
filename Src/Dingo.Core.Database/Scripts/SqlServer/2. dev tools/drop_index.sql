@@ -1,4 +1,4 @@
-create or alter procedure dingo.drop_default(
+create or alter procedure dingo.drop_index(
 	@p_table_name  varchar(128),
 	@p_index_name  varchar(512),
 	@p_schema_name varchar(128) = 'dbo'

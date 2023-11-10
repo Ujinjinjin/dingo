@@ -2,7 +2,7 @@
 select dingo.drop_routine('_get_migrations_status', 'dingo');
 
 -- Create function
-create function dingo._get_migrations_status(
+create or replace function dingo._get_migrations_status(
 	pti_migration_info_input dingo.t_migration_info_input[]
 )
 returns table (
@@ -21,10 +21,10 @@ begin
 	from unnest(pti_migration_info_input) as t1_input;
 	----------------------------------------------------------------
 	return query select
-		t1_input.migration_hash,
-		t1_input.migration_hash = registered_migration.migration_hash as hash_matches
-	from tt_input as t1_input
-	left outer join (
+		inner_table.migration_hash,
+		outer_table.migration_hash = inner_table.migration_hash as hash_matches
+	from tt_input as inner_table
+	left join lateral (
 		select
 			migration.migration_path,
 			patch_migration.migration_hash
@@ -34,7 +34,11 @@ begin
 		inner join dingo.patch as patch
 			on patch.patch_number = patch_migration.patch_number
 			and patch.reverted = false
-	) as registered_migration on registered_migration.migration_path = t1_input.migration_path
+		where migration.migration_path = inner_table.migration_path
+		order by patch.patch_number desc
+		limit 1
+	) as outer_table
+		on inner_table.migration_path = outer_table.migration_path
 	;
 	----------------------------------------------------------------
 end;

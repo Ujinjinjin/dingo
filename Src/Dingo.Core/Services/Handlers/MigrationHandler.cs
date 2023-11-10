@@ -49,7 +49,7 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationHandler:CreateAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:CreateAsync:Error");
 			_output.Write("Error occured while creating migration file", LogLevel.Error);
 		}
 	}
@@ -66,7 +66,7 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationHandler:MigrateAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:MigrateAsync:Error");
 			_output.Write($"Error occured while applying migrations: {ex.Message}", LogLevel.Error);
 		}
 	}
@@ -89,7 +89,7 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationHandler:RollbackAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:RollbackAsync:Error");
 			_output.Write($"Error occured while rolling back migrations: {ex.Message}", LogLevel.Error);
 		}
 	}
@@ -106,7 +106,7 @@ internal class MigrationHandler : IMigrationHandler
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "MigrationHandler:ShowStatusAsync:Error;");
+			_logger.LogError(ex, "MigrationHandler:ShowStatusAsync:Error");
 			_output.Write("Error occured while retrieving migrations status", LogLevel.Error);
 		}
 	}

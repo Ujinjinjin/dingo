@@ -12,8 +12,7 @@ begin
 	update dingo.patch set
 		reverted = true,
 		reverted_at = timezone('utc', now())
-	where 1 = 1
-		and patch_number = p_patch_number;
+	where patch_number = p_patch_number;
 	----------------------------------------------------------------
 end;
 $$
