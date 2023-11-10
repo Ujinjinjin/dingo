@@ -16,7 +16,7 @@ Use this section as a reference `dingo` configurations.
 
 ## db.connection-string
 
-Database connection string in the following format: `Server=SERVER_HOST;Database=DB_NAME;User Id=USERNAME;Password=PWD;`
+Database connection string in the following format: `Server=SERVER_HOST;Database=DB__NAME;User Id=USERNAME;Password=PWD;`
 
 <tabs group="config-type">
     <tab title="yaml" group-key="config-yaml">
@@ -36,7 +36,7 @@ Database connection string in the following format: `Server=SERVER_HOST;Database
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_DB_CONNECTION_STRING="Server=127.0.0.1;Database=dingo;User Id=dingo_usr;Password=VeryStr0ngPwd#;"
+            export DINGO_DB__CONNECTION_STRING="Server=127.0.0.1;Database=dingo;User Id=dingo_usr;Password=VeryStr0ngPwd#;"
         </code-block>
     </tab>
 </tabs>
@@ -63,7 +63,7 @@ Database provider of the target DB where migrations will be applied
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_DB_PROVIDER=PostgreSQL
+            export DINGO_DB__PROVIDER=PostgreSQL
         </code-block>
     </tab>
 </tabs>
@@ -94,7 +94,7 @@ Schema name where `dingo` will save [database tools](DB-tools.md) and meta infor
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_DB_SCHEMA=dingo
+            export DINGO_DB__SCHEMA=dingo
         </code-block>
     </tab>
 </tabs>
@@ -121,7 +121,7 @@ Regular expression to specify migration file line that separates `up` and `down`
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_MIGRATION_DELIMITER="^--\s*down$"
+            export DINGO_MIGRATION__DELIMITER="^--\s*down$"
         </code-block>
     </tab>
 </tabs>
@@ -148,7 +148,7 @@ Wildcard used to search migration files in the specified directory
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_MIGRATION_WILDCARD="*.sql"
+            export DINGO_MIGRATION__WILDCARD="*.sql"
         </code-block>
     </tab>
 </tabs>
@@ -175,7 +175,7 @@ Specifies if `down` part of migrations is required. If `true` - applying migrati
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_MIGRATION_DOWN_REQUIRED=false
+            export DINGO_MIGRATION__DOWN_REQUIRED=false
         </code-block>
     </tab>
 </tabs>
@@ -205,7 +205,7 @@ Specifies logging level of the application
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_LOG_LEVEL=Information
+            export DINGO_LOG__LEVEL=Information
         </code-block>
     </tab>
 </tabs>
@@ -251,13 +251,13 @@ Specifies logging level of the application
     </tab>
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
-            export DINGO_DB_CONNECTION_STRING="Server=127.0.0.1;Database=dingo;User Id=dingo_usr;Password=VeryStr0ngPwd#;"
-            export DINGO_DB_PROVIDER=SqlServer
-            export DINGO_DB_SCHEMA=dingo
-            export DINGO_MIGRATION_DELIMITER="^--\s*down$"
-            export DINGO_MIGRATION_WILDCARD="*.sql"
-            export DINGO_MIGRATION_DOWN_REQUIRED=true
-            export DINGO_LOG_LEVEL=Error
+            export DINGO_DB__CONNECTION_STRING="Server=127.0.0.1;Database=dingo;User Id=dingo_usr;Password=VeryStr0ngPwd#;"
+            export DINGO_DB__PROVIDER=SqlServer
+            export DINGO_DB__SCHEMA=dingo
+            export DINGO_MIGRATION__DELIMITER="^--\s*down$"
+            export DINGO_MIGRATION__WILDCARD="*.sql"
+            export DINGO_MIGRATION__DOWN_REQUIRED=true
+            export DINGO_LOG__LEVEL=Error
         </code-block>
     </tab>
 </tabs>

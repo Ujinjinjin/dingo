@@ -3,7 +3,7 @@ name: Build documentation
 
 on:
   push:
-    branches: ['main', 'release/v2.0', 'feature/61-writing-docs']
+    branches: ['main', 'release/v2.0']
   workflow_dispatch:
 
 permissions:
