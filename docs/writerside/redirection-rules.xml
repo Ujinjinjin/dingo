@@ -6,8 +6,4 @@
         <accepts>page.html</accepts>
     </rule>
     -->
-    <rule id="8b0222a">
-        <description>Created after removal of "get started" from Help Instance</description>
-        <accepts>get-started.html</accepts>
-    </rule>
 </rules>

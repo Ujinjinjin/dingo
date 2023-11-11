@@ -16,15 +16,15 @@ It's a command line tool that can be used on any project regardless of the progr
 
 ## Summary
 
-|               |                                                                                                                                                                                                         |
-|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Build Status  | [![Build Status](https://dev.azure.com/ujinjinjin/Dingo/_apis/build/status/Ujinjinjin.dingo?branchName=master)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master) |
-| Unit Tests    | [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/ujinjinjin/Dingo/12?label=Unit%20tests)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master)       |
-| Test Coverage | ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/ujinjinjin/dingo/20)                                                                                                              |
-| Version       | ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/ujinjinjin/dingo)                                                                                                             |
-| Downloads     | ![GitHub all releases](https://img.shields.io/github/downloads/ujinjinjin/dingo/total)                                                                                                                  |
-| License       | [![GitHub](https://img.shields.io/github/license/ujinjinjin/dingo)](https://github.com/Ujinjinjin/dingo/blob/master/LICENSE)                                                                            |
-| Docs          | [![Static Badge](https://img.shields.io/badge/docs-wiki-blue)](https://ujinjinjin.github.io/dingo/dingo.html)                                                                                           |
+|               |                                                                                                                                                                                                       |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build Status  | [![Build Status](https://dev.azure.com/ujinjinjin/Dingo/_apis/build/status%2FDingo.%20CLI?branchName=master)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=15&branchName=master) |
+| Unit Tests    | [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/ujinjinjin/Dingo/12?label=Unit%20tests)](https://dev.azure.com/ujinjinjin/Dingo/_build/latest?definitionId=12&branchName=master)     |
+| Test Coverage | ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/ujinjinjin/dingo/20)                                                                                                            |
+| Version       | ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/ujinjinjin/dingo)                                                                                                           |
+| Downloads     | ![GitHub all releases](https://img.shields.io/github/downloads/ujinjinjin/dingo/total)                                                                                                                |
+| License       | [![GitHub](https://img.shields.io/github/license/ujinjinjin/dingo)](https://github.com/Ujinjinjin/dingo/blob/master/LICENSE)                                                                          |
+| Docs          | [![Static Badge](https://img.shields.io/badge/docs-wiki-blue)](https://ujinjinjin.github.io/dingo/dingo.html)                                                                                         |
 
 ## Installation
 
@@ -96,13 +96,13 @@ The command will create a file `user-service/migrations/tables/users/YYYYMMDDmmH
 
 ```postgresql
 -- up
-create table user (
+create table "user" (
   user_id serial not null,
   username text not null
 );
 
 -- down
-drop table user;
+drop table "user";
 ```
 
 Now let's apply migration using following command:
