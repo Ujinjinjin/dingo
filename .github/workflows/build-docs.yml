@@ -3,7 +3,7 @@ name: Build documentation
 
 on:
   push:
-    branches: ['main', 'release/v2.0']
+    branches: ['main']
   workflow_dispatch:
 
 permissions:
