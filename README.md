@@ -34,9 +34,9 @@ To install `dingo` on Linux run following commands:
 
 ```shell
 curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
-                                 | grep "browser_download_url.*deb" \
-                                 | cut -d '"' -f 4 \
-                                 | wget -O dingo.deb -qi -
+    | grep "browser_download_url.*deb" \
+    | cut -d '"' -f 4 \
+    | wget -O dingo.deb -qi -
 sudo dpkg --install dingo.deb
 ```
 Then add `/usr/share/dingo` to the `$PATH` environment variable. Run following command to validate successful installation:
@@ -59,7 +59,7 @@ To install `dingo` on macOS run following commands:
 curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
     | grep "browser_download_url.*pkg" \
     | cut -d '"' -f 4 \
-    | xargs -I packageUrl curl -s -o dingo.pkg packageUrl
+    | xargs -I packageUrl curl packageUrl -L -s -o dingo.pkg
 installer -pkg dingo.pkg -target CurrentUserHomeDirectory
 ```
 
