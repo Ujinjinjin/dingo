@@ -13,6 +13,7 @@ internal static class Configuration
 		public const string MigrationDelimiter = "migration.delimiter";
 		public const string MigrationWildcard = "migration.wildcard";
 		public const string MigrationDownRequired = "migration.down-required";
+		public const string MigrationForcePaths = "migration.force-paths";
 		public const string LogLevel = "log.level";
 	}
 
@@ -24,6 +25,7 @@ internal static class Configuration
 		{ Key.MigrationDelimiter, @"^--\s*down$" },
 		{ Key.MigrationWildcard, "*.sql" },
 		{ Key.MigrationDownRequired, "false" },
+		{ Key.MigrationForcePaths, string.Empty },
 		{ Key.LogLevel, LogLevel.Information.ToString() },
 	};
 }

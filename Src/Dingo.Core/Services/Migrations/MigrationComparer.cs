@@ -3,16 +3,19 @@ using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
+using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
 internal class MigrationComparer : IMigrationComparer
 {
 	private readonly IRepository _repository;
+	private readonly IConfiguration _configuration;
 
-	public MigrationComparer(IRepository repository)
+	public MigrationComparer(IRepository repository, IConfiguration configuration)
 	{
 		_repository = repository.Required(nameof(repository));
+		_configuration = configuration.Required(nameof(configuration));
 	}
 
 	public async Task<IReadOnlyList<Migration>> CalculateMigrationsStatusAsync(
@@ -63,14 +66,22 @@ internal class MigrationComparer : IMigrationComparer
 			throw new MigrationMismatchException("count", "Can't calculate migration statuses. Error on db side");
 		}
 
-		for (var i = 0; i < migrations.Count; i++)
+		var forceDirs = GetForcePaths();
+
+		foreach (var migration in migrations)
 		{
-			if (!migrationComparison.TryGetValue(migrations[i].Hash.Value, out var comparisonOutput))
+			if (!migrationComparison.TryGetValue(migration.Hash.Value, out var comparisonOutput))
 			{
 				throw new MigrationMismatchException("hash", "Can't calculate migration statuses. Migration path mismatch");
 			}
 
-			migrations[i].Status = comparisonOutput.HashMatches switch
+			if (IsMigrationInForcePath(forceDirs, migration))
+			{
+				migration.Status = MigrationStatus.ForceOutdated;
+				continue;
+			}
+
+			migration.Status = comparisonOutput.HashMatches switch
 			{
 				null => MigrationStatus.New,
 				true => MigrationStatus.UpToDate,
@@ -79,5 +90,21 @@ internal class MigrationComparer : IMigrationComparer
 		}
 
 		return migrations;
+	}
+
+	private IReadOnlyList<string> GetForcePaths()
+	{
+		var paths = _configuration.Get(Configuration.Key.MigrationForcePaths);
+		if (string.IsNullOrWhiteSpace(paths))
+		{
+			return Array.Empty<string>();
+		}
+
+		return paths.Split(Constants.PathArraySeparator);
+	}
+
+	private bool IsMigrationInForcePath(IReadOnlyList<string> forcePaths, Migration migration)
+	{
+		return forcePaths.Any(fd => migration.Path.Relative.StartsWith(fd));
 	}
 }

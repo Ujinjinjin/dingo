@@ -1,21 +1,23 @@
+using Dingo.Core;
 using Dingo.Core.Exceptions;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
 using Dingo.Core.Services.Migrations;
+using Trico.Configuration;
 
 namespace Dingo.UnitTests.Services.Migrations;
 
 public class MigrationComparerTests : UnitTestBase
 {
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenDatabaseNotAvailable_ThenExceptionThrown()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenDatabaseNotAvailable_ThenExceptionThrown()
 	{
 		// arrange
 		var initialMigrations = CreateMigrations(Fixture.Create<string>());
 		var repository = SetupRepository(databaseAvailable: false);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -25,13 +27,13 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenDatabaseIsEmpty_ThenAllMigrationsAreNew()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenDatabaseIsEmpty_ThenAllMigrationsAreNew()
 	{
 		// arrange
 		var initialMigrations = CreateMigrations(Fixture.Create<string>());
 		var repository = SetupRepository(databaseIsEmpty: true);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -42,8 +44,7 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsCountNotMatchesDbComparisonCount_ThenExceptionThrown()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsCountNotMatchesDbComparisonCount_ThenExceptionThrown()
 	{
 		// arrange
 		var count = 1;
@@ -52,7 +53,8 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, null, count + 1);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -62,8 +64,7 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsHashNotMatchesDbComparisonHash_ThenExceptionThrown()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationsHashNotMatchesDbComparisonHash_ThenExceptionThrown()
 	{
 		// arrange
 		var count = 1;
@@ -71,7 +72,8 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, Fixture.Create<string>(), count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var func = async () => await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -81,8 +83,7 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationNotInDb_ThenMigrationStatusIsNew()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenGivenMigrationNotInDb_ThenMigrationStatusIsNew()
 	{
 		// arrange
 		var count = 1;
@@ -91,7 +92,8 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(null, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -103,8 +105,7 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenHashMatches_ThenMigrationStatusIsUpToDate()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenHashMatches_ThenMigrationStatusIsUpToDate()
 	{
 		// arrange
 		var count = 1;
@@ -113,7 +114,8 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(true, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -125,8 +127,7 @@ public class MigrationComparerTests : UnitTestBase
 	}
 
 	[Fact]
-	public async Task
-		MigrationComparerTests_CalculateMigrationsStatusAsync__WhenHashNotMatches_ThenMigrationStatusIsOutdated()
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenHashNotMatches_ThenMigrationStatusIsOutdated()
 	{
 		// arrange
 		var count = 1;
@@ -135,7 +136,8 @@ public class MigrationComparerTests : UnitTestBase
 		var migrationComparison = CreateMigrationComparisonOutput(false, migrationPath, count);
 
 		var repository = SetupRepository(migrationComparison: migrationComparison);
-		var comparer = new MigrationComparer(repository);
+		var configuration = SetupConfiguration();
+		var comparer = new MigrationComparer(repository, configuration);
 
 		// act
 		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
@@ -144,6 +146,34 @@ public class MigrationComparerTests : UnitTestBase
 		updatedMigrations.Should().NotBeEmpty();
 		updatedMigrations.Should().HaveCount(count);
 		updatedMigrations.Should().AllSatisfy(x => x.Status.Should().Be(MigrationStatus.Outdated));
+	}
+
+
+
+	[Theory]
+	[InlineData(null)]
+	[InlineData(false)]
+	[InlineData(true)]
+	public async Task MigrationComparerTests_CalculateMigrationsStatusAsync__WhenMigrationIsInForceDir_ThenMigrationStatusIsForce(bool? hashMatches)
+	{
+		// arrange
+		var count = 1;
+		var migrationPath = Fixture.Create<string>();
+		var initialMigrations = CreateMigrations(migrationPath, count);
+		var migrationComparison = CreateMigrationComparisonOutput(hashMatches, migrationPath, count);
+		var migration = initialMigrations[0];
+
+		var repository = SetupRepository(migrationComparison: migrationComparison);
+		var configuration = SetupConfiguration(migration.Path.Relative);
+		var comparer = new MigrationComparer(repository, configuration);
+
+		// act
+		var updatedMigrations = await comparer.CalculateMigrationsStatusAsync(initialMigrations);
+
+		// assert
+		updatedMigrations.Should().NotBeEmpty();
+		updatedMigrations.Should().HaveCount(count);
+		updatedMigrations.Should().AllSatisfy(x => x.Status.Should().Be(MigrationStatus.ForceOutdated));
 	}
 
 	private IRepository SetupRepository(
@@ -161,45 +191,19 @@ public class MigrationComparerTests : UnitTestBase
 			.ReturnsAsync(databaseIsEmpty);
 
 		migrationComparison ??= Fixture.CreateMany<MigrationComparisonOutput>().ToArray();
-		repository.Setup(
-				r => r.GetMigrationsComparisonAsync(It.IsAny<IReadOnlyList<Migration>>(), It.IsAny<CancellationToken>())
-			)
+		repository.Setup(r => r.GetMigrationsComparisonAsync(It.IsAny<IReadOnlyList<Migration>>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(migrationComparison);
 
 		return repository.Object;
 	}
 
-	private IReadOnlyList<Migration> CreateMigrations(
-		string hash,
-		int? count = null
-	)
+	private IConfiguration SetupConfiguration(string? forceDir = default)
 	{
-		count ??= 3;
-		Fixture.Register(() => new Hash(hash));
-		Fixture.Register(
-			() => new Migration(
-				Fixture.Create<MigrationPath>(),
-				Fixture.Create<Hash>(),
-				Fixture.Create<MigrationCommand>()
-			)
-		);
+		var config = new Mock<IConfiguration>();
 
-		return Fixture.CreateMany<Migration>(count.Value).ToArray();
-	}
+		config.Setup(x => x.Get(It.Is<string>(s => s == Configuration.Key.MigrationForcePaths)))
+			.Returns(forceDir ?? string.Empty);
 
-	private IReadOnlyList<MigrationComparisonOutput> CreateMigrationComparisonOutput(
-		bool? hashMatches,
-		string? hash,
-		int? count = null
-	)
-	{
-		count ??= 3;
-		Fixture.Register(() => new MigrationComparisonOutput
-		{
-			MigrationHash = hash ?? Fixture.Create<string>(),
-			HashMatches = hashMatches,
-		});
-
-		return Fixture.CreateMany<MigrationComparisonOutput>(count.Value).ToArray();
+		return config.Object;
 	}
 }

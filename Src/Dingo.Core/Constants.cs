@@ -2,6 +2,7 @@ namespace Dingo.Core;
 
 internal class Constants
 {
+	public const string PathArraySeparator = " ";
 	public const string CurrentDir = ".";
 	public const string ConfigDir = ".dingo";
 	public const string ConfigFilename = "config";
