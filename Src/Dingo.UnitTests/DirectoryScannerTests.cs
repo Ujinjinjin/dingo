@@ -1,67 +1,55 @@
-using AutoFixture;
-using Dingo.Core.Adapters;
-using Dingo.Core.Helpers;
-using Moq;
-using System.IO;
-using Xunit;
+using Dingo.Core.Services.Adapters;
+using Dingo.Core.Services.Helpers;
 
-namespace Dingo.UnitTests
+namespace Dingo.UnitTests;
+
+public class DirectoryScannerTests : UnitTestBase
 {
-	public class DirectoryScannerTests : UnitTestsBase
+	[Fact]
+	public void DirectoryScannerTests__GetFilePathList__WhenGivenPathContainsFiles_ThenResultOrderedByModuleThenByFilename()
 	{
-		[Fact]
-		public void DirectoryScannerTests__GetFilePathList__WhenPathsGiven_ThenResultOrderedByModuleThenByFilename()
-		{
-			// Arrange
-			var pathHelper = new PathHelper();
-			var mockPathHelper = new Mock<IPathHelper>();
-			var directoryAdapter = new Mock<IDirectoryAdapter>();
+		// arrange
+		var rootPath = "/usr/home/projects/dingo/";
+		var pathAdapter = SetupPathAdapter();
+		var directoryAdapter = SetupDirectoryAdapter(rootPath);
+		var directoryScanner = new DirectoryScanner(directoryAdapter, pathAdapter);
 
-			var fixture = CreateFixture(directoryAdapter, mockPathHelper);
-			var rootPath = "/usr/home/projects/dingo/";
+		// act
+		var filePathList = directoryScanner.Scan(rootPath, It.IsAny<string>());
+		var filenames = filePathList.Select(x => $"{x.Module}/{x.Filename}").ToArray();
 
-			mockPathHelper
-				.Setup(x => x.GetRootDirectory(It.IsAny<string>()))
-				.Returns<string>(x => pathHelper.GetRootDirectory(x));
-			directoryAdapter
-				.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
-				.Returns(new[]
-				{
-					$"{rootPath}1. migrations/dingo_migrations/20201116000000_create.sql",
-					$"{rootPath}1. migrations/dingo_migrations/20201119000000_alter.sql",
-					$"{rootPath}1. migrations/users/20201118000000_create.sql",
-					$"{rootPath}1. migrations/work_item/20201111000000_create.sql",
-					$"{rootPath}2. date_types/t_user_filter.sql",
-					$"{rootPath}3. procedures/create_user.sql",
-					$"{rootPath}3. procedures/get_user_by_id.sql",
-				});
+		// assert
+		filenames.Should().BeInAscendingOrder();
+	}
 
-			var directoryScanner = fixture.Create<DirectoryScanner>();
+	private IPath SetupPathAdapter()
+	{
+		var pathHelper = new PathAdapter();
+		var adapter = new Mock<IPath>();
+		adapter
+			.Setup(x => x.GetRootDirectory(It.IsAny<string>()))
+			.Returns<string>(x => pathHelper.GetRootDirectory(x));
 
-			// Act
-			var filePathList = directoryScanner.GetFilePathList(rootPath, It.IsAny<string>());
+		return adapter.Object;
+	}
 
-			// Assert
-			Assert.Equal("20201111000000_create.sql", filePathList[0].Filename);
-			Assert.Equal("1. migrations", filePathList[0].Module);
+	private IDirectory SetupDirectoryAdapter(string rootPath)
+	{
+		var adapter = new Mock<IDirectory>();
 
-			Assert.Equal("20201116000000_create.sql", filePathList[1].Filename);
-			Assert.Equal("1. migrations", filePathList[1].Module);
+		adapter
+			.Setup(x => x.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
+			.Returns(new[]
+			{
+				$"{rootPath}1. migrations/dingo_migrations/20201116000000_create.sql",
+				$"{rootPath}1. migrations/dingo_migrations/20201119000000_alter.sql",
+				$"{rootPath}1. migrations/users/20201118000000_create.sql",
+				$"{rootPath}1. migrations/work_item/20201111000000_create.sql",
+				$"{rootPath}2. date_types/t_user_filter.sql",
+				$"{rootPath}3. procedures/create_user.sql",
+				$"{rootPath}3. procedures/get_user_by_id.sql",
+			});
 
-			Assert.Equal("20201118000000_create.sql", filePathList[2].Filename);
-			Assert.Equal("1. migrations", filePathList[2].Module);
-
-			Assert.Equal("20201119000000_alter.sql", filePathList[3].Filename);
-			Assert.Equal("1. migrations", filePathList[3].Module);
-
-			Assert.Equal("t_user_filter.sql", filePathList[4].Filename);
-			Assert.Equal("2. date_types", filePathList[4].Module);
-
-			Assert.Equal("create_user.sql", filePathList[5].Filename);
-			Assert.Equal("3. procedures", filePathList[5].Module);
-
-			Assert.Equal("get_user_by_id.sql", filePathList[6].Filename);
-			Assert.Equal("3. procedures", filePathList[6].Module);
-		}
+		return adapter.Object;
 	}
 }

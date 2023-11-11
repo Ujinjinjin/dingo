@@ -1,158 +1,166 @@
-﻿using Dingo.Core.Adapters;
-using Dingo.Core.Config;
-using Dingo.Core.Factories;
-using Dingo.Core.Helpers;
+using System.Data;
+using Dapper;
+using Dingo.Core.Extensions;
 using Dingo.Core.Models;
-using Dingo.Core.Repository.DbClasses;
-using Dingo.Core.Utils;
+using Dingo.Core.Repository.Command;
+using Dingo.Core.Repository.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Npgsql;
+using Trico.Configuration;
 
-namespace Dingo.Core.Repository
+namespace Dingo.Core.Repository;
+
+internal class DatabaseRepository : IRepository
 {
-	/// <inheritdoc />
-	internal class DatabaseRepository : IDatabaseRepository
+	private readonly IConnectionFactory _connectionFactory;
+	private readonly ICommandProviderFactory _commandProviderFactory;
+	private readonly IConfiguration _configuration;
+	private readonly ILogger _logger;
+
+	public DatabaseRepository(
+		IConnectionFactory connectionFactory,
+		ICommandProviderFactory commandProviderFactory,
+		IConfiguration configuration,
+		ILoggerFactory loggerFactory
+	)
 	{
-		private readonly IPathHelper _pathHelper;
-		private readonly IConfigWrapper _configWrapper;
-		private readonly IFileAdapter _fileAdapter;
-		private readonly IDatabaseContextFactory _databaseContextFactory;
-		private readonly ILogger _logger;
+		_connectionFactory = connectionFactory.Required(nameof(connectionFactory));
+		_commandProviderFactory = commandProviderFactory.Required(nameof(commandProviderFactory));
+		_configuration = configuration.Required(nameof(configuration));
+		_logger = loggerFactory.Required(nameof(loggerFactory))
+			.CreateLogger<DatabaseRepository>()
+			.Required(nameof(loggerFactory));
 
-		public DatabaseRepository(
-			IPathHelper pathHelper,
-			IConfigWrapper configWrapper,
-			IFileAdapter fileAdapter,
-			IDatabaseContextFactory databaseContextFactory,
-			ILoggerFactory loggerFactory
-		)
+		DefaultTypeMap.MatchNamesWithUnderscores = true;
+	}
+
+	public async Task<bool> TryHandshakeAsync(CancellationToken ct = default)
+	{
+		try
 		{
-			_pathHelper = pathHelper ?? throw new ArgumentNullException(nameof(pathHelper));
-			_configWrapper = configWrapper ?? throw new ArgumentNullException(nameof(configWrapper));
-			_fileAdapter = fileAdapter ?? throw new ArgumentNullException(nameof(fileAdapter));
-			_databaseContextFactory = databaseContextFactory ?? throw new ArgumentNullException(nameof(databaseContextFactory));
-			_logger = loggerFactory?.CreateLogger<DatabaseRepository>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-		}
-
-		/// <inheritdoc />
-		public async Task ApplyMigrationAsync(string sql, string migrationPath, string migrationHash, bool registerMigrations = true)
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			try
-			{
-				await dbContext.ExecuteRawSqlAsync(sql);
-
-				if (registerMigrations)
-				{
-					await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
-				}
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, $"Error applying migration: {migrationPath}");
-				throw;
-			}
-		}
-
-		/// <inheritdoc />
-		public async Task<bool> CheckMigrationTableExistenceAsync()
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			var result = await dbContext.CheckTableExistenceAsync(_configWrapper.MigrationSchema, _configWrapper.MigrationTable);
-			return result.SystemCheckTableExistence;
-		}
-
-		/// <inheritdoc />
-		public async Task<IList<MigrationInfo>> GetMigrationsStatusAsync(IList<MigrationInfo> migrationInfoList)
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			var input = migrationInfoList
-				.Select(x => new DbMigrationInfoInput
-				{
-					MigrationHash = x.NewHash,
-					MigrationPath = x.Path.Relative
-				})
-				.ToArray();
-			var dbMigrationStatuses = await dbContext.GetMigrationsStatusAsync(input);
-
-			var result = new MigrationInfo[dbMigrationStatuses.Count];
-			for (var i = 0; i < dbMigrationStatuses.Count; i++)
-			{
-				result[i] = new MigrationInfo
-				{
-					Path = migrationInfoList[i].Path,
-					NewHash = dbMigrationStatuses[i].NewHash,
-					OldHash = dbMigrationStatuses[i].OldHash,
-					Status = dbMigrationStatuses[i].IsOutdated switch
-					{
-						null => MigrationStatus.New,
-						true => MigrationStatus.Outdated,
-						false => MigrationStatus.UpToDate,
-					},
-				};
-			}
-
-			return result;
-		}
-
-		/// <inheritdoc />
-		public async Task<bool> HandshakeDatabaseConnectionAsync()
-		{
-			using var _ = new CodeTiming(_logger);
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			try
-			{
-				await dbContext.HandshakeDatabaseConnectionAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "DatabaseRepository:Error:HandshakeDatabaseConnectionAsync;");
-				return false;
-			}
+			await HandshakeAsync(ct);
 			return true;
 		}
-
-		/// <inheritdoc />
-		public async Task InstallCheckTableExistenceProcedureAsync()
+		catch (Exception ex)
 		{
-			using var _ = new CodeTiming(_logger);
+			_logger.LogError(ex, "Can't establish database connection");
+			return false;
+		}
+	}
 
-			var sqlScriptPath = _pathHelper.GetAppRootPathFromRelative(_configWrapper.CheckTableExistenceProcedurePath);
-			var sqlScriptText = await _fileAdapter.ReadAllTextAsync(sqlScriptPath);
+	private async Task HandshakeAsync(CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
 
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			await dbContext.ExecuteRawSqlAsync(sqlScriptText);
+		if (connection.State == ConnectionState.Open)
+		{
+			return;
 		}
 
-		/// <inheritdoc />
-		public async Task RegisterMigrationAsync(string migrationPath, string migrationHash)
+		await connection.OpenAsync(ct);
+	}
+
+	public async Task<bool> SchemaExistsAsync(string schema, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.SelectSchema(schema);
+
+		var result = await connection.QueryAsync<string>(command);
+
+		return result.FirstOrDefault() != null;
+	}
+
+	public async Task<bool> IsDatabaseEmptyAsync(CancellationToken ct = default)
+	{
+		var dingoSchemaName = _configuration.Get(Configuration.Key.SchemaName);
+		return !await SchemaExistsAsync(dingoSchemaName, ct);
+	}
+
+	public async Task<IReadOnlyList<MigrationComparisonOutput>> GetMigrationsComparisonAsync(
+		IReadOnlyList<Migration> migrations,
+		CancellationToken ct = default
+	)
+	{
+		var migrationInfoInputs = migrations.Select(ToMigrationsInfoInput).ToArray();
+
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.GetMigrationsStatus(migrationInfoInputs);
+
+		var result = await connection.QueryAsync<MigrationComparisonOutput>(command);
+		return result.ToArray();
+	}
+
+	// TODO: extract
+	private MigrationComparisonInput ToMigrationsInfoInput(Migration migration)
+	{
+		return new MigrationComparisonInput(migration.Hash.Value, migration.Path.Relative);
+	}
+
+	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.GetNextPatch();
+
+		var result = await connection.QueryAsync<int>(command);
+		return result.Single();
+	}
+
+	public async Task<IReadOnlyList<PatchMigration>> GetLastPatchMigrationsAsync(
+		int patchCount,
+		CancellationToken ct = default
+	)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.GetLastPatchMigrations(patchCount);
+
+		var result = await connection.QueryAsync<PatchMigration>(command);
+		return result.ToArray();
+	}
+
+	public async Task RegisterMigrationAsync(Migration migration, int patchNumber, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.RegisterMigration(migration, patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
+	public async Task RevertPatchAsync(int patchNumber, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.RevertPatch(patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
+	public async Task CompletePatchAsync(int patchNumber, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		var command = _commandProviderFactory.Create()
+			.CompletePatch(patchNumber);
+
+		await connection.ExecuteAsync(command);
+	}
+
+	public async Task ExecuteAsync(string sql, CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		await connection.ExecuteAsync(sql, commandType: CommandType.Text);
+	}
+
+	public async Task ReloadTypesAsync(CancellationToken ct = default)
+	{
+		await using var connection = _connectionFactory.Create();
+		if (connection is NpgsqlConnection npgsqlConnection)
 		{
-			using var _ = new CodeTiming(_logger);
-
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			await dbContext.RegisterMigrationAsync(migrationPath, migrationHash, DateTime.UtcNow);
-		}
-
-		/// <inheritdoc />
-		public async Task ReloadDatabaseTypesAsync()
-		{
-			using var _ = new CodeTiming(_logger);
-
-			using var dbContext = _databaseContextFactory.CreateDatabaseContext();
-
-			await dbContext.ReloadDatabaseTypesAsync();
+			await connection.OpenAsync(ct);
+			await npgsqlConnection.ReloadTypesAsync();
 		}
 	}
 }

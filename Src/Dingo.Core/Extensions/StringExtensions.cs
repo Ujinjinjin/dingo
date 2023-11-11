@@ -1,45 +1,33 @@
-﻿namespace Dingo.Core.Extensions
+﻿using Dingo.Core.Repository;
+
+namespace Dingo.Core.Extensions;
+
+/// <summary> Collection of extensions for <see cref="string"/> </summary>
+internal static class StringExtensions
 {
-	/// <summary> Collection of extensions for <see cref="string"/> </summary>
-	internal static class StringExtensions
+	/// <summary> Returns a value indicating whether a specified substring does not occur within this string </summary>
+	/// <param name="source">Source string</param>
+	/// <param name="value">The string to seek</param>
+	public static bool NotContains(this string source, string value)
 	{
-		/// <summary> Returns a concatenation of two path strings </summary>
-		/// <param name="source">First path of path</param>
-		/// <param name="value">Second part of path</param>
-		public static string ConcatPath(this string source, string value)
-		{
-			var path = source + "/" + value;
+		return !source.Contains(value);
+	}
 
-			path = path.ReplaceBackslashesWithSlashes();
+	/// <summary> Replace all `\r\n` with `\n` in given string </summary>
+	/// <param name="source">Source string</param>
+	public static string ToUnixEol(this string source)
+	{
+		return source.Replace("\r\n", "\n");
+	}
 
-			while (path.Contains("//"))
-			{
-				path = path.Replace("//", "/");
-			}
+	public static bool IsPostgres(this string provider)
+	{
+		return provider.Equals(ProviderName.PostgreSql, StringComparison.InvariantCultureIgnoreCase) ||
+			provider.Equals(ProviderName.Postgres, StringComparison.InvariantCultureIgnoreCase);
+	}
 
-			return path;
-		}
-		
-		/// <summary> Returns a value indicating whether a specified substring does not occur within this string </summary>
-		/// <param name="source">Source string</param>
-		/// <param name="value">Substring to search</param>
-		public static bool NotContains(this string source, string value)
-		{
-			return !source.Contains(value);
-		}
-		
-		/// <summary> Replace all `\` with `/` in given string </summary>
-		/// <param name="value">Source string</param>
-		public static string ReplaceBackslashesWithSlashes(this string value)
-		{
-			return value.Replace("\\", "/");
-		}
-
-		/// <summary> Replace all `\r\n` with `\n` in given string </summary>
-		/// <param name="source">Source string</param>
-		public static string ToUnixEol(this string source)
-		{
-			return source.Replace("\r\n", "\n");
-		}
+	public static bool IsSqlServer(this string provider)
+	{
+		return provider.Equals(ProviderName.SqlServer, StringComparison.InvariantCultureIgnoreCase);
 	}
 }

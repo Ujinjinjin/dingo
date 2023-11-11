@@ -1,48 +1,89 @@
-﻿using Dingo.Core.Adapters;
-using Dingo.Core.Config;
-using Dingo.Core.Factories;
-using Dingo.Core.Helpers;
-using Dingo.Core.Operations;
+﻿using Dingo.Core.IO;
 using Dingo.Core.Repository;
-using Dingo.Core.Validators;
+using Dingo.Core.Repository.Command;
+using Dingo.Core.Repository.Source;
+using Dingo.Core.Services.Adapters;
+using Dingo.Core.Services.Config;
+using Dingo.Core.Services.Handlers;
+using Dingo.Core.Services.Helpers;
+using Dingo.Core.Services.Logs;
+using Dingo.Core.Services.Migrations;
+using Dingo.Core.Validators.Migration;
+using Dingo.Core.Validators.Migration.Name;
+using Dingo.Core.Validators.Migration.Sql;
+using Dingo.Core.Validators.Primitive;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Trico.Extensions;
 
-namespace Dingo.Core.Extensions
+namespace Dingo.Core.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-	/// <summary> Collection of extensions for <see cref="IServiceCollection"/> </summary>
-	public static class ServiceCollectionExtensions
+	public static void AddDingo(this IServiceCollection serviceCollection)
 	{
-		/// <summary> Add dingo dependencies to service collection </summary>
-		/// <param name="serviceCollection">Target service collection</param>
-		public static void UseDingo(this IServiceCollection serviceCollection)
-		{
-			serviceCollection.AddSingleton<IConfigLoader, ConfigLoader>();
-			serviceCollection.AddSingleton<IConfigSaver, ConfigSaver>();
-			serviceCollection.AddSingleton<IConfigWrapper, ConfigWrapper>();
+		serviceCollection.AddAdapters();
+		serviceCollection.AddValidators();
+		serviceCollection.AddFactories();
+		serviceCollection.AddServices();
 
-			serviceCollection.AddSingleton<IDatabaseContextFactory, DatabaseContextFactory>();
-			serviceCollection.AddSingleton<IDatabaseContractConverterFactory, DatabaseContractConverterFactory>();
-			serviceCollection.AddSingleton<IInternalSerializerFactory, InternalSerializerFactory>();
-			serviceCollection.AddSingleton<ILoggerFactory, DingoLoggerFactory>();
-			serviceCollection.AddSingleton<IOutputQueueFactory, OutputQueueFactory>();
+		serviceCollection.AddConfiguration()
+			.AddEnvironmentVariableProvider()
+			.AddFileProvider()
+			.AddInMemoryProvider(Configuration.Dict);
+	}
 
-			serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
-			serviceCollection.AddSingleton<IHashMaker, HashMaker>();
-			serviceCollection.AddSingleton<IPathHelper, PathHelper>();
+	private static void AddAdapters(this IServiceCollection serviceCollection)
+	{
+		serviceCollection.AddSingleton<IDirectory, DirectoryAdapter>();
+		serviceCollection.AddSingleton<IFile, FileAdapter>();
+		serviceCollection.AddSingleton<IPath, PathAdapter>();
+	}
 
-			serviceCollection.AddSingleton<IDirectoryAdapter, DirectoryAdapter>();
-			serviceCollection.AddSingleton<IFileAdapter, FileAdapter>();
+	private static void AddValidators(this IServiceCollection serviceCollection)
+	{
+		// migration validator
+		serviceCollection.AddSingleton<MigrationValidator>();
 
-			serviceCollection.AddSingleton<IConfigOperations, ConfigOperations>();
-			serviceCollection.AddSingleton<ILogsOperations, LogsOperations>();
-			serviceCollection.AddSingleton<IMigrationOperations, MigrationOperations>();
-			serviceCollection.AddSingleton<IProviderOperations, ProviderOperations>();
+		serviceCollection.AddSingleton<ISqlCommandValidator, UpSqlRequiredValidator>();
+		serviceCollection.AddSingleton<ISqlCommandValidator, DownSqlRequiredValidator>();
+		serviceCollection.AddSingleton<IMigrationNameValidator, MigrationNameValidator>();
 
-			serviceCollection.AddSingleton<MigrationNameValidator>();
+		// primitive
+		serviceCollection.AddSingleton<StringRequiredValidator>();
+	}
 
-			serviceCollection.AddSingleton<IDatabaseRepository, DatabaseRepository>();
-			serviceCollection.AddSingleton<IDatabaseContext, DatabaseContext>();
-		}
+	private static void AddFactories(this IServiceCollection serviceCollection)
+	{
+		serviceCollection.AddSingleton<IConnectionFactory, ConnectionFactory>();
+		serviceCollection.AddSingleton<ICommandProviderFactory, CommandProviderFactory>();
+		serviceCollection.AddSingleton<ICommandProviderFactory, CommandProviderFactory>();
+	}
+
+	private static void AddServices(this IServiceCollection serviceCollection)
+	{
+		serviceCollection.AddSingleton<IMigrationCommandParser, MigrationCommandParser>();
+		serviceCollection.AddSingleton<IMigrationScanner, MigrationScanner>();
+		serviceCollection.AddSingleton<IMigrationComparer, MigrationComparer>();
+		serviceCollection.AddSingleton<IMigrationGenerator, MigrationGenerator>();
+		serviceCollection.AddSingleton<IMigrationGenerator, MigrationGenerator>();
+		serviceCollection.AddSingleton<IDirectoryScanner, DirectoryScanner>();
+		serviceCollection.AddSingleton<IMigrationApplier, MigrationApplier>();
+		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
+		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
+		serviceCollection.AddSingleton<IMigrationStatusCalculator, MigrationStatusCalculator>();
+		serviceCollection.AddSingleton<IConfigGenerator, ConfigGenerator>();
+		serviceCollection.AddSingleton<IConfigProfileLoader, ConfigProfileLoader>();
+		serviceCollection.AddSingleton<ILogsPruner, LogsPruner>();
+		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
+		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
+		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
+		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();
+		serviceCollection.AddSingleton<IConnectionHandler, ConnectionHandler>();
+		serviceCollection.AddSingleton<IConfigHandler, ConfigHandler>();
+		serviceCollection.AddSingleton<ILogsHandler, LogsHandler>();
+
+		serviceCollection.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+		serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
 	}
 }

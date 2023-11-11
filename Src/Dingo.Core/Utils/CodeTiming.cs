@@ -1,26 +1,25 @@
 using Microsoft.Extensions.Logging;
-using System;
 using System.Runtime.CompilerServices;
+using Dingo.Core.Extensions;
 
-namespace Dingo.Core.Utils
+namespace Dingo.Core.Utils;
+
+internal readonly struct CodeTiming : IDisposable
 {
-	public readonly struct CodeTiming : IDisposable
+	private readonly ILogger _logger;
+	private readonly long _startTicks;
+	private readonly string? _callerName;
+
+	public CodeTiming(ILogger logger, [CallerMemberName] string? callerName = default)
 	{
-		private readonly ILogger _logger;
-		private readonly long _startTicks;
-		private readonly string _callerName;
+		_logger = logger.Required(nameof(logger));
+		_startTicks = DateTime.UtcNow.Ticks;
+		_callerName = callerName;
+	}
 
-		public CodeTiming(ILogger logger, [CallerMemberName] string callerName = null)
-		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_startTicks = DateTime.UtcNow.Ticks;
-			_callerName = callerName;
-		}
-
-		public void Dispose()
-		{
-			var finishTicks = DateTime.UtcNow.Ticks;
-			_logger.LogDebug($"Method:{_callerName}; elapsed: {TimeSpan.FromTicks(finishTicks - _startTicks)}");
-		}
+	public void Dispose()
+	{
+		var finishTicks = DateTime.UtcNow.Ticks;
+		_logger.LogDebug($"Method:{_callerName}; elapsed: {TimeSpan.FromTicks(finishTicks - _startTicks)}");
 	}
 }

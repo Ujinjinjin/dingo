@@ -1,30 +1,32 @@
-using System;
-using System.Collections.Generic;
+namespace Dingo.Core.Validators;
 
-namespace Dingo.Core.Validators
+/// <inheritdoc />
+internal abstract class Validator<T> : IValidator<T>
 {
+	/// <summary> List of validation rules </summary>
+	private IReadOnlyList<Func<T, bool>>? _validationRules;
+
+	protected abstract IReadOnlyList<Func<T, bool>> GetValidationRules();
+
 	/// <inheritdoc />
-	internal abstract class Validator<T> : IValidator<T>
+	public bool Validate(T entity)
 	{
-		/// <summary> List of validation rules </summary>
-		protected IList<Func<T, bool>> ValidationRules;
+		_validationRules = GetValidationRules();
 
-		/// <inheritdoc />
-		public bool Validate(T entity)
+		if (_validationRules == null || _validationRules.Count == 0)
 		{
-			if (ValidationRules == null || ValidationRules.Count == 0)
-			{
-				return true;
-			}
-
-			var result = true;
-
-			for (var i = 0; i < ValidationRules.Count; i++)
-			{
-				result = result && ValidationRules[i](entity);
-			}
-
-			return result;
+			return true;
 		}
+
+		for (var i = 0; i < _validationRules.Count; i++)
+		{
+			var result = _validationRules[i](entity);
+			if (!result)
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

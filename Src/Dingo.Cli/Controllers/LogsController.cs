@@ -1,40 +1,45 @@
-using Cliff;
-using Dingo.Core.Operations;
-using System;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using Cliff;
+using Cliff.Factories;
+using Dingo.Core.Extensions;
+using Dingo.Core.Services.Handlers;
 
-namespace Dingo.Cli.Controllers
+namespace Dingo.Cli.Controllers;
+
+internal sealed class LogsController : CliController
 {
-	/// <summary> Controller allowing to work with logs </summary>
-	internal class LogsController : CliController
+	private readonly ILogsHandler _logsHandler;
+
+	public LogsController(
+		RootCommand rootCommand,
+		ICommandFactory commandFactory,
+		IOptionFactory optionFactory,
+		ILogsHandler logsHandler
+	) : base(
+		rootCommand,
+		commandFactory,
+		optionFactory
+	)
 	{
-		private readonly ILogsOperations _logsOperations;
+		_logsHandler = logsHandler.Required(nameof(logsHandler));
+	}
 
-		public LogsController(RootCommand rootCommand, ILogsOperations logsOperations) : base(rootCommand)
-		{
-			_logsOperations = logsOperations ?? throw new ArgumentNullException(nameof(logsOperations));
-		}
+	public override void Register()
+	{
+		var command = CommandFactory.CreateCommand("logs", "Group of commands to work with logs");
+		command.Add(GetPruneCommand());
+		Register(command);
+	}
 
-		public override void Register()
-		{
-			var command = CreateCommand("logs", "Group of commands to work with logs");
+	private Command GetPruneCommand()
+	{
+		var command = CommandFactory.CreateCommand(
+			"prune",
+			"Prune dingo log files"
+		);
 
-			command.AddCommand(CreateCommand(
-				"level", 
-				"Switch level of logging",
-				CommandHandler.Create<string, int?>(_logsOperations.SwitchLogLevelAsync),
-				CreateOption(new[] {"--config-path", "-c"}, "Custom path to configuration file", typeof(string), false),
-				CreateOption(new[] {"--log-level", "-l"}, "Integer representation of logging level", typeof(int?), false)
-			));
+		command.SetHandler(() => _logsHandler.Prune());
 
-			command.AddCommand(CreateCommand(
-				"prune", 
-				"Prune dingo log files",
-				CommandHandler.Create(_logsOperations.PruneLogsAsync)
-			));
-
-			RootCommand.AddCommand(command);
-		}
+		return command;
 	}
 }

@@ -1,28 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>Dingo.Core</PackageId>
         <Version>0.0.1</Version>
         <Authors>Camille Galladjov</Authors>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/ujinjinjin/dingo</RepositoryUrl>
         <Company>None</Company>
+        <RootNamespace>Dingo.Core</RootNamespace>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="Jarl.Yaml" Version="1.0.1" />
-        <PackageReference Include="linq2db" Version="3.3.0" />
-        <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-        <PackageReference Include="Npgsql" Version="5.0.4" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+        <PackageReference Include="Dapper" Version="2.1.15"/>
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0"/>
+        <PackageReference Include="Npgsql" Version="7.0.6"/>
+        <PackageReference Include="Trico" Version="1.1.7" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Dingo.UnitTests"/>
+        <InternalsVisibleTo Include="Dingo.IntegrationTests"/>
+        <InternalsVisibleTo Include="Dingo.Playground"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    </ItemGroup>
+
     <ItemGroup>
         <Content Include="Database\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Dingo.Core.Database\Dingo.Core.Database.csproj"/>
+    </ItemGroup>
 </Project>
