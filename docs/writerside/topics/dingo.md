@@ -40,7 +40,7 @@ Currently, `dingo` can only be installed as a binary using default package manag
         curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
             | grep "browser_download_url.*pkg" \
             | cut -d '"' -f 4 \
-            | xargs -I packageUrl curl -s -o dingo.pkg packageUrl
+            | xargs -I packageUrl curl packageUrl -L -s -o dingo.pkg
         installer -pkg dingo.pkg -target CurrentUserHomeDirectory
     </code-block>
 </tab>
