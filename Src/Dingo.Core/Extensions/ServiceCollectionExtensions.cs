@@ -71,6 +71,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IMigrationApplier, MigrationApplier>();
 		serviceCollection.AddSingleton<IMigrationPathBuilder, MigrationPathBuilder>();
 		serviceCollection.AddSingleton<IMigrationRunner, MigrationRunner>();
+		serviceCollection.AddSingleton<IMigrationStatusCalculator, MigrationStatusCalculator>();
 		serviceCollection.AddSingleton<IConfigGenerator, ConfigGenerator>();
 		serviceCollection.AddSingleton<IConfigProfileLoader, ConfigProfileLoader>();
 		serviceCollection.AddSingleton<ILogsPruner, LogsPruner>();

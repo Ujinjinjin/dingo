@@ -3,7 +3,7 @@ using Dingo.Core.Services.Adapters;
 using Dingo.Core.Services.Migrations;
 using Dingo.Core.Validators.Migration.Name;
 
-namespace Dingo.UnitTests.Migrations;
+namespace Dingo.UnitTests.Services.Migrations;
 
 public class MigrationGeneratorTests : UnitTestBase
 {

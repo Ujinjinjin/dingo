@@ -5,7 +5,7 @@ using Dingo.Core.Models;
 using Dingo.Core.Services.Migrations;
 using Trico.Configuration;
 
-namespace Dingo.UnitTests.Migrations;
+namespace Dingo.UnitTests.Services.Migrations;
 
 public sealed class MigrationCommandParserTests : UnitTestBase
 {

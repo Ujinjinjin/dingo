@@ -5,7 +5,7 @@ using Dingo.Core.Services.Helpers;
 using Dingo.Core.Services.Migrations;
 using Trico.Configuration;
 
-namespace Dingo.UnitTests.Migrations;
+namespace Dingo.UnitTests.Services.Migrations;
 
 public class MigrationScannerTests : UnitTestBase
 {

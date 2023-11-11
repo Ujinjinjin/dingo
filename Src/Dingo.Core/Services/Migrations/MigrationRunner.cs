@@ -1,3 +1,4 @@
+using System.Text;
 using Dingo.Core.Extensions;
 using Dingo.Core.IO;
 using Dingo.Core.Models;
@@ -13,6 +14,7 @@ internal class MigrationRunner : IMigrationRunner
 	private readonly IMigrationComparer _migrationComparer;
 	private readonly IMigrationScanner _migrationScanner;
 	private readonly IMigrationPathBuilder _migrationPathBuilder;
+	private readonly IMigrationStatusCalculator _migrationStatusCalculator;
 	private readonly IRepository _repository;
 	private readonly IOutput _output;
 
@@ -22,13 +24,15 @@ internal class MigrationRunner : IMigrationRunner
 		IMigrationScanner migrationScanner,
 		IMigrationPathBuilder migrationPathBuilder,
 		IRepository repository,
-		IOutput output
+		IOutput output,
+		IMigrationStatusCalculator migrationStatusCalculator
 	)
 	{
 		_migrationApplier = migrationApplier.Required(nameof(migrationApplier));
 		_migrationComparer = migrationComparer.Required(nameof(migrationComparer));
 		_migrationScanner = migrationScanner.Required(nameof(migrationScanner));
 		_migrationPathBuilder = migrationPathBuilder.Required(nameof(migrationPathBuilder));
+		_migrationStatusCalculator = migrationStatusCalculator.Required(nameof(migrationStatusCalculator));
 		_repository = repository.Required(nameof(repository));
 		_output = output.Required(nameof(output));
 	}
@@ -78,7 +82,7 @@ internal class MigrationRunner : IMigrationRunner
 	)
 	{
 		var migrationsToApply = (await _migrationComparer.CalculateMigrationsStatusAsync(migrations, ct))
-			.Where(x => x.Status is MigrationStatus.New or MigrationStatus.Outdated)
+			.Where(_migrationStatusCalculator.NeedToApplyMigration)
 			.ToArray();
 
 		if (migrationsToApply.Length == 0)
@@ -150,51 +154,38 @@ internal class MigrationRunner : IMigrationRunner
 		bool force
 	)
 	{
-		var forceMsg = force
-			? string.Empty
-			: " To ignore the issue execute this command with `--force` flag";
+		var sb = new StringBuilder();
+		var canRollback = true;
 		foreach (var migration in migrations)
 		{
-			if (!localMigrationsMap.TryGetValue(migration.MigrationPath, out var localMigration))
-			{
-				_output.Write(
-					$"Can't find local migration file {migration.MigrationPath}. " +
-					$"Most probably it was deleted from the directory.",
-					LogLevel.Warning
-				);
+			var status = _migrationStatusCalculator.CalculatePatchMigrationStatus(migration, localMigrationsMap);
 
-				return false;
+			if (status.HasFlag(PatchMigrationStatus.LocalMigrationNotFound))
+			{
+				sb.Append($"Can't find local migration file {migration.MigrationPath}. ");
+				sb.Append("Most probably it was deleted from the directory.");
+				sb.Append(Environment.NewLine);
+				canRollback = false;
 			}
 
-			if (localMigration.Status != MigrationStatus.UpToDate)
+			if (status.HasFlag(PatchMigrationStatus.LocalMigrationModified))
 			{
-				_output.Write(
-					$"Local migration {migration.MigrationPath} was modified since last patch, " +
-					$"rolling it back might cause unexpected behaviour.{forceMsg}",
-					LogLevel.Warning
-				);
-
-				if (!force)
-				{
-					return false;
-				}
-			}
-
-			if (migration.MigrationHash != localMigration.Hash.Value)
-			{
-				_output.Write(
-					$"Local migration {migration.MigrationPath} was modified since last patch, " +
-					$"rolling it back might cause unexpected behaviour.{forceMsg}",
-					LogLevel.Warning
-				);
-
-				if (!force)
-				{
-					return false;
-				}
+				sb.Append($"Local migration {migration.MigrationPath} was modified since last patch, ");
+				sb.Append("rolling it back might cause unexpected behaviour.");
+				sb.Append(Environment.NewLine);
+				canRollback = false;
 			}
 		}
 
-		return true;
+		canRollback |= force;
+		if (!canRollback)
+		{
+			sb.Append(Environment.NewLine);
+			sb.Append("To ignore the issues above execute this command with `--force` flag");
+		}
+
+		_output.Write(sb.ToString(), LogLevel.Warning);
+
+		return canRollback;
 	}
 }
