@@ -12,5 +12,5 @@ public interface IMigrationHandler
 	Task MigrateAsync(string? profile, string path, CancellationToken ct = default);
 
 	/// <summary> Rollback last N patches </summary>
-	Task RollbackAsync(string? profile, string path, int patchCount, bool force, CancellationToken ct = default);
+	Task RollbackAsync(string? profile, string path, int? patchCount, bool force, CancellationToken ct = default);
 }

@@ -9,6 +9,8 @@ namespace Dingo.Core.Services.Handlers;
 
 internal class MigrationHandler : IMigrationHandler
 {
+	private const int DefaultPatchRollbackCount = 1;
+
 	private readonly IMigrationGenerator _migrationGenerator;
 	private readonly IMigrationComparer _migrationComparer;
 	private readonly IMigrationScanner _migrationScanner;
@@ -75,7 +77,7 @@ internal class MigrationHandler : IMigrationHandler
 	public async Task RollbackAsync(
 		string? profile,
 		string path,
-		int patchCount,
+		int? patchCount,
 		bool force,
 		CancellationToken ct = default
 	)
@@ -85,7 +87,7 @@ internal class MigrationHandler : IMigrationHandler
 		try
 		{
 			await _profileLoader.LoadAsync(profile, ct);
-			await _migrationRunner.RollbackAsync(path, patchCount, force, ct);
+			await _migrationRunner.RollbackAsync(path, patchCount ?? DefaultPatchRollbackCount, force, ct);
 		}
 		catch (Exception ex)
 		{
