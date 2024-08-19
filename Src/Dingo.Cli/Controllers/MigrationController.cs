@@ -111,7 +111,7 @@ public class MigrationController : CliController
 		var forceOption = OptionFactory.CreateOption<bool>(
 			new[] { "--force", "-f" },
 			"Ignore all warnings and rollback patches",
-			true
+			false
 		);
 
 		var command = CommandFactory.CreateCommand(
