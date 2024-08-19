@@ -103,7 +103,7 @@ public class MigrationController : CliController
 			"Root path to database migration files",
 			true
 		);
-		var countOption = OptionFactory.CreateOption<int>(
+		var countOption = OptionFactory.CreateOption<int?>(
 			new[] { "--count" },
 			"Number of patches to rollback. Default: 1",
 			false
