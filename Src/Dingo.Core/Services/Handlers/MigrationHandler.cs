@@ -1,9 +1,11 @@
+using Dingo.Core.Exceptions;
 using Dingo.Core.Extensions;
 using Dingo.Core.IO;
 using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Migrations;
 using Dingo.Core.Utils;
 using Microsoft.Extensions.Logging;
+using Trico.Configuration;
 
 namespace Dingo.Core.Services.Handlers;
 
@@ -16,6 +18,7 @@ internal sealed class MigrationHandler : IMigrationHandler
 	private readonly IMigrationScanner _migrationScanner;
 	private readonly IMigrationRunner _migrationRunner;
 	private readonly IConfigProfileLoader _profileLoader;
+	private readonly IConfiguration _configuration;
 	private readonly IOutput _output;
 	private readonly ILogger _logger;
 
@@ -25,6 +28,7 @@ internal sealed class MigrationHandler : IMigrationHandler
 		IMigrationScanner migrationScanner,
 		IMigrationRunner migrationRunner,
 		IConfigProfileLoader profileLoader,
+		IConfiguration configuration,
 		IOutput output,
 		ILoggerFactory loggerFactory
 	)
@@ -34,6 +38,7 @@ internal sealed class MigrationHandler : IMigrationHandler
 		_migrationScanner = migrationScanner.Required(nameof(migrationScanner));
 		_migrationRunner = migrationRunner.Required(nameof(migrationRunner));
 		_profileLoader = profileLoader.Required(nameof(profileLoader));
+		_configuration = configuration.Required(nameof(configuration));
 		_output = output.Required(nameof(output));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
 			.CreateLogger<MigrationHandler>()
@@ -57,14 +62,14 @@ internal sealed class MigrationHandler : IMigrationHandler
 	}
 
 	/// <inheritdoc />
-	public async Task MigrateAsync(string? profile, string path, CancellationToken ct = default)
+	public async Task MigrateAsync(string? profile, string? path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
 
 		try
 		{
 			await _profileLoader.LoadAsync(profile, ct);
-			await _migrationRunner.MigrateAsync(path, ct);
+			await _migrationRunner.MigrateAsync(ResolvePath(path), ct);
 		}
 		catch (Exception ex)
 		{
@@ -76,7 +81,7 @@ internal sealed class MigrationHandler : IMigrationHandler
 	/// <inheritdoc />
 	public async Task RollbackAsync(
 		string? profile,
-		string path,
+		string? path,
 		int? patchCount,
 		bool force,
 		CancellationToken ct = default
@@ -87,7 +92,7 @@ internal sealed class MigrationHandler : IMigrationHandler
 		try
 		{
 			await _profileLoader.LoadAsync(profile, ct);
-			await _migrationRunner.RollbackAsync(path, patchCount ?? DefaultPatchRollbackCount, force, ct);
+			await _migrationRunner.RollbackAsync(ResolvePath(path), patchCount ?? DefaultPatchRollbackCount, force, ct);
 		}
 		catch (Exception ex)
 		{
@@ -97,14 +102,14 @@ internal sealed class MigrationHandler : IMigrationHandler
 	}
 
 	/// <inheritdoc />
-	public async Task ShowStatusAsync(string? profile, string path, CancellationToken ct = default)
+	public async Task ShowStatusAsync(string? profile, string? path, CancellationToken ct = default)
 	{
 		using var _ = new CodeTiming(_logger);
 
 		try
 		{
 			await _profileLoader.LoadAsync(profile, ct);
-			await _ShowStatusAsync(path, ct);
+			await _ShowStatusAsync(ResolvePath(path), ct);
 		}
 		catch (Exception ex)
 		{
@@ -123,5 +128,10 @@ internal sealed class MigrationHandler : IMigrationHandler
 		{
 			_output.Write($"{migration.Status} - '{migration.Path.Relative}'", LogLevel.Information);
 		}
+	}
+
+	private string ResolvePath(string? path)
+	{
+		return path ?? _configuration.Get(Configuration.Key.MigrationPath) ?? throw new PathNotProvidedException();
 	}
 }
