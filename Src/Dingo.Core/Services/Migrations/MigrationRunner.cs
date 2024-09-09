@@ -55,7 +55,11 @@ internal class MigrationRunner : IMigrationRunner
 
 		if (await _repository.IsDatabaseEmptyAsync(ct))
 		{
-			await RunInTransaction(async () => await ApplySystemMigrationsOnEmptyDatabaseAsync(migrations, ct), ct);
+			await RunInTransaction(
+				async () => await ApplySystemMigrationsOnEmptyDatabaseAsync(migrations, ct),
+				LogLevel.None,
+				ct
+			);
 		}
 		else
 		{
@@ -115,6 +119,7 @@ internal class MigrationRunner : IMigrationRunner
 
 				await _repository.CompletePatchAsync(patch, ct);
 			},
+			LogLevel.Information,
 			ct
 		);
 
@@ -160,6 +165,7 @@ internal class MigrationRunner : IMigrationRunner
 					await _repository.RevertPatchAsync(patch, ct);
 					rolledBackCount++;
 				},
+				LogLevel.Information,
 				ct
 			);
 		}
@@ -208,18 +214,21 @@ internal class MigrationRunner : IMigrationRunner
 		return canRollback;
 	}
 
-	private async Task RunInTransaction(Func<Task> action, CancellationToken ct = default)
+	private async Task RunInTransaction(Func<Task> action, LogLevel logLevel, CancellationToken ct = default)
 	{
 		await using var unitOfWork = await _unitOfWorkFactory.CreateAsync();
 		try
 		{
+			_output.Write($"Transaction start. ID: {unitOfWork.Id.ToString()}", logLevel);
 			await unitOfWork.BeginAsync(ct);
 			await action();
 			await unitOfWork.CommitAsync(ct);
+			_output.Write($"Transaction commited. ID: {unitOfWork.Id.ToString()}", logLevel);
 		}
 		catch (Exception)
 		{
 			await unitOfWork.RollbackAsync(ct);
+			_output.Write($"Transaction rolled back. ID: {unitOfWork.Id.ToString()}", logLevel);
 			throw;
 		}
 	}
