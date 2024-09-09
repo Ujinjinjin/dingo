@@ -4,6 +4,7 @@ using Dingo.Core.IO;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
+using Dingo.Core.Repository.UoW;
 using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Migrations;
@@ -15,6 +16,7 @@ internal class MigrationRunner : IMigrationRunner
 	private readonly IMigrationScanner _migrationScanner;
 	private readonly IMigrationPathBuilder _migrationPathBuilder;
 	private readonly IMigrationStatusCalculator _migrationStatusCalculator;
+	private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 	private readonly IRepository _repository;
 	private readonly IOutput _output;
 
@@ -23,6 +25,7 @@ internal class MigrationRunner : IMigrationRunner
 		IMigrationComparer migrationComparer,
 		IMigrationScanner migrationScanner,
 		IMigrationPathBuilder migrationPathBuilder,
+		IUnitOfWorkFactory unitOfWorkFactory,
 		IRepository repository,
 		IOutput output,
 		IMigrationStatusCalculator migrationStatusCalculator
@@ -33,6 +36,7 @@ internal class MigrationRunner : IMigrationRunner
 		_migrationScanner = migrationScanner.Required(nameof(migrationScanner));
 		_migrationPathBuilder = migrationPathBuilder.Required(nameof(migrationPathBuilder));
 		_migrationStatusCalculator = migrationStatusCalculator.Required(nameof(migrationStatusCalculator));
+		_unitOfWorkFactory = unitOfWorkFactory.Required(nameof(unitOfWorkFactory));
 		_repository = repository.Required(nameof(repository));
 		_output = output.Required(nameof(output));
 	}
@@ -51,14 +55,18 @@ internal class MigrationRunner : IMigrationRunner
 
 		if (await _repository.IsDatabaseEmptyAsync(ct))
 		{
-			await InitializeDatabaseAsync(migrations, ct);
-			await _repository.ReloadTypesAsync(ct);
+			await RunInTransaction(async () => await ApplySystemMigrationsOnEmptyDatabaseAsync(migrations, ct), ct);
 		}
-
-		await ApplyMigrationsAsync(migrations, MigrationType.System, ct);
+		else
+		{
+			await ApplyMigrationsAsync(migrations, MigrationType.System, ct);
+		}
 	}
 
-	private async Task InitializeDatabaseAsync(IReadOnlyList<Migration> migrations, CancellationToken ct = default)
+	private async Task ApplySystemMigrationsOnEmptyDatabaseAsync(
+		IReadOnlyList<Migration> migrations,
+		CancellationToken ct = default
+	)
 	{
 		foreach (var migration in migrations)
 		{
@@ -73,6 +81,7 @@ internal class MigrationRunner : IMigrationRunner
 		}
 
 		await _repository.CompletePatchAsync(patch, ct);
+		await _repository.ReloadTypesAsync(ct);
 	}
 
 	private async Task ApplyMigrationsAsync(
@@ -91,18 +100,23 @@ internal class MigrationRunner : IMigrationRunner
 			return;
 		}
 
-		var patch = await _repository.GetNextPatchAsync(ct);
-		var total = migrationsToApply.Length;
-		var current = 1;
-		_output.Write($"Patch #{patch}; Migrations to apply: {total}", LogLevel.Information);
+		await RunInTransaction(
+			async () => {
+				var patch = await _repository.GetNextPatchAsync(ct);
+				var total = migrationsToApply.Length;
+				var current = 1;
+				_output.Write($"Patch #{patch}; Migrations to apply: {total}", LogLevel.Information);
 
-		foreach (var migration in migrationsToApply)
-		{
-			_output.Write($"{current++}/{total} Applying '{migration.Path.Relative}'", LogLevel.Information);
-			await _migrationApplier.ApplyAndRegisterAsync(migration, patch, ct);
-		}
+				foreach (var migration in migrationsToApply)
+				{
+					_output.Write($"{current++}/{total} Applying '{migration.Path.Relative}'", LogLevel.Information);
+					await _migrationApplier.ApplyAndRegisterAsync(migration, patch, ct);
+				}
 
-		await _repository.CompletePatchAsync(patch, ct);
+				await _repository.CompletePatchAsync(patch, ct);
+			},
+			ct
+		);
 
 		_output.Write($"Finished applying {migrationType} migrations.", LogLevel.Information);
 	}
@@ -135,14 +149,19 @@ internal class MigrationRunner : IMigrationRunner
 				break;
 			}
 
-			foreach (var migration in migrations)
-			{
-				var localMigration = localMigrationsMap[migration.MigrationPath];
-				await _migrationApplier.RevertAsync(localMigration, ct);
-			}
+			await RunInTransaction(
+				async () => {
+					foreach (var migration in migrations)
+					{
+						var localMigration = localMigrationsMap[migration.MigrationPath];
+						await _migrationApplier.RevertAsync(localMigration, ct);
+					}
 
-			await _repository.RevertPatchAsync(patch, ct);
-			rolledBackCount++;
+					await _repository.RevertPatchAsync(patch, ct);
+					rolledBackCount++;
+				},
+				ct
+			);
 		}
 
 		_output.Write($"Finished. Rolled back {rolledBackCount} patches.", LogLevel.Information);
@@ -187,5 +206,21 @@ internal class MigrationRunner : IMigrationRunner
 		_output.Write(sb.ToString(), LogLevel.Warning);
 
 		return canRollback;
+	}
+
+	private async Task RunInTransaction(Func<Task> action, CancellationToken ct = default)
+	{
+		await using var unitOfWork = await _unitOfWorkFactory.CreateAsync();
+		try
+		{
+			await unitOfWork.BeginAsync(ct);
+			await action();
+			await unitOfWork.CommitAsync(ct);
+		}
+		catch (Exception)
+		{
+			await unitOfWork.RollbackAsync(ct);
+			throw;
+		}
 	}
 }

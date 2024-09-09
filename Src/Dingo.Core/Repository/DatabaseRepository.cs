@@ -12,19 +12,19 @@ namespace Dingo.Core.Repository;
 
 internal class DatabaseRepository : IRepository
 {
-	private readonly IConnectionFactory _connectionFactory;
+	private readonly IConnectionResolverFactory _connectionResolverFactory;
 	private readonly ICommandProviderFactory _commandProviderFactory;
 	private readonly IConfiguration _configuration;
 	private readonly ILogger _logger;
 
 	public DatabaseRepository(
-		IConnectionFactory connectionFactory,
+		IConnectionResolverFactory connectionResolverFactory,
 		ICommandProviderFactory commandProviderFactory,
 		IConfiguration configuration,
 		ILoggerFactory loggerFactory
 	)
 	{
-		_connectionFactory = connectionFactory.Required(nameof(connectionFactory));
+		_connectionResolverFactory = connectionResolverFactory.Required(nameof(connectionResolverFactory));
 		_commandProviderFactory = commandProviderFactory.Required(nameof(commandProviderFactory));
 		_configuration = configuration.Required(nameof(configuration));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
@@ -50,23 +50,25 @@ internal class DatabaseRepository : IRepository
 
 	private async Task HandshakeAsync(CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
-
-		if (connection.State == ConnectionState.Open)
+		await using var resolver = _connectionResolverFactory.Create();
+		if (resolver.Connection.State == ConnectionState.Open)
 		{
 			return;
 		}
 
-		await connection.OpenAsync(ct);
+		await resolver.Connection.OpenAsync(ct);
 	}
 
-	public async Task<bool> SchemaExistsAsync(string schema, CancellationToken ct = default)
+	public async Task<bool> SchemaExistsAsync(
+		string schema,
+		CancellationToken ct = default
+	)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.SelectSchema(schema);
 
-		var result = await connection.QueryAsync<string>(command);
+		var result = await resolver.Connection.QueryAsync<string>(command);
 
 		return result.FirstOrDefault() != null;
 	}
@@ -82,13 +84,13 @@ internal class DatabaseRepository : IRepository
 		CancellationToken ct = default
 	)
 	{
+		await using var resolver = _connectionResolverFactory.Create();
 		var migrationInfoInputs = migrations.Select(ToMigrationsInfoInput).ToArray();
 
-		await using var connection = _connectionFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.GetMigrationsStatus(migrationInfoInputs);
 
-		var result = await connection.QueryAsync<MigrationComparisonOutput>(command);
+		var result = await resolver.Connection.QueryAsync<MigrationComparisonOutput>(command);
 		return result.ToArray();
 	}
 
@@ -100,11 +102,11 @@ internal class DatabaseRepository : IRepository
 
 	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.GetNextPatch();
 
-		var result = await connection.QueryAsync<int>(command);
+		var result = await resolver.Connection.QueryAsync<int>(command);
 		return result.Single();
 	}
 
@@ -113,53 +115,57 @@ internal class DatabaseRepository : IRepository
 		CancellationToken ct = default
 	)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.GetLastPatchMigrations(patchCount);
 
-		var result = await connection.QueryAsync<PatchMigration>(command);
+		var result = await resolver.Connection.QueryAsync<PatchMigration>(command);
 		return result.ToArray();
 	}
 
-	public async Task RegisterMigrationAsync(Migration migration, int patchNumber, CancellationToken ct = default)
+	public async Task RegisterMigrationAsync(
+		Migration migration,
+		int patchNumber,
+		CancellationToken ct = default
+	)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.RegisterMigration(migration, patchNumber);
 
-		await connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command);
 	}
 
 	public async Task RevertPatchAsync(int patchNumber, CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.RevertPatch(patchNumber);
 
-		await connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command);
 	}
 
 	public async Task CompletePatchAsync(int patchNumber, CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
+		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
 			.CompletePatch(patchNumber);
 
-		await connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command);
 	}
 
 	public async Task ExecuteAsync(string sql, CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
-		await connection.ExecuteAsync(sql, commandType: CommandType.Text);
+		await using var resolver = _connectionResolverFactory.Create();
+		await resolver.Connection.ExecuteAsync(sql, commandType: CommandType.Text);
 	}
 
 	public async Task ReloadTypesAsync(CancellationToken ct = default)
 	{
-		await using var connection = _connectionFactory.Create();
-		if (connection is NpgsqlConnection npgsqlConnection)
+		await using var resolver = _connectionResolverFactory.Create();
+		if (resolver.Connection is NpgsqlConnection npgsqlConnection)
 		{
-			await connection.OpenAsync(ct);
+			await resolver.Connection.OpenAsync(ct);
 			await npgsqlConnection.ReloadTypesAsync();
 		}
 	}

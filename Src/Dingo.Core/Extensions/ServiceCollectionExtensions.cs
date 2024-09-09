@@ -2,6 +2,7 @@
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
 using Dingo.Core.Repository.Source;
+using Dingo.Core.Repository.UoW;
 using Dingo.Core.Services.Adapters;
 using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Handlers;
@@ -56,6 +57,8 @@ public static class ServiceCollectionExtensions
 	private static void AddFactories(this IServiceCollection serviceCollection)
 	{
 		serviceCollection.AddSingleton<IConnectionFactory, ConnectionFactory>();
+		serviceCollection.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
+		serviceCollection.AddSingleton<IConnectionResolverFactory, ConnectionResolverFactory>();
 		serviceCollection.AddSingleton<ICommandProviderFactory, CommandProviderFactory>();
 		serviceCollection.AddSingleton<ICommandProviderFactory, CommandProviderFactory>();
 	}

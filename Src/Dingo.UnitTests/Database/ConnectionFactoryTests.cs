@@ -41,7 +41,7 @@ public class ConnectionFactoryTests : UnitTestBase
 	[InlineData(ProviderName.PostgreSql, null)]
 	[InlineData(ProviderName.PostgreSql, "")]
 	[InlineData(ProviderName.PostgreSql, " ")]
-	public void ConnectionFactoryTests_Create__WhenEmptyOrNullConnectionStringGiven_ThenExceptionThrown(string providerName, string connectionString)
+	public void ConnectionFactoryTests_Create__WhenEmptyOrNullConnectionStringGiven_ThenExceptionThrown(string providerName, string? connectionString)
 	{
 		// arrange
 		var configuration = SetupConfiguration(providerName, connectionString);
@@ -78,7 +78,7 @@ public class ConnectionFactoryTests : UnitTestBase
 	[InlineData(null)]
 	[InlineData("")]
 	[InlineData(" ")]
-	public void ConnectionFactoryTests_Create__WhenEmptyOrNullProviderNameGiven_ThenExceptionThrown(string providerName)
+	public void ConnectionFactoryTests_Create__WhenEmptyOrNullProviderNameGiven_ThenExceptionThrown(string? providerName)
 	{
 		// arrange
 		var configuration = SetupConfiguration(providerName, ValidConnectionString);
