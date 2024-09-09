@@ -1,6 +1,7 @@
 using Dingo.Core.Exceptions;
 using Dingo.Core.Extensions;
 using Dingo.Core.IO;
+using Dingo.Core.Models;
 using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Migrations;
 using Dingo.Core.Utils;
@@ -126,7 +127,10 @@ internal sealed class MigrationHandler : IMigrationHandler
 		_output.Write($"Total count: {migrations.Count}", LogLevel.Information);
 		foreach (var migration in migrations)
 		{
-			_output.Write($"{migration.Status} - '{migration.Path.Relative}'", LogLevel.Information);
+			if (migration.Status > MigrationStatus.UpToDate)
+			{
+				_output.Write($"{migration.Status} - '{migration.Path.Relative}'", LogLevel.Information);
+			}
 		}
 	}
 
