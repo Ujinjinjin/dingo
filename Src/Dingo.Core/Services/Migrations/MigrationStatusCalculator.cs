@@ -1,5 +1,4 @@
 using Dingo.Core.Models;
-using Dingo.Core.Repository.Models;
 
 namespace Dingo.Core.Services.Migrations;
 
@@ -17,7 +16,7 @@ internal sealed class MigrationStatusCalculator : IMigrationStatusCalculator
 	{
 		var status = PatchMigrationStatus.None;
 
-		if (!localMigrationsMap.TryGetValue(patchMigration.MigrationPath, out var localMigration))
+		if (!localMigrationsMap.TryGetValue(patchMigration.MigrationPath.Relative, out var localMigration))
 		{
 			status |= PatchMigrationStatus.LocalMigrationNotFound;
 			return status;

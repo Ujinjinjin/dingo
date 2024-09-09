@@ -78,12 +78,16 @@ public class UnitTestBase
 	protected PatchMigration CreatePatchMigration(string? path = default, string? hash = default)
 	{
 		Fixture.Register(
-			() => new PatchMigration
-			{
-				MigrationPath = path ?? Fixture.Create<string>(),
-				MigrationHash = hash ?? Fixture.Create<string>(),
-				PatchNumber = Fixture.Create<int>(),
-			}
+			() => new PatchMigration(
+				hash ?? Fixture.Create<string>(),
+				new MigrationPath(
+					Fixture.Create<string>(),
+					path ?? Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>()
+				),
+				Fixture.Create<int>()
+			)
 		);
 
 		return Fixture.Create<PatchMigration>();

@@ -1,6 +1,7 @@
 using System.Data;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
+using Dingo.Core.Repository.Mapper;
 using Dingo.Core.Repository.UoW;
 using Trico.Configuration;
 
@@ -15,11 +16,13 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Open));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
+		var mapper = SetupMapper();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
 			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
+			mapper,
 			loggerFactory
 		);
 
@@ -37,11 +40,13 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Closed));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
+		var mapper = SetupMapper();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
 			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
+			mapper,
 			loggerFactory
 		);
 
@@ -59,11 +64,13 @@ public class DatabaseRepositoryTests : UnitTestBase
 		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Closed, false));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
+		var mapper = SetupMapper();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
 			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
+			mapper,
 			loggerFactory
 		);
 
@@ -95,6 +102,13 @@ public class DatabaseRepositoryTests : UnitTestBase
 	private IConfiguration SetupConfiguration()
 	{
 		var config = new Mock<IConfiguration>();
+
+		return config.Object;
+	}
+
+	private IDbModelMapper SetupMapper()
+	{
+		var config = new Mock<IDbModelMapper>();
 
 		return config.Object;
 	}

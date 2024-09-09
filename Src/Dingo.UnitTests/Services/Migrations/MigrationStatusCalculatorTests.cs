@@ -60,7 +60,7 @@ public class MigrationStatusCalculatorTests : UnitTestBase
 		var patchMigration = CreatePatchMigration();
 		var localMigrationMap = new Dictionary<string, Migration>()
 		{
-			{ patchMigration.MigrationPath, CreateMigration(MigrationStatus.Outdated) },
+			{ patchMigration.MigrationPath.Relative, CreateMigration(MigrationStatus.Outdated) },
 		};
 		var calculator = new MigrationStatusCalculator();
 
@@ -81,7 +81,7 @@ public class MigrationStatusCalculatorTests : UnitTestBase
 		var localMigration = CreateMigration(MigrationStatus.UpToDate);
 		var localMigrationMap = new Dictionary<string, Migration>()
 		{
-			{ patchMigration.MigrationPath, localMigration },
+			{ patchMigration.MigrationPath.Relative, localMigration },
 		};
 		var calculator = new MigrationStatusCalculator();
 
@@ -103,7 +103,7 @@ public class MigrationStatusCalculatorTests : UnitTestBase
 		var localMigration = CreateMigration(MigrationStatus.UpToDate, patchMigration.MigrationHash);
 		var localMigrationMap = new Dictionary<string, Migration>()
 		{
-			{ patchMigration.MigrationPath, localMigration },
+			{ patchMigration.MigrationPath.Relative, localMigration },
 		};
 		var calculator = new MigrationStatusCalculator();
 

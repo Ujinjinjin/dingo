@@ -1,4 +1,6 @@
-﻿namespace Dingo.Core.Extensions;
+﻿using Dingo.Core.Models;
+
+namespace Dingo.Core.Extensions;
 
 /// <summary> Collection of extensions for <see cref="IList{T}"/> </summary>
 internal static class ListExtensions
@@ -61,5 +63,12 @@ internal static class ListExtensions
 		}
 
 		return target;
+	}
+
+	public static IEnumerable<MigrationPath> OrderMigrations(this IEnumerable<MigrationPath> source)
+	{
+		return source
+			.OrderBy(x => x.Module)
+			.ThenBy(x => x.Filename);
 	}
 }

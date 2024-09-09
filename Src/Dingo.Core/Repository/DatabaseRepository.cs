@@ -3,6 +3,7 @@ using Dapper;
 using Dingo.Core.Extensions;
 using Dingo.Core.Models;
 using Dingo.Core.Repository.Command;
+using Dingo.Core.Repository.Mapper;
 using Dingo.Core.Repository.Models;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -15,18 +16,21 @@ internal sealed class DatabaseRepository : IRepository
 	private readonly IConnectionResolverFactory _connectionResolverFactory;
 	private readonly ICommandProviderFactory _commandProviderFactory;
 	private readonly IConfiguration _configuration;
+	private readonly IDbModelMapper _mapper;
 	private readonly ILogger _logger;
 
 	public DatabaseRepository(
 		IConnectionResolverFactory connectionResolverFactory,
 		ICommandProviderFactory commandProviderFactory,
 		IConfiguration configuration,
+		IDbModelMapper mapper,
 		ILoggerFactory loggerFactory
 	)
 	{
 		_connectionResolverFactory = connectionResolverFactory.Required(nameof(connectionResolverFactory));
 		_commandProviderFactory = commandProviderFactory.Required(nameof(commandProviderFactory));
 		_configuration = configuration.Required(nameof(configuration));
+		_mapper = mapper.Required(nameof(mapper));
 		_logger = loggerFactory.Required(nameof(loggerFactory))
 			.CreateLogger<DatabaseRepository>()
 			.Required(nameof(loggerFactory));
@@ -85,19 +89,13 @@ internal sealed class DatabaseRepository : IRepository
 	)
 	{
 		await using var resolver = _connectionResolverFactory.Create();
-		var migrationInfoInputs = migrations.Select(ToMigrationsInfoInput).ToArray();
+		var migrationInfoInputs = migrations.Select(_mapper.ToMigrationsInfoInput).ToArray();
 
 		var command = _commandProviderFactory.Create()
 			.GetMigrationsStatus(migrationInfoInputs);
 
 		var result = await resolver.Connection.QueryAsync<MigrationComparisonOutput>(command, resolver.Transaction);
 		return result.ToArray();
-	}
-
-	// TODO: extract
-	private MigrationComparisonInput ToMigrationsInfoInput(Migration migration)
-	{
-		return new MigrationComparisonInput(migration.Hash.Value, migration.Path.Relative);
 	}
 
 	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
@@ -119,8 +117,8 @@ internal sealed class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.GetLastPatchMigrations(patchCount);
 
-		var result = await resolver.Connection.QueryAsync<PatchMigration>(command, resolver.Transaction);
-		return result.ToArray();
+		var result = await resolver.Connection.QueryAsync<DbPatchMigration>(command, resolver.Transaction);
+		return result.Select(_mapper.ToPathMigration).ToArray();
 	}
 
 	public async Task RegisterMigrationAsync(
