@@ -38,12 +38,12 @@ public class MigrationController : CliController
 		var nameOption = OptionFactory.CreateOption<string>(
 			new[] { "--name", "-n" },
 			"Migration name",
-			false
+			true
 		);
 		var pathOption = OptionFactory.CreateOption<string>(
 			new[] { "--path", "-p" },
 			"Destination where migration file will be created",
-			false
+			true
 		);
 
 		var command = CommandFactory.CreateCommand(
@@ -64,15 +64,15 @@ public class MigrationController : CliController
 
 	private Command GetUpCommand()
 	{
-		var profileOption = OptionFactory.CreateOption<string>(
+		var profileOption = OptionFactory.CreateOption<string?>(
 			new[] { "--configuration", "-c" },
 			"Configuration profile name",
 			false
 		);
-		var pathOption = OptionFactory.CreateOption<string>(
+		var pathOption = OptionFactory.CreateOption<string?>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
-			true
+			false
 		);
 
 		var command = CommandFactory.CreateCommand(
@@ -93,15 +93,15 @@ public class MigrationController : CliController
 
 	private Command GetDownCommand()
 	{
-		var profileOption = OptionFactory.CreateOption<string>(
+		var profileOption = OptionFactory.CreateOption<string?>(
 			new[] { "--configuration", "-c" },
 			"Configuration profile name",
 			false
 		);
-		var pathOption = OptionFactory.CreateOption<string>(
+		var pathOption = OptionFactory.CreateOption<string?>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
-			true
+			false
 		);
 		var countOption = OptionFactory.CreateOption<int?>(
 			new[] { "--count" },
@@ -136,15 +136,15 @@ public class MigrationController : CliController
 
 	private Command GetStatusCommand()
 	{
-		var profileOption = OptionFactory.CreateOption<string>(
+		var profileOption = OptionFactory.CreateOption<string?>(
 			new[] { "--configuration", "-c" },
 			"Configuration profile name",
 			false
 		);
-		var pathOption = OptionFactory.CreateOption<string>(
+		var pathOption = OptionFactory.CreateOption<string?>(
 			new[] { "--path", "-p" },
 			"Root path to database migration files",
-			true
+			false
 		);
 
 		var command = CommandFactory.CreateCommand(

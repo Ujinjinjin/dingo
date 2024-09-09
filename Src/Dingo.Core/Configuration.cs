@@ -14,6 +14,7 @@ internal static class Configuration
 		public const string MigrationWildcard = "migration.wildcard";
 		public const string MigrationDownRequired = "migration.down-required";
 		public const string MigrationForcePaths = "migration.force-paths";
+		public const string MigrationPath = "migration.path";
 		public const string LogLevel = "log.level";
 	}
 

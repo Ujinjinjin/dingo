@@ -10,6 +10,8 @@ Use this section as a reference `dingo` configurations.
 | `db.provider`             | ✕        | `PostgreSQL`  |
 | `migration.delimiter`     | ✕        | `^--\s*down$` |
 | `migration.wildcard`      | ✕        | `*.sql`       |
+| `migration.force-paths`   | ✕        | `null`       |
+| `migration.path`          | ~        | `null`       |
 | `migration.down-required` | ✕        | `false`       |
 | `log.level`               | ✕        | `Information` |
 
@@ -121,6 +123,67 @@ Wildcard used to search migration files in the specified directory
     <tab title="env" group-key="config-env">
         <code-block lang="shell">
             export DINGO_MIGRATION__WILDCARD="*.sql"
+        </code-block>
+    </tab>
+</tabs>
+
+## migration.force-paths
+
+List of paths containing migrations that need to be forcefully applied on every patch. The most common use-case is to reapply all stored procedures / functions after user defined types have been changed.
+
+<tabs group="config-type">
+    <tab title="yaml" group-key="config-yaml">
+        <code-block lang="yaml">
+            migration:
+              force-paths:
+                - ./db/auth/procedures
+                - ./db/auth/types
+        </code-block>
+    </tab>
+    <tab title="json" group-key="config-json">
+        <code-block lang="json">
+            {
+                "migration": {
+                    "force-paths": [
+                        "./db/auth/procedures",
+                        "./db/auth/types"
+                    ]
+                }
+            }
+        </code-block>
+    </tab>
+    <tab title="env" group-key="config-env">
+        <code-block lang="shell">
+            export DINGO_MIGRATION__FORCE_PATHS="./db/auth/procedures ./db/auth/types"
+        </code-block>
+    </tab>
+</tabs>
+
+> Currently space character is used as a delimiter for paths set through env variable, which wasn't a good idea, so it will be replaced with system PATH var delimiter instead
+
+## migration.path
+
+Path where migration files are stored. Can be provided either in the configuration file or as a `-p` parameter
+
+<tabs group="config-type">
+    <tab title="yaml" group-key="config-yaml">
+        <code-block lang="yaml">
+            migration:
+              path: ./db/auth
+        </code-block>
+    </tab>
+    <tab title="json" group-key="config-json">
+        <code-block lang="json">
+            {
+                "migration": {
+                    "path": "./db/auth"
+                }
+            }
+        </code-block>
+    </tab>
+    <tab title="env" group-key="config-env">
+        <code-block lang="shell">
+            export DINGO_MIGRATION__PATH="./db/auth"
         </code-block>
     </tab>
 </tabs>
