@@ -24,7 +24,7 @@ internal static class Configuration
 		{ Key.SchemaName, "dingo" },
 		{ Key.MigrationDelimiter, @"^--\s*down$" },
 		{ Key.MigrationWildcard, "*.sql" },
-		{ Key.MigrationDownRequired, "false" },
+		{ Key.MigrationDownRequired, false.ToString() },
 		{ Key.MigrationForcePaths, string.Empty },
 		{ Key.LogLevel, LogLevel.Information.ToString() },
 	};

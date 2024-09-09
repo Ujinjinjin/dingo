@@ -1,5 +1,8 @@
+using System.Data;
 using Dingo.Core.Models;
+using Dingo.Core.Repository;
 using Dingo.Core.Repository.Models;
+using Dingo.UnitTests.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace Dingo.UnitTests;
@@ -95,5 +98,30 @@ public class UnitTestBase
 			.Returns(logger.Object);
 
 		return factory.Object;
+	}
+
+	protected IConnectionFactory SetupConnectionFactory(IDbConnection connection)
+	{
+		var factory = new Mock<IConnectionFactory>();
+		factory.Setup(f => f.Create())
+			.Returns(() => new DummyConnection(connection));
+
+		return factory.Object;
+	}
+
+	protected IDbConnection MockConnection(ConnectionState state, bool succeed = true)
+	{
+		var connection = new Mock<IDbConnection>();
+
+		connection.Setup(c => c.State)
+			.Returns(state);
+
+		if (!succeed)
+		{
+			connection.Setup(c => c.Open())
+				.Throws<Exception>();
+		}
+
+		return connection.Object;
 	}
 }

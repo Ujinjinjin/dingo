@@ -9,6 +9,11 @@ public sealed class CliOutput : IOutput
 {
 	public void Write(string message, LogLevel level)
 	{
+		if (level == LogLevel.None)
+		{
+			return;
+		}
+
 		var textColor = GetMessageColor(level);
 		message = message.Pastel(textColor);
 

@@ -1,8 +1,7 @@
 using System.Data;
-using Dingo.Core;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
-using Dingo.UnitTests.Helpers;
+using Dingo.Core.Repository.UoW;
 using Trico.Configuration;
 
 namespace Dingo.UnitTests.Database;
@@ -13,12 +12,12 @@ public class DatabaseRepositoryTests : UnitTestBase
 	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionIsAlreadyOpen_ThenHandshakeSucceeded()
 	{
 		// arrange
-		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Open));
+		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Open));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
-			connectionFactory,
+			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
 			loggerFactory
@@ -35,12 +34,12 @@ public class DatabaseRepositoryTests : UnitTestBase
 	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionOpenedSuccessfully_ThenHandshakeSucceeded()
 	{
 		// arrange
-		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed));
+		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Closed));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
-			connectionFactory,
+			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
 			loggerFactory
@@ -57,12 +56,12 @@ public class DatabaseRepositoryTests : UnitTestBase
 	public async Task DatabaseRepositoryTests_TryHandshake__WhenConnectionNotOpened_ThenHandshakeFailed()
 	{
 		// arrange
-		var connectionFactory = SetupConnectionFactory(MockConnection(ConnectionState.Closed, false));
+		var connectionResolverFactory = SetupConnectionResolverFactory(MockConnection(ConnectionState.Closed, false));
 		var commandProviderFactory = SetupCommandProviderFactory();
 		var configuration = SetupConfiguration();
 		var loggerFactory = SetupLoggerFactory();
 		var repository = new DatabaseRepository(
-			connectionFactory,
+			connectionResolverFactory,
 			commandProviderFactory,
 			configuration,
 			loggerFactory
@@ -75,29 +74,15 @@ public class DatabaseRepositoryTests : UnitTestBase
 		result.Should().BeFalse();
 	}
 
-	private IConnectionFactory SetupConnectionFactory(IDbConnection connection)
+	private IConnectionResolverFactory SetupConnectionResolverFactory(IDbConnection connection)
 	{
-		var factory = new Mock<IConnectionFactory>();
+		var connectionFactory = SetupConnectionFactory(connection);
+
+		var factory = new Mock<IConnectionResolverFactory>();
 		factory.Setup(f => f.Create())
-			.Returns(() => new DummyConnection(connection));
+			.Returns(() => new ConnectionResolver(new Mock<IUnitOfWorkFactory>().Object, connectionFactory));
 
 		return factory.Object;
-	}
-
-	private IDbConnection MockConnection(ConnectionState state, bool succeed = true)
-	{
-		var connection = new Mock<IDbConnection>();
-
-		connection.Setup(c => c.State)
-			.Returns(state);
-
-		if (!succeed)
-		{
-			connection.Setup(c => c.Open())
-				.Throws<Exception>();
-		}
-
-		return connection.Object;
 	}
 
 	private ICommandProviderFactory SetupCommandProviderFactory()
