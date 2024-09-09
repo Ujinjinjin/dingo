@@ -22,7 +22,7 @@ public class UnitTestBase
 	}
 
 	protected Migration CreateMigration(
-		MigrationStatus status = MigrationStatus.Unknown,
+		MigrationStatus status = MigrationStatus.None,
 		string? hash = default
 	)
 	{

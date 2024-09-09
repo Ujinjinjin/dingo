@@ -15,7 +15,7 @@ public sealed class Migration : IMigrationMeta, IMigrationBody
 		Path = path;
 		Hash = hash;
 		Command = command;
-		Status = MigrationStatus.Unknown;
+		Status = MigrationStatus.None;
 	}
 
 	public static Migration Empty => new(default, default, default);

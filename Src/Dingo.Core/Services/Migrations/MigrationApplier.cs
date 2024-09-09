@@ -5,7 +5,7 @@ using Dingo.Core.Repository;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationApplier : IMigrationApplier
+internal sealed class MigrationApplier : IMigrationApplier
 {
 	private readonly IRepository _repository;
 

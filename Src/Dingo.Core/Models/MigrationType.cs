@@ -2,7 +2,7 @@ namespace Dingo.Core.Models;
 
 public enum MigrationType
 {
-	Unknown = 0,
+	None = 0,
 
 	/// <summary> System migrations </summary>
 	System = 1,

@@ -1,11 +1,10 @@
 using Dingo.Core.Extensions;
 using Dingo.Core.Services.Adapters;
 using Dingo.Core.Utils;
-using Trico.Configuration;
 
 namespace Dingo.Core.Services.Config;
 
-internal class ConfigGenerator : IConfigGenerator
+internal sealed class ConfigGenerator : IConfigGenerator
 {
 	private readonly IFile _file;
 	private readonly IPath _path;

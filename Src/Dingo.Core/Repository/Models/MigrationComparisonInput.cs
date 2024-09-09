@@ -1,3 +1,3 @@
 namespace Dingo.Core.Repository.Models;
 
-public record MigrationComparisonInput(string MigrationHash, string MigrationPath);
+public sealed record MigrationComparisonInput(string MigrationHash, string MigrationPath);

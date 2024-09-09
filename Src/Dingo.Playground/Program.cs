@@ -2,11 +2,9 @@
 
 using Dingo.Core.Extensions;
 using Dingo.Core.IO;
-using Dingo.Core.Services.Config;
 using Dingo.Core.Services.Handlers;
 using Dingo.Playground;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 var sc = new ServiceCollection();
 

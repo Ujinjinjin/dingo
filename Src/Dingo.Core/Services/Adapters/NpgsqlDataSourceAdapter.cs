@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Dingo.Core.Services.Adapters;
 
-public class NpgsqlDataSourceAdapter : INpgsqlDataSource
+internal sealed class NpgsqlDataSourceAdapter : INpgsqlDataSource
 {
 	private readonly NpgsqlDataSource _dataSource;
 

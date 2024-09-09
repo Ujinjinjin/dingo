@@ -7,7 +7,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Repository.Source;
 
-internal class NpgsqlDataSourceProvider : INpgsqlDataSourceProvider
+internal sealed class NpgsqlDataSourceProvider : INpgsqlDataSourceProvider
 {
 	private readonly IConfiguration _configuration;
 	private readonly INpgsqlDataSourceBuilder _dataSourceBuilder;

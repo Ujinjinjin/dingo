@@ -1,5 +1,5 @@
-﻿using Cliff;
-using System.CommandLine;
+﻿using System.CommandLine;
+using Cliff;
 using Cliff.Factories;
 using Dingo.Core.Extensions;
 using Dingo.Core.Services.Handlers;

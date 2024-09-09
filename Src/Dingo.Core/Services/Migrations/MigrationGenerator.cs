@@ -5,7 +5,7 @@ using Dingo.Core.Validators.Migration.Name;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationGenerator : IMigrationGenerator
+internal sealed class MigrationGenerator : IMigrationGenerator
 {
 	private readonly IMigrationNameValidator _migrationNameValidator;
 	private readonly IDirectory _directory;

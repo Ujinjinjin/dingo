@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Handlers;
 
-public class LogsHandler : ILogsHandler
+public sealed class LogsHandler : ILogsHandler
 {
 	private readonly ILogsPruner _logsPruner;
 	private readonly IOutput _output;

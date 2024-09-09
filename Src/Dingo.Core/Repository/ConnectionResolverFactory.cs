@@ -3,7 +3,7 @@ using Dingo.Core.Repository.UoW;
 
 namespace Dingo.Core.Repository;
 
-internal class ConnectionResolverFactory : IConnectionResolverFactory
+internal sealed class ConnectionResolverFactory : IConnectionResolverFactory
 {
 	private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 	private readonly IConnectionFactory _connectionFactory;

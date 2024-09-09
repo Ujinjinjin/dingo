@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationRunner : IMigrationRunner
+internal sealed class MigrationRunner : IMigrationRunner
 {
 	private readonly IMigrationApplier _migrationApplier;
 	private readonly IMigrationComparer _migrationComparer;

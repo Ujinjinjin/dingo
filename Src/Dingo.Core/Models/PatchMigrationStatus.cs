@@ -4,7 +4,7 @@ namespace Dingo.Core.Models;
 public enum PatchMigrationStatus
 {
 	/// <summary> Unknown status </summary>
-	Unknown = 0,
+	None = 0,
 
 	/// <summary> Everything is OK, patch can be rolled back </summary>
 	Ok = 1 << 0,

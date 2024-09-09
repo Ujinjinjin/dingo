@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Handlers;
 
-internal class MigrationHandler : IMigrationHandler
+internal sealed class MigrationHandler : IMigrationHandler
 {
 	private const int DefaultPatchRollbackCount = 1;
 

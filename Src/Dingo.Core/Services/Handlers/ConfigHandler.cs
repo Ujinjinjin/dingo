@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Handlers;
 
-internal class ConfigHandler : IConfigHandler
+internal sealed class ConfigHandler : IConfigHandler
 {
 	private readonly IConfigGenerator _configGenerator;
 	private readonly IOutput _output;

@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-internal class MigrationParsingException : DingoException
+internal sealed class MigrationParsingException : DingoException
 {
 	private const string ErrorPrefix = "Migration file has invalid format and can't be parsed";
 

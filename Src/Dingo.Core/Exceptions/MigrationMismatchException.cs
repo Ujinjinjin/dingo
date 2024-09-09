@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-internal class MigrationMismatchException : DingoException
+internal sealed class MigrationMismatchException : DingoException
 {
 	private const string ErrorPrefix = "Migration mismatch. Param: {0}";
 	public readonly string ParamName;

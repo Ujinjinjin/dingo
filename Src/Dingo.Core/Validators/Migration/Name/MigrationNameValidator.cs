@@ -4,7 +4,7 @@ using Dingo.Core.Validators.Primitive;
 
 namespace Dingo.Core.Validators.Migration.Name;
 
-internal class MigrationNameValidator : IMigrationNameValidator
+internal sealed class MigrationNameValidator : IMigrationNameValidator
 {
 	private readonly StringRequiredValidator _stringRequiredValidator;
 	private readonly Regex _regex = new(@"^[\w\d_]+$");

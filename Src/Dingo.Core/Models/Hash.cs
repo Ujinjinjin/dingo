@@ -4,7 +4,7 @@ using Dingo.Core.Services.Adapters;
 
 namespace Dingo.Core.Models;
 
-public record Hash(string Value)
+public sealed record Hash(string Value)
 {
 	public string Value { get; private set; } = Value;
 

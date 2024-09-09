@@ -78,7 +78,7 @@ public class MigrationScannerTests : UnitTestBase
 
 		// assert
 		migrations.Should().NotBeNull();
-		migrations.Should().AllSatisfy(migration => migration.Status.Should().Be(MigrationStatus.Unknown));
+		migrations.Should().AllSatisfy(migration => migration.Status.Should().Be(MigrationStatus.None));
 	}
 
 	private IConfiguration SetupConfiguration()

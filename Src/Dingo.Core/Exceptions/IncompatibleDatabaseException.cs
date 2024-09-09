@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-internal class IncompatibleDatabaseException : DingoException
+internal sealed class IncompatibleDatabaseException : DingoException
 {
 	private const string ErrorPrefix = "Current database {0} is not compatible with requested operation";
 
