@@ -68,7 +68,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.SelectSchema(schema);
 
-		var result = await resolver.Connection.QueryAsync<string>(command);
+		var result = await resolver.Connection.QueryAsync<string>(command, resolver.Transaction);
 
 		return result.FirstOrDefault() != null;
 	}
@@ -90,7 +90,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.GetMigrationsStatus(migrationInfoInputs);
 
-		var result = await resolver.Connection.QueryAsync<MigrationComparisonOutput>(command);
+		var result = await resolver.Connection.QueryAsync<MigrationComparisonOutput>(command, resolver.Transaction);
 		return result.ToArray();
 	}
 
@@ -106,7 +106,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.GetNextPatch();
 
-		var result = await resolver.Connection.QueryAsync<int>(command);
+		var result = await resolver.Connection.QueryAsync<int>(command, resolver.Transaction);
 		return result.Single();
 	}
 
@@ -119,7 +119,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.GetLastPatchMigrations(patchCount);
 
-		var result = await resolver.Connection.QueryAsync<PatchMigration>(command);
+		var result = await resolver.Connection.QueryAsync<PatchMigration>(command, resolver.Transaction);
 		return result.ToArray();
 	}
 
@@ -133,7 +133,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.RegisterMigration(migration, patchNumber);
 
-		await resolver.Connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command, resolver.Transaction);
 	}
 
 	public async Task RevertPatchAsync(int patchNumber, CancellationToken ct = default)
@@ -142,7 +142,7 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.RevertPatch(patchNumber);
 
-		await resolver.Connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command, resolver.Transaction);
 	}
 
 	public async Task CompletePatchAsync(int patchNumber, CancellationToken ct = default)
@@ -151,13 +151,13 @@ internal class DatabaseRepository : IRepository
 		var command = _commandProviderFactory.Create()
 			.CompletePatch(patchNumber);
 
-		await resolver.Connection.ExecuteAsync(command);
+		await resolver.Connection.ExecuteAsync(command, resolver.Transaction);
 	}
 
 	public async Task ExecuteAsync(string sql, CancellationToken ct = default)
 	{
 		await using var resolver = _connectionResolverFactory.Create();
-		await resolver.Connection.ExecuteAsync(sql, commandType: CommandType.Text);
+		await resolver.Connection.ExecuteAsync(sql, commandType: CommandType.Text, transaction: resolver.Transaction);
 	}
 
 	public async Task ReloadTypesAsync(CancellationToken ct = default)

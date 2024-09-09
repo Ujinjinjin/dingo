@@ -6,8 +6,8 @@ public class AsyncUnitOfWork : IAsyncUnitOfWork
 {
 	public Guid Id { get; }
 	public DbConnection Connection { get; }
+	public DbTransaction? Transaction { get; private set; }
 
-	private DbTransaction? _transaction;
 	private readonly Action _onDisposed;
 
 	internal AsyncUnitOfWork(DbConnection connection, Action onDisposed)
@@ -19,23 +19,23 @@ public class AsyncUnitOfWork : IAsyncUnitOfWork
 
 	public async ValueTask BeginAsync(CancellationToken ct = default)
 	{
-		_transaction = await Connection.BeginTransactionAsync(ct);
+		Transaction = await Connection.BeginTransactionAsync(ct);
 	}
 
 	public async ValueTask CommitAsync(CancellationToken ct = default)
 	{
-		if (_transaction is not null)
+		if (Transaction is not null)
 		{
-			await _transaction.CommitAsync(ct);
+			await Transaction.CommitAsync(ct);
 			await DisposeTransactionAsync();
 		}
 	}
 
 	public async ValueTask RollbackAsync(CancellationToken ct = default)
 	{
-		if (_transaction is not null)
+		if (Transaction is not null)
 		{
-			await _transaction.RollbackAsync(ct);
+			await Transaction.RollbackAsync(ct);
 			await DisposeTransactionAsync();
 		}
 	}
@@ -56,11 +56,11 @@ public class AsyncUnitOfWork : IAsyncUnitOfWork
 
 	private async ValueTask DisposeTransactionAsync()
 	{
-		if (_transaction is not null)
+		if (Transaction is not null)
 		{
-			await _transaction.DisposeAsync();
+			await Transaction.DisposeAsync();
 		}
 
-		_transaction = null;
+		Transaction = null;
 	}
 }

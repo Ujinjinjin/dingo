@@ -7,11 +7,13 @@ internal sealed class ConnectionResolver : IConnectionResolver
 {
 	private readonly bool _isUnitOfWork;
 	public DbConnection Connection { get; }
+	public DbTransaction? Transaction { get; }
 
 	public ConnectionResolver(IUnitOfWorkFactory unitOfWorkFactory, IConnectionFactory connectionFactory)
 	{
 		_isUnitOfWork = unitOfWorkFactory.TryGet(out var unitOfWork);
 		Connection = unitOfWork is not null ? unitOfWork.Connection : connectionFactory.Create();
+		Transaction = unitOfWork?.Transaction;
 	}
 
 	public void Dispose()
