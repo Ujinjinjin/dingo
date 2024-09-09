@@ -41,8 +41,7 @@ internal sealed class DirectoryScanner : IDirectoryScanner
 		}
 
 		return migrationPaths
-			.OrderBy(x => x.Module)
-			.ThenBy(x => x.Filename)
+			.OrderMigrations()
 			.ToArray();
 	}
 }

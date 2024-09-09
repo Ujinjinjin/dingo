@@ -1,6 +1,7 @@
 ﻿using Dingo.Core.IO;
 using Dingo.Core.Repository;
 using Dingo.Core.Repository.Command;
+using Dingo.Core.Repository.Mapper;
 using Dingo.Core.Repository.Source;
 using Dingo.Core.Repository.UoW;
 using Dingo.Core.Services.Adapters;
@@ -79,6 +80,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection.AddSingleton<IConfigProfileLoader, ConfigProfileLoader>();
 		serviceCollection.AddSingleton<ILogsPruner, LogsPruner>();
 		serviceCollection.AddSingleton<IRepository, DatabaseRepository>();
+		serviceCollection.AddSingleton<IDbModelMapper, DbModelMapper>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceProvider, NpgsqlDataSourceProvider>();
 		serviceCollection.AddSingleton<INpgsqlDataSourceBuilder, NpgsqlDataSourceBuilderAdapter>();
 		serviceCollection.AddSingleton<IMigrationHandler, MigrationHandler>();

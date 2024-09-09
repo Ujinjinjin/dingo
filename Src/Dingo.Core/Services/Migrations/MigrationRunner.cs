@@ -3,7 +3,6 @@ using Dingo.Core.Extensions;
 using Dingo.Core.IO;
 using Dingo.Core.Models;
 using Dingo.Core.Repository;
-using Dingo.Core.Repository.Models;
 using Dingo.Core.Repository.UoW;
 using Microsoft.Extensions.Logging;
 
@@ -154,11 +153,19 @@ internal sealed class MigrationRunner : IMigrationRunner
 				break;
 			}
 
+			var reverseOrderedPaths = migrations
+				.Select(x => x.MigrationPath)
+				.OrderMigrations()
+				.Reverse()
+				.ToArray();
+
 			await RunInTransaction(
 				async () => {
-					foreach (var migration in migrations)
+					var current = 1;
+					foreach (var migrationPath in reverseOrderedPaths)
 					{
-						var localMigration = localMigrationsMap[migration.MigrationPath];
+						_output.Write($"{current++}/{totalMigrations} Reverting '{migrationPath.Relative}'", LogLevel.Information);
+						var localMigration = localMigrationsMap[migrationPath.Relative];
 						await _migrationApplier.RevertAsync(localMigration, ct);
 					}
 
@@ -187,7 +194,7 @@ internal sealed class MigrationRunner : IMigrationRunner
 
 			if (status.HasFlag(PatchMigrationStatus.LocalMigrationNotFound))
 			{
-				sb.Append($"Can't find local migration file {migration.MigrationPath}. ");
+				sb.Append($"Can't find local migration file {migration.MigrationPath.Relative}. ");
 				sb.Append("Most probably it was deleted from the directory.");
 				sb.Append(Environment.NewLine);
 				canRollback = false;
@@ -195,7 +202,7 @@ internal sealed class MigrationRunner : IMigrationRunner
 
 			if (status.HasFlag(PatchMigrationStatus.LocalMigrationModified))
 			{
-				sb.Append($"Local migration {migration.MigrationPath} was modified since last patch, ");
+				sb.Append($"Local migration {migration.MigrationPath.Relative} was modified since last patch, ");
 				sb.Append("rolling it back might cause unexpected behaviour.");
 				sb.Append(Environment.NewLine);
 				canRollback = false;
