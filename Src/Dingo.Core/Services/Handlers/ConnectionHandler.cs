@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Services.Handlers;
 
-internal class ConnectionHandler : IConnectionHandler
+internal sealed class ConnectionHandler : IConnectionHandler
 {
 	private readonly IConfigProfileLoader _profileLoader;
 	private readonly IRepository _repository;

@@ -1,10 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using Dingo.Core.Exceptions;
 using Dingo.Core.Extensions;
 
 namespace Dingo.Core.Repository.UoW;
 
-internal class UnitOfWorkFactory : IUnitOfWorkFactory
+internal sealed class UnitOfWorkFactory : IUnitOfWorkFactory
 {
 	private readonly IConnectionFactory _connectionFactory;
 	private readonly Stack<IAsyncUnitOfWork> _units = new();

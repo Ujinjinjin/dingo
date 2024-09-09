@@ -1,6 +1,6 @@
 namespace Dingo.Core.Repository.Models;
 
-public class PatchMigration
+public sealed class PatchMigration
 {
 	public string MigrationHash { get; set; }
 	public string MigrationPath { get; set; }

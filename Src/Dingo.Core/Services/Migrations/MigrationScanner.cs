@@ -6,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationScanner : IMigrationScanner
+internal sealed class MigrationScanner : IMigrationScanner
 {
 	private readonly IConfiguration _configuration;
 	private readonly IMigrationCommandParser _commandParser;

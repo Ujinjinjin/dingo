@@ -3,7 +3,7 @@ using Dingo.Core.Services.Adapters;
 
 namespace Dingo.Core.Services.Logs;
 
-internal class LogsPruner : ILogsPruner
+internal sealed class LogsPruner : ILogsPruner
 {
 	private readonly IPath _path;
 	private readonly IFile _file;

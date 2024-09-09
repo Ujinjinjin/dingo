@@ -3,7 +3,7 @@ using Dingo.Core.Repository.Models;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationStatusCalculator : IMigrationStatusCalculator
+internal sealed class MigrationStatusCalculator : IMigrationStatusCalculator
 {
 	public bool NeedToApplyMigration(Migration migration)
 	{
@@ -15,7 +15,7 @@ internal class MigrationStatusCalculator : IMigrationStatusCalculator
 		Dictionary<string, Migration> localMigrationsMap
 	)
 	{
-		var status = PatchMigrationStatus.Unknown;
+		var status = PatchMigrationStatus.None;
 
 		if (!localMigrationsMap.TryGetValue(patchMigration.MigrationPath, out var localMigration))
 		{
@@ -33,7 +33,7 @@ internal class MigrationStatusCalculator : IMigrationStatusCalculator
 			status |= PatchMigrationStatus.LocalMigrationModified;
 		}
 
-		if (status == PatchMigrationStatus.Unknown)
+		if (status == PatchMigrationStatus.None)
 		{
 			status |= PatchMigrationStatus.Ok;
 		}

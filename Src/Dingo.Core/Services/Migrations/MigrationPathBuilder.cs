@@ -6,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationPathBuilder : IMigrationPathBuilder
+internal sealed class MigrationPathBuilder : IMigrationPathBuilder
 {
 	private readonly IPath _path;
 	private readonly IConfiguration _configuration;

@@ -6,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationCommandParser : IMigrationCommandParser
+internal sealed class MigrationCommandParser : IMigrationCommandParser
 {
 	private readonly Regex _delimiter;
 

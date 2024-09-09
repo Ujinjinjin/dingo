@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-internal class InvalidMigrationNameException : DingoException
+internal sealed class InvalidMigrationNameException : DingoException
 {
 	private const string ErrorPrefix = "Migration name is invalid";
 

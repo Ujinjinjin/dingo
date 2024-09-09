@@ -7,7 +7,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Migrations;
 
-internal class MigrationComparer : IMigrationComparer
+internal sealed class MigrationComparer : IMigrationComparer
 {
 	private readonly IRepository _repository;
 	private readonly IConfiguration _configuration;

@@ -2,7 +2,7 @@ using System.Data.Common;
 
 namespace Dingo.Core.Repository.UoW;
 
-public class AsyncUnitOfWork : IAsyncUnitOfWork
+internal sealed class AsyncUnitOfWork : IAsyncUnitOfWork
 {
 	public Guid Id { get; }
 	public DbConnection Connection { get; }

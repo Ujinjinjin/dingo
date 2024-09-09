@@ -1,4 +1,3 @@
-using System.Data;
 using System.Data.Common;
 using Dingo.Core.Extensions;
 using Dingo.Core.Repository.Source;
@@ -7,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Repository;
 
-internal class ConnectionFactory : IConnectionFactory
+internal sealed class ConnectionFactory : IConnectionFactory
 {
 	private readonly IConfiguration _configuration;
 	private readonly INpgsqlDataSourceProvider _npgsqlProvider;

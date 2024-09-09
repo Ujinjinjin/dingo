@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-public class ValueRequiredException : DingoException
+internal sealed class ValueRequiredException : DingoException
 {
 	private const string ErrorPrefix = "Missing required argument: {0}";
 

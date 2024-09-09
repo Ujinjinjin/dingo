@@ -5,7 +5,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Config;
 
-internal class ConfigProfileLoader : IConfigProfileLoader
+internal sealed class ConfigProfileLoader : IConfigProfileLoader
 {
 	private readonly IConfiguration _configuration;
 	private readonly IPath _path;

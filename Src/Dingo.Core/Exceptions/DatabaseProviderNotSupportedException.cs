@@ -1,6 +1,6 @@
 namespace Dingo.Core.Exceptions;
 
-internal class DatabaseProviderNotSupportedException : DingoException
+internal sealed class DatabaseProviderNotSupportedException : DingoException
 {
 	private const string ErrorPrefix = "Database provider {0} not supported";
 

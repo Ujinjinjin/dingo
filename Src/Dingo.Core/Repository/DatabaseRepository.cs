@@ -10,7 +10,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Repository;
 
-internal class DatabaseRepository : IRepository
+internal sealed class DatabaseRepository : IRepository
 {
 	private readonly IConnectionResolverFactory _connectionResolverFactory;
 	private readonly ICommandProviderFactory _commandProviderFactory;

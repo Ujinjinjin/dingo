@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient.Server;
 
 namespace Dingo.Core.Repository.Command;
 
-internal class SqlServerCommandProvider : ICommandProvider
+internal sealed class SqlServerCommandProvider : ICommandProvider
 {
 	public Command SelectSchema(string schema)
 	{

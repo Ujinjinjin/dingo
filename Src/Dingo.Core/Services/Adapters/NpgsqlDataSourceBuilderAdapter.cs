@@ -6,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.Services.Adapters;
 
-public class NpgsqlDataSourceBuilderAdapter : INpgsqlDataSourceBuilder
+internal sealed class NpgsqlDataSourceBuilderAdapter : INpgsqlDataSourceBuilder
 {
 	private readonly IConfiguration _configuration;
 

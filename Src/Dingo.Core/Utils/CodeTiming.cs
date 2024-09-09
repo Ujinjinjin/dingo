@@ -1,6 +1,6 @@
-using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using Dingo.Core.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Dingo.Core.Utils;
 

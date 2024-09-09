@@ -6,7 +6,7 @@ using Trico.Configuration;
 
 namespace Dingo.Core.IO;
 
-internal class FileLogger : ILogger
+internal sealed class FileLogger : ILogger
 {
 	private readonly string _categoryName;
 	private readonly IConfiguration _configuration;

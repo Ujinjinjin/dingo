@@ -1,6 +1,6 @@
 namespace Dingo.Core.Repository;
 
-public class ProviderName
+public sealed class ProviderName
 {
 	public const string PostgreSql = "PostgreSQL";
 	public const string Postgres = "Postgres";

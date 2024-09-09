@@ -1,4 +1,5 @@
 using Cliff.Infrastructure;
+using Dingo.Core.Exceptions;
 using Dingo.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,7 @@ internal static class Program
 		var dingo = serviceProvider.GetService<ICliService>();
 		if (dingo is null)
 		{
-			throw new Exception($"Couldn't find any registered {nameof(ICliService)}");
+			throw new DingoException($"Couldn't find any registered {nameof(ICliService)}");
 		}
 
 		await dingo.ExecuteAsync(args);
