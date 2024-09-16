@@ -21,7 +21,7 @@ begin
 			and information_schema.columns.table_name   = p_table_name
 			and information_schema.columns.column_name  = p_column_name
 		loop
-			execute 'alter table ' || quote_ident(r.schema_name) || '.' || quote_ident(r.table_name) || ' alter column ' || quote_ident(r.column_name) || 'drop default;';
+			execute 'alter table ' || quote_ident(r.schema_name) || '.' || quote_ident(r.table_name) || ' alter column ' || quote_ident(r.column_name) || ' drop default;';
 			v_dropped_count = v_dropped_count + 1;
 		end loop;
 	end if;

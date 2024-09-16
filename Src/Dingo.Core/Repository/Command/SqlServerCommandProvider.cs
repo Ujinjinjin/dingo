@@ -39,11 +39,11 @@ internal sealed class SqlServerCommandProvider : ICommandProvider
 		);
 	}
 
-	public Command GetNextPatch()
+	public Command GetNextPatch(PatchType patchType)
 	{
 		return new Command(
 			"dingo._next_patch",
-			null,
+			new { p_patch_type = patchType },
 			CommandType.StoredProcedure
 		);
 	}

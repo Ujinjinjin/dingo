@@ -7,10 +7,12 @@ create function dingo._get_last_patch(
 )
 returns table (
 	migration_hash varchar(256),
-	migration_path text,
+	migration_path varchar(512),
 	patch_number integer
 ) as
 $$
+declare
+	user_patch integer := 2;
 begin
 	----------------------------------------------------------------
 	drop table if exists tt_patches;
@@ -18,7 +20,9 @@ begin
 	create temp table tt_patches as
 	select patch.patch_number
 	from dingo.patch as patch
-	where patch.reverted = false
+	where 1 = 1
+		and patch.reverted = false
+		and patch."type" = user_patch
 	order by patch.patch_number desc
 	limit p_patch_count;
 	----------------------------------------------------------------

@@ -44,7 +44,7 @@ internal sealed class MigrationRunner : IMigrationRunner
 	{
 		await ApplySystemMigrationsAsync(ct);
 		var migrations = await _migrationScanner.ScanAsync(path, ct);
-		await ApplyMigrationsAsync(migrations, MigrationType.User, ct);
+		await ApplyMigrationsAsync(migrations, PatchType.User, LogLevel.Information, ct);
 	}
 
 	private async Task ApplySystemMigrationsAsync(CancellationToken ct = default)
@@ -62,7 +62,7 @@ internal sealed class MigrationRunner : IMigrationRunner
 		}
 		else
 		{
-			await ApplyMigrationsAsync(migrations, MigrationType.System, ct);
+			await ApplyMigrationsAsync(migrations, PatchType.System, LogLevel.None, ct);
 		}
 	}
 
@@ -76,7 +76,7 @@ internal sealed class MigrationRunner : IMigrationRunner
 			await _migrationApplier.ApplyAsync(migration, ct);
 		}
 
-		var patch = await _repository.GetNextPatchAsync(ct);
+		var patch = await _repository.GetNextPatchAsync(PatchType.System, ct);
 
 		foreach (var migration in migrations)
 		{
@@ -89,7 +89,8 @@ internal sealed class MigrationRunner : IMigrationRunner
 
 	private async Task ApplyMigrationsAsync(
 		IReadOnlyList<Migration> migrations,
-		MigrationType migrationType,
+		PatchType patchType,
+		LogLevel logLevel,
 		CancellationToken ct = default
 	)
 	{
@@ -99,30 +100,30 @@ internal sealed class MigrationRunner : IMigrationRunner
 
 		if (migrationsToApply.Length == 0)
 		{
-			_output.Write($"All {migrationType} migrations are up to date, skipping", LogLevel.Information);
+			_output.Write($"All {patchType} migrations are up to date, skipping", LogLevel.Information);
 			return;
 		}
 
 		await RunInTransaction(
 			async () => {
-				var patch = await _repository.GetNextPatchAsync(ct);
+				var patch = await _repository.GetNextPatchAsync(patchType, ct);
 				var total = migrationsToApply.Length;
 				var current = 1;
-				_output.Write($"Patch #{patch}; Migrations to apply: {total}", LogLevel.Information);
+				_output.Write($"Patch #{patch}; {patchType} migrations to apply: {total}", LogLevel.Information);
 
 				foreach (var migration in migrationsToApply)
 				{
-					_output.Write($"{current++}/{total} Applying '{migration.Path.Relative}'", LogLevel.Information);
+					_output.Write($"{current++}/{total} Applying '{migration.Path.Relative}'", logLevel);
 					await _migrationApplier.ApplyAndRegisterAsync(migration, patch, ct);
 				}
 
 				await _repository.CompletePatchAsync(patch, ct);
 			},
-			LogLevel.Information,
+			logLevel,
 			ct
 		);
 
-		_output.Write($"Finished applying {migrationType} migrations.", LogLevel.Information);
+		_output.Write($"Finished applying {patchType} migrations.", LogLevel.Information);
 	}
 
 	public async Task RollbackAsync(string path, int patchCount, bool force, CancellationToken ct = default)
