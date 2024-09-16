@@ -98,11 +98,11 @@ internal sealed class DatabaseRepository : IRepository
 		return result.ToArray();
 	}
 
-	public async Task<int> GetNextPatchAsync(CancellationToken ct = default)
+	public async Task<int> GetNextPatchAsync(PatchType patchType, CancellationToken ct = default)
 	{
 		await using var resolver = _connectionResolverFactory.Create();
 		var command = _commandProviderFactory.Create()
-			.GetNextPatch();
+			.GetNextPatch(patchType);
 
 		var result = await resolver.Connection.QueryAsync<int>(command, resolver.Transaction);
 		return result.Single();
@@ -161,10 +161,17 @@ internal sealed class DatabaseRepository : IRepository
 	public async Task ReloadTypesAsync(CancellationToken ct = default)
 	{
 		await using var resolver = _connectionResolverFactory.Create();
-		if (resolver.Connection is NpgsqlConnection npgsqlConnection)
+
+		if (resolver.Connection is not NpgsqlConnection npgsqlConnection)
+		{
+			return;
+		}
+
+		if (npgsqlConnection.State != ConnectionState.Open)
 		{
 			await resolver.Connection.OpenAsync(ct);
-			await npgsqlConnection.ReloadTypesAsync();
 		}
+
+		await npgsqlConnection.ReloadTypesAsync();
 	}
 }

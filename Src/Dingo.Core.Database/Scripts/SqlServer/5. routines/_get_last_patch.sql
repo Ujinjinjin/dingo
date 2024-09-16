@@ -6,11 +6,15 @@ begin
 	----------------------------------------------------------------
 	drop table if exists #tt_patches;
 	----------------------------------------------------------------
+	declare @user_patch int = 2;
+	----------------------------------------------------------------
 	select top (@p_patch_count)
 		patch.patch_number
 	into #tt_patches
 	from dingo.patch as patch
-	where patch.reverted = 0
+	where 1 = 1
+		and patch.reverted = 0
+		and patch.[type] = @user_patch
 	order by patch.patch_number desc;
 	----------------------------------------------------------------
 	select

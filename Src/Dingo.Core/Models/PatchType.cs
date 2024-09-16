@@ -1,6 +1,6 @@
 namespace Dingo.Core.Models;
 
-public enum MigrationType
+public enum PatchType
 {
 	None = 0,
 

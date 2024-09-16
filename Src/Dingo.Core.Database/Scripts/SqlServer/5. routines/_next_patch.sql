@@ -1,4 +1,6 @@
-create or alter procedure dingo._next_patch
+create or alter procedure dingo._next_patch(
+	@p_patch_type integer
+)
 as
 begin
 	----------------------------------------------------------------
@@ -13,7 +15,8 @@ begin
 	-- if there are no patches in the table, create one
 	if (@v_patch_number is null)
 	begin
-		insert into dingo.patch default values;
+		insert into dingo.patch (applied_at, reverted_at, reverted, [type]) values
+			(default, default, default, @p_patch_type);
 		set @v_patch_number = scope_identity();
 	end;
 	----------------------------------------------------------------
@@ -27,9 +30,15 @@ begin
 	-- create new patch only if the last one is not empty
 	if (@v_last_patch_empty = 0)
 	begin
-		insert into dingo.patch default values;
+		insert into dingo.patch (applied_at, reverted_at, reverted, [type]) values
+			(default, default, default, @p_patch_type);
 		set @v_patch_number = scope_identity();
+	end
+	else -- if last patch is empty, update its type
+	begin
+		update dingo.patch set [type] = @p_patch_type where patch_number = @v_patch_number;
 	end;
+
 	----------------------------------------------------------------
 	select @v_patch_number;
 	----------------------------------------------------------------

@@ -28,11 +28,11 @@ internal sealed class PostgreSqlCommandProvider : ICommandProvider
 		);
 	}
 
-	public Command GetNextPatch()
+	public Command GetNextPatch(PatchType patchType)
 	{
 		return new Command(
-			"select * from dingo._next_patch()",
-			null,
+			"select * from dingo._next_patch(@PatchType)",
+			new { PatchType = patchType },
 			CommandType.Text
 		);
 	}
