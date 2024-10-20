@@ -14,3 +14,5 @@ Src/Dingo.Cli/dingo.yml
 Src/Dingo.sln.DotSettings.user
 
 .DS_Store
+
+**/TestResults/
