@@ -30,9 +30,6 @@ Currently, `dingo` can only be installed as a binary using default package manag
             | wget -O dingo.deb -qi -
         sudo dpkg --install dingo.deb
     </code-block>
-    <p>Then add <code>/usr/share/dingo</code> to the <code>$PATH</code> environment variable.</p>
-    <p>Restart your terminal shell and run following command to validate successful installation:</p>
-    <code-block lang="shell">dingo --version</code-block>
 </tab>
 <tab title="macOS" group-key="platform-macOS">
     <p>Download and install the binary:</p>
@@ -45,6 +42,9 @@ Currently, `dingo` can only be installed as a binary using default package manag
     </code-block>
 </tab>
 </tabs>
+
+<p>Run the following command to validate successful installation:</p>
+<code-block lang="shell">dingo --version</code-block>
 
 ### Uninstall
 
