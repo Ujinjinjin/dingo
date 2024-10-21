@@ -55,15 +55,20 @@ internal sealed class PathAdapter : IPath
 	}
 
 	/// <inheritdoc />
-	public string GetApplicationPath()
+	public string GetAppDataPath()
 	{
+		if (OperatingSystem.IsLinux())
+		{
+			return Constants.AppDataLinux;
+		}
+
 		return CleanPath(AppDomain.CurrentDomain.BaseDirectory);
 	}
 
 	/// <inheritdoc />
 	public string GetLogsPath()
 	{
-		return Join(GetApplicationPath(), Constants.LogsDir);
+		return Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.LogsDir);
 	}
 
 	/// <inheritdoc />
