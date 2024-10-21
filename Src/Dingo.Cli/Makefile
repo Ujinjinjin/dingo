@@ -1,10 +1,13 @@
 linux_exe:
 	make full_clean_up
-	mkdir temp temp/dingo temp/dingo/DEBIAN temp/dingo/usr temp/dingo/usr/share temp/dingo/usr/share/dingo
+	mkdir temp temp/dingo temp/dingo/DEBIAN temp/dingo/usr temp/dingo/usr/bin temp/dingo/usr/share temp/dingo/usr/share/dingo temp/dingo/usr/share/dingo/Scripts
+	cp ../../tools/debian/postinst temp/dingo/DEBIAN/postinst
+	cp ../../tools/debian/preinst temp/dingo/DEBIAN/preinst
 	make control_content -s > temp/dingo/DEBIAN/control
 	dotnet test ../Dingo.UnitTests/Dingo.UnitTests.csproj -c release
 	dotnet publish -c release --self-contained --runtime linux-x64 -o bin/linux
-	cp -r bin/linux/* temp/dingo/usr/share/dingo
+	cp -r bin/linux/Scripts/* temp/dingo/usr/share/dingo/Scripts
+	cp bin/linux/dingo temp/dingo/usr/bin
 	dpkg-deb --build temp/dingo
 	cp temp/dingo.deb .
 	make clean_up
@@ -15,8 +18,8 @@ mac_exe:
 	dotnet test ../Dingo.UnitTests/Dingo.UnitTests.csproj -c release
 	dotnet publish -c release --self-contained --runtime osx-x64 -o bin/osx
 	cp -r bin/osx/* temp/dist
-	cp ../../tools/osx-postinstall temp/scripts/postinstall
-	cp ../../tools/osx-preinstall temp/scripts/preinstall
+	cp ../../tools/osx/postinstall temp/scripts/postinstall
+	cp ../../tools/osx/preinstall temp/scripts/preinstall
 	cp -r temp/scripts/* temp/bin/resources/
 
 	pkgbuild --root temp/dist --version 1.0 --identifier com.ujinjinjin.dingo --install-location /.dingo --scripts temp/scripts temp/bin/dist.pkg

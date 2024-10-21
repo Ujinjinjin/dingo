@@ -18,8 +18,8 @@ internal interface IPath
 	/// <summary> Extract root directory name from path </summary>
 	string GetRootDirectory(string path);
 
-	/// <summary> Get application installation directory path </summary>
-	string GetApplicationPath();
+	/// <summary> Get directory path where application data files are stored </summary>
+	string GetAppDataPath();
 
 	/// <summary> Get directory path where logs are stored </summary>
 	string GetLogsPath();

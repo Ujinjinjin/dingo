@@ -32,7 +32,7 @@ internal sealed class MigrationPathBuilder : IMigrationPathBuilder
 		};
 
 		return _path.Join(
-			_path.GetApplicationPath(),
+			_path.GetAppDataPath(),
 			"Scripts",
 			providerDir
 		);
