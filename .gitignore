@@ -16,3 +16,5 @@ Src/Dingo.sln.DotSettings.user
 .DS_Store
 
 **/TestResults/
+
+**/coverage/
