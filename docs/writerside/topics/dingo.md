@@ -25,7 +25,7 @@ Currently, `dingo` can only be installed as a binary using default package manag
     <p>First, download and install the binary:</p>
     <code-block lang="shell">
         curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
-            | grep "browser_download_url.*deb" \
+            | grep "browser_download_url.*x64.deb" \
             | cut -d '"' -f 4 \
             | wget -O dingo.deb -qi -
         sudo dpkg --install dingo.deb
@@ -35,13 +35,17 @@ Currently, `dingo` can only be installed as a binary using default package manag
     <p>Download and install the binary:</p>
     <code-block lang="shell">
         curl -s https://api.github.com/repos/ujinjinjin/dingo/releases/latest \
-            | grep "browser_download_url.*pkg" \
+            | grep "browser_download_url.*x64.pkg" \
             | cut -d '"' -f 4 \
             | xargs -I packageUrl curl packageUrl -L -s -o dingo.pkg
         installer -pkg dingo.pkg -target CurrentUserHomeDirectory
     </code-block>
 </tab>
 </tabs>
+
+<note>
+    If you want to install <code>dingo</code> on a <code>arm64</code> system, replace <code>x64</code> with <code>arm64</code> in the <code>grep</code> command
+</note>
 
 <p>Run the following command to validate successful installation:</p>
 <code-block lang="shell">dingo --version</code-block>
