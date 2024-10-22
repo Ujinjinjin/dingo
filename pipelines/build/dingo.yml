@@ -4,11 +4,6 @@ trigger:
     include:
     - '*'
 
-pr:
-  branches:
-    include:
-    - '*'
-
 variables:
   - name: 'pipeline_name'
     value: 'Dingo. Tests'

@@ -1,0 +1,69 @@
+parameters:
+  - name: 'project'
+    default: ''
+  - name: 'pkg_version'
+    default: ''
+  - name: 'pkg_name'
+    default: ''
+  - name: 'pkg_description'
+    default: ''
+  - name: 'buildPlatform'
+    default: ''
+  - name: 'buildConfiguration'
+    default: ''
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'publish app executable'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: $(project)
+    arguments: '-c $(buildConfiguration) --self-contained --runtime linux-$(buildPlatform) -o bin/linux /property:Version=$(pkg_version)'
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+- task: CmdLine@2
+  displayName: 'create deb packaging directories'
+  inputs:
+    script: mkdir temp temp/dingo temp/dingo/DEBIAN temp/dingo/usr temp/dingo/usr/bin temp/dingo/usr/share temp/dingo/usr/share/dingo temp/dingo/usr/share/dingo/Scripts
+
+- task: CmdLine@2
+  displayName: 'copy install scripts'
+  inputs:
+    script: cp tools/debian/postinst temp/dingo/DEBIAN/postinst; cp tools/debian/preinst temp/dingo/DEBIAN/preinst
+
+- task: PythonScript@0
+  displayName: 'create DEBIAN control file'
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: 'tools/control.py'
+    arguments: '-p $(pkg_name) -v $(pkg_version) -s 1024 -d "$(pkg_description)" --dest temp/dingo/DEBIAN'
+
+- task: CmdLine@2
+  displayName: 'copy build artifacts to deb packaging directory'
+  inputs:
+    script: cp bin/linux/dingo temp/dingo/usr/bin && cp -r bin/linux/Scripts/* temp/dingo/usr/share/dingo/Scripts
+
+- task: CmdLine@2
+  displayName: 'create deb package'
+  inputs:
+    script: dpkg-deb --build temp/dingo
+
+- task: CmdLine@2
+  displayName: 'rename deb package'
+  inputs:
+    script: mv temp/dingo.deb "dingo-$(pkg_version)_$(buildPlatform).deb"
+
+- task: CopyFiles@2
+  displayName: 'copy files to artifact staging directory'
+  inputs:
+    Contents: 'dingo-$(pkg_version)_$(buildPlatform).deb'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish build artifacts'
+  inputs:
+    PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
+    ArtifactName: 'drop-linux'
+    publishLocation: 'Container'
