@@ -4,11 +4,6 @@ trigger:
     include:
       - '*'
 
-pr:
-  branches:
-    include:
-      - master
-
 variables:
   - name: 'pipeline_name'
     value: 'Dingo. Tests Coverage'
@@ -34,8 +29,7 @@ jobs:
           buildConfiguration: $(buildConfiguration)
           collectCodeCoverage: true
 
-      - task: PublishCodeCoverageResults@1
+      - task: PublishCodeCoverageResults@2
         displayName: 'publish code coverage result'
         inputs:
-          codeCoverageTool: 'JaCoCo'
-          summaryFileLocation: '$(Agent.TempDirectory)/*.coverage'
+          summaryFileLocation: '$(Agent.TempDirectory)/**/*.xml'

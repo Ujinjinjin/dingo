@@ -1,0 +1,68 @@
+parameters:
+  - name: 'project'
+    default: ''
+  - name: 'pkg_version'
+    default: ''
+  - name: 'buildPlatform'
+    default: ''
+  - name: 'buildConfiguration'
+    default: ''
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'publish app executable'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: $(project)
+    arguments: '-c $(buildConfiguration) --self-contained --runtime osx-$(buildPlatform) -o bin/osx /property:Version=$(pkg_version)'
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+- task: CmdLine@2
+  displayName: 'create packaging directories'
+  inputs:
+    script: mkdir temp temp/dist temp/dingo temp/scripts temp/bin temp/bin/resources
+
+- task: CmdLine@2
+  displayName: 'copy application files to dist'
+  inputs:
+    script: cp -r bin/osx/* temp/dist
+
+- task: CmdLine@2
+  displayName: 'copy install scripts'
+  inputs:
+    script: cp tools/osx/postinstall temp/scripts/postinstall; cp tools/osx/preinstall temp/scripts/preinstall
+
+- task: CmdLine@2
+  displayName: 'copy install scripts to resources'
+  inputs:
+    script: cp -r temp/scripts/* temp/bin/resources/
+
+- task: CmdLine@2
+  displayName: 'build macOS package'
+  inputs:
+    script: pkgbuild --root temp/dist --version $(pkg_version) --identifier com.ujinjinjin.dingo --install-location /.dingo --scripts temp/scripts temp/bin/dist.pkg
+
+- task: CmdLine@2
+  displayName: 'wrap macOS package into distributive'
+  inputs:
+    script: productbuild --package temp/bin/dist.pkg --resources temp/bin/resources temp/dingo.pkg
+
+- task: CmdLine@2
+  displayName: 'rename macOS package'
+  inputs:
+    script: mv temp/dingo.pkg "dingo-$(pkg_version)_$(buildPlatform).pkg"
+
+- task: CopyFiles@2
+  displayName: 'copy files to artifact staging directory'
+  inputs:
+    Contents: 'dingo-$(pkg_version)_$(buildPlatform).pkg'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/cli'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish build artifacts'
+  inputs:
+    PathToPublish: '$(Build.ArtifactStagingDirectory)/cli'
+    ArtifactName: 'drop-macOS'
+    publishLocation: 'Container'

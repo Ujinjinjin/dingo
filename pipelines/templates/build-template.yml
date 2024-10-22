@@ -36,6 +36,6 @@ steps:
     projects: 'Src/Dingo.UnitTests/Dingo.UnitTests.csproj'
     testRunTitle: 'Unit tests'
     ${{ if eq(parameters.collectCodeCoverage, true) }}:
-      arguments: '-c ${{ parameters.buildConfiguration }} --collect "Code coverage"'
+      arguments: '-c ${{ parameters.buildConfiguration }} --collect "XPlat Code Coverage"'
     ${{ if eq(parameters.collectCodeCoverage, false) }}:
       arguments: '-c ${{ parameters.buildConfiguration }}'
